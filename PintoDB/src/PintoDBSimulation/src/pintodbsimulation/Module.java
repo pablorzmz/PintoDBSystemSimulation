@@ -13,8 +13,8 @@ public abstract class  Module {
     protected RandomNumberGenerator randNoGen;
     protected Queue<ClientQuery> queryQueue;
     protected LinkedList<Integer> queueSizeRegister;
-    protected  SimPintoDB simPintoDBPointer;
-    protected  Module nextModule;
+    protected SimPintoDB simPintoDBPointer;
+    protected Module nextModule;
     
      /**
      *
@@ -28,6 +28,7 @@ public abstract class  Module {
         this.maxServers = maxServers;
         this.simPintoDBPointer = simPintoDBPointer;
         this.nextModule = nextModule;
+        this.randNoGen = new RandomNumberGenerator();
     }
 
      /**
