@@ -11,11 +11,18 @@ public abstract class  Module {
     protected int servers;
     protected int maxServers;
     protected RandomNumberGenerator randNoGen;
-    protected Queue<Query> queryQueue;
+    protected Queue<ClientQuery> queryQueue;
     protected LinkedList<Integer> queueSizeRegister;
     protected  SimPintoDB simPintoDBPointer;
     protected  Module nextModule;
-
+    
+     /**
+     *
+     * @param servers
+     * @param maxServers
+     * @param simPintoDBPointer
+     * @param nextModule
+     */    
     public Module(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         this.servers = servers;
         this.maxServers = maxServers;
@@ -23,9 +30,30 @@ public abstract class  Module {
         this.nextModule = nextModule;
     }
 
+     /**
+     *
+     */    
     public abstract void processTimeOut();
+    
+     /**
+     *
+     */    
     public abstract void processArrive();
+    
+     /**
+     *
+     */    
     public abstract void processExit();
-    public abstract void genereteAction();
-
+    
+     /**
+     *
+     * @param clientQuery
+     */    
+    public abstract void genereteAction( ClientQuery clientQuery);
+    
+     /**
+     *
+     * @param clientQuery
+     */    
+    public abstract void genereteNextModuleAction(ClientQuery clientQuery);   
 }

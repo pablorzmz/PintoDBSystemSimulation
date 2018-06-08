@@ -1,5 +1,8 @@
 package pintodbsimulation;
 
+/**
+*
+*/
 public enum StatementType {
     SELECT,
     JOIN,
