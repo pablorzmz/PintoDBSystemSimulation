@@ -17,6 +17,17 @@ public class StatementPerModuleStats {
     private double DLLStatementTime;
 
     /**
+     * 
+     * @param other 
+     */
+    public void addOtherValues( StatementPerModuleStats other )
+    {
+        this.DLLStatementTime += other.DLLStatementTime;
+        this.joinStatementTime += other.joinStatementTime;
+        this.selectStatementTime += other.selectStatementTime;
+        this.updateStatementTime += other.updateStatementTime;
+    }
+    /**
     * 
     */    
     public StatementPerModuleStats() {

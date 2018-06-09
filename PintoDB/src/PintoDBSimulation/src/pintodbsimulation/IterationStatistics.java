@@ -29,6 +29,22 @@ public class IterationStatistics {
     */    
     public IterationStatistics() {
     }
+    public void addOtherValues( IterationStatistics other )
+    {
+        this.averageQueryLifeTime += other.averageQueryLifeTime;
+        this.averageQueueSizeConnectionM += other.averageQueueSizeConnectionM;
+        this.averageQueueSizeExecM += other.averageQueueSizeExecM;
+        this.averageQueueSizeProcessM += other.averageQueueSizeProcessM;
+        this.averageQueueSizeQueryM += other.averageQueueSizeQueryM;
+        this.averageQueueSizeTransM += other.averageQueueSizeTransM;
+        this.counterOfDeniedConnection += other.counterOfDeniedConnection;
+        this.connectionModStats.addOtherValues( other.getConnectionModStats() );
+        this.processModStats.addOtherValues( other.getProcessModStats() );
+        this.queryProcModStats.addOtherValues( other.getQueryProcModStats() );        
+        this.transactionModStats.addOtherValues( other.getTransactionModStats() );
+        this.executionModStats.addOtherValues( other.getExecutionModStats() );
+    }
+    
     /**
      * 
      */

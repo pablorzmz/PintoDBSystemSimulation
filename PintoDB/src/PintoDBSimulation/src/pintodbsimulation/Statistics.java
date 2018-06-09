@@ -27,7 +27,106 @@ public class Statistics {
         this.currentIterationStats = new IterationStatistics();
         this.finalIterationStats = new IterationStatistics();
     }
-    
+    /**
+     * 
+     * @param arraySizes
+     * @param statement 
+     */
+    private void calculateAverageTimePerStatementPerModule(int arraySizes[], StatementType statement )
+    {
+        double dummyValue;
+        switch( statement )
+        {
+            case UPDATE:
+                ////Connection Module
+                dummyValue = currentIterationStats.getConnectionModStats().getUpdateStatementTime();
+                dummyValue /= arraySizes[0]==0?1:arraySizes[0];
+                currentIterationStats.getConnectionModStats().setUpdateStatementTime( dummyValue );
+                ////Execution Module
+                dummyValue = currentIterationStats.getExecutionModStats().getUpdateStatementTime();
+                dummyValue /= arraySizes[1]==0?1:arraySizes[1];
+                currentIterationStats.getExecutionModStats().setUpdateStatementTime( dummyValue );
+                ////Process Managment Module
+                dummyValue = currentIterationStats.getProcessModStats().getUpdateStatementTime();
+                dummyValue /= arraySizes[2]==0?1:arraySizes[2];
+                currentIterationStats.getProcessModStats().setUpdateStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getTransactionModStats().getUpdateStatementTime();
+                dummyValue /= arraySizes[3]==0?1:arraySizes[3];
+                currentIterationStats.getTransactionModStats().setUpdateStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getQueryProcModStats().getUpdateStatementTime();
+                dummyValue /= arraySizes[4]==0?1:arraySizes[4];
+                currentIterationStats.getQueryProcModStats().setUpdateStatementTime( dummyValue );                     
+            break;
+            case DDL:
+                ////Connection Module
+                dummyValue = currentIterationStats.getConnectionModStats().getDLLStatementTime();
+                dummyValue /= arraySizes[0]==0?1:arraySizes[0];
+                currentIterationStats.getConnectionModStats().setDLLStatementTime(dummyValue );
+                ////Execution Module
+                dummyValue = currentIterationStats.getExecutionModStats().getDLLStatementTime();
+                dummyValue /= arraySizes[1]==0?1:arraySizes[1];
+                currentIterationStats.getExecutionModStats().setDLLStatementTime( dummyValue );
+                ////Process Managment Module
+                dummyValue = currentIterationStats.getProcessModStats().getDLLStatementTime();
+                dummyValue /= arraySizes[2]==0?1:arraySizes[2];
+                currentIterationStats.getProcessModStats().setDLLStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getTransactionModStats().getDLLStatementTime();
+                dummyValue /= arraySizes[3]==0?1:arraySizes[3];
+                currentIterationStats.getTransactionModStats().setDLLStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getQueryProcModStats().getDLLStatementTime();
+                dummyValue /= arraySizes[4]==0?1:arraySizes[4];
+                currentIterationStats.getQueryProcModStats().setDLLStatementTime( dummyValue );                                     
+            break;
+            case SELECT:
+                ////Connection Module
+                dummyValue = currentIterationStats.getConnectionModStats().getSelectStatementTime();
+                dummyValue /= arraySizes[0]==0?1:arraySizes[0];
+                currentIterationStats.getConnectionModStats().setSelectStatementTime(dummyValue );
+                ////Execution Module
+                dummyValue = currentIterationStats.getExecutionModStats().getSelectStatementTime();
+                dummyValue /= arraySizes[1]==0?1:arraySizes[1];
+                currentIterationStats.getExecutionModStats().setSelectStatementTime( dummyValue );
+                ////Process Managment Module
+                dummyValue = currentIterationStats.getProcessModStats().getSelectStatementTime();
+                dummyValue /= arraySizes[2]==0?1:arraySizes[2];
+                currentIterationStats.getProcessModStats().setSelectStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getTransactionModStats().getSelectStatementTime();
+                dummyValue /= arraySizes[3]==0?1:arraySizes[3];
+                currentIterationStats.getTransactionModStats().setSelectStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getQueryProcModStats().getSelectStatementTime();
+                dummyValue /= arraySizes[4]==0?1:arraySizes[4];
+                currentIterationStats.getQueryProcModStats().setSelectStatementTime(dummyValue );                                                     
+            break;    
+            case JOIN:
+                ////Connection Module
+                dummyValue = currentIterationStats.getConnectionModStats().getJoinStatementTime();
+                dummyValue /= arraySizes[0]==0?1:arraySizes[0];
+                currentIterationStats.getConnectionModStats().setJoinStatementTime(dummyValue );
+                ////Execution Module
+                dummyValue = currentIterationStats.getExecutionModStats().getJoinStatementTime();
+                dummyValue /= arraySizes[1]==0?1:arraySizes[1];
+                currentIterationStats.getExecutionModStats().setJoinStatementTime( dummyValue );
+                ////Process Managment Module
+                dummyValue = currentIterationStats.getProcessModStats().getJoinStatementTime();
+                dummyValue /= arraySizes[2]==0?1:arraySizes[2];
+                currentIterationStats.getProcessModStats().setJoinStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getTransactionModStats().getJoinStatementTime();
+                dummyValue /= arraySizes[3]==0?1:arraySizes[3];
+                currentIterationStats.getTransactionModStats().setJoinStatementTime( dummyValue );
+                ////Transaction Module
+                dummyValue = currentIterationStats.getQueryProcModStats().getJoinStatementTime();
+                dummyValue /= arraySizes[4]==0?1:arraySizes[4];
+                currentIterationStats.getQueryProcModStats().setJoinStatementTime(dummyValue );                                                                     
+            break;
+        }                        
+    }
     /**
      * 
      * @param m 
@@ -44,7 +143,7 @@ public class Statistics {
         {
             value += m.getQueueSizeRegister().get(index);
         }
-        value /= queueSize;
+        value /= queueSize==0?1:queueSize;
         currentIterationStats.setAverageQueueSizeProcessM(value);
     }
     /**
@@ -292,9 +391,19 @@ public class Statistics {
         
         // Store denied connection counter
         ConnectionModule cm = (ConnectionModule)this.pointerSimPintoDB.getConnectionModule();
-        currentIterationStats.setCounterOfDeniedConnection( 0 ); // it must change and use variable cm  
+        currentIterationStats.setCounterOfDeniedConnection( cm.getDeniedConnectionCounter() );
         
-        // finally, calculate averages
+        // finally, calculate averages per statement and per module
+        calculateAverageTimePerStatementPerModule( updateClientsWhoFinishedService, StatementType.UPDATE );
+        calculateAverageTimePerStatementPerModule( DDLClientsWhoFinishedService, StatementType.DDL );
+        calculateAverageTimePerStatementPerModule( selectClientsWhoFinishedService, StatementType.SELECT );
+        calculateAverageTimePerStatementPerModule( joinClientsWhoFinishedService, StatementType.JOIN );
+        
+        // store stats in final stats
+        this.finalIterationStats.addOtherValues( currentIterationStats );
+        
+        // clean current stats
+        this.currentIterationStats.clean();
     }
     
     /**
