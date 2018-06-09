@@ -57,11 +57,20 @@ public class Statistics {
         double systemLifeTime;
         double currentClientTimeInModule;
         // For counting just clients who finished service per module
-        int clientsWhoFinishesService[] = new int[5];
+        int[] updateClientsWhoFinishedService = new int[5];
+        int[] DDLClientsWhoFinishedService =    new int[5];
+        int[] selectClientsWhoFinishedService = new int[5];
+        int[] joinClientsWhoFinishedService =   new int[5];
+        // For counting amount of clients who really finished srevice in system
+        int clientsWhoFinishedSystemProcess = 0;
         // initialize vector
         for (int x = 0; x < 5 ; ++x)
-             clientsWhoFinishesService[ x ] = 0;
-        
+        {
+            updateClientsWhoFinishedService[ x ] = 0;        
+            DDLClientsWhoFinishedService[ x ] = 0;
+            selectClientsWhoFinishedService[ x ] = 0;
+            joinClientsWhoFinishedService[ x ] = 0;
+        }                 
         for (int index = 0; index < cl.size(); ++ index )
         {
             if ( null != cl.get(index).getQueryType() )
@@ -75,7 +84,7 @@ public class Statistics {
                         currentIterationStats.getConnectionModStats().setUpdateStatementTime
                         (currentIterationStats.getConnectionModStats().getUpdateStatementTime()
                                 + currentClientTimeInModule);
-                        clientsWhoFinishesService[0] +=1;
+                        updateClientsWhoFinishedService[0] +=1;
                     }                    
                     // Time in execution module
                     currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInExecMod();
@@ -84,7 +93,7 @@ public class Statistics {
                         currentIterationStats.getExecutionModStats().setUpdateStatementTime
                         (currentIterationStats.getExecutionModStats().getUpdateStatementTime()
                                 + currentClientTimeInModule );
-                        clientsWhoFinishesService[1] +=1;
+                        updateClientsWhoFinishedService[1] +=1;
                     }                    
                     // Time in process managment mod
                     currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInProcMgmtMod();
@@ -93,7 +102,7 @@ public class Statistics {
                         currentIterationStats.getProcessModStats().setUpdateStatementTime
                         (currentIterationStats.getProcessModStats().getUpdateStatementTime()
                                 + currentClientTimeInModule );
-                        clientsWhoFinishesService[2] +=1;
+                        updateClientsWhoFinishedService[2] +=1;
                     }                     
                     // Time in transaction processor module
                     currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInTransMod();
@@ -102,7 +111,7 @@ public class Statistics {
                         currentIterationStats.getTransactionModStats().setUpdateStatementTime
                         (currentIterationStats.getTransactionModStats().getUpdateStatementTime()
                                 + currentClientTimeInModule );
-                        clientsWhoFinishesService[3] +=1;
+                        updateClientsWhoFinishedService[3] +=1;
                     }                    
                     //Time in query processor module
                     currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInQueryProcMod();
@@ -111,88 +120,165 @@ public class Statistics {
                         currentIterationStats.getQueryProcModStats().setUpdateStatementTime
                         (currentIterationStats.getQueryProcModStats().getUpdateStatementTime()
                                 + currentClientTimeInModule );
-                        clientsWhoFinishesService[4] +=1;
+                        updateClientsWhoFinishedService[4] +=1;
                     }                    
                     break;
                 case DDL:
                     // Sum time for DDL queries                    
                     // Time in connection module
-                    currentIterationStats.getConnectionModStats().setDLLStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInConnectionMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getConnectionModStats().setDLLStatementTime
                         (currentIterationStats.getConnectionModStats().getDLLStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInConnectionMod());
+                                + currentClientTimeInModule);
+                        DDLClientsWhoFinishedService[0] +=1;
+                    }                    
                     // Time in execution module
-                    currentIterationStats.getExecutionModStats().setDLLStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInExecMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getExecutionModStats().setDLLStatementTime
                         (currentIterationStats.getExecutionModStats().getDLLStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInExecMod());
+                                + currentClientTimeInModule );
+                        DDLClientsWhoFinishedService[1] +=1;
+                    }                    
                     // Time in process managment mod
-                    currentIterationStats.getProcessModStats().setDLLStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInProcMgmtMod();
+                    if ( INVALID_TIME !=  currentClientTimeInModule )
+                    {
+                        currentIterationStats.getProcessModStats().setDLLStatementTime
                         (currentIterationStats.getProcessModStats().getDLLStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInProcMgmtMod());
+                                + currentClientTimeInModule );
+                        DDLClientsWhoFinishedService[2] +=1;
+                    }                     
                     // Time in transaction processor module
-                    currentIterationStats.getTransactionModStats().setDLLStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInTransMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getTransactionModStats().setDLLStatementTime
                         (currentIterationStats.getTransactionModStats().getDLLStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInTransMod());
+                                + currentClientTimeInModule );
+                        DDLClientsWhoFinishedService[3] +=1;
+                    }                    
                     //Time in query processor module
-                    currentIterationStats.getQueryProcModStats().setDLLStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInQueryProcMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getQueryProcModStats().setDLLStatementTime
                         (currentIterationStats.getQueryProcModStats().getDLLStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInQueryProcMod());
+                                + currentClientTimeInModule );
+                        DDLClientsWhoFinishedService[4] +=1;
+                    }   
                     break;
                 case SELECT:
                     // Sum time for SELECT queries
-                    
                     // Time in connection module
-                    currentIterationStats.getConnectionModStats().setSelectStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInConnectionMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getConnectionModStats().setSelectStatementTime
                         (currentIterationStats.getConnectionModStats().getSelectStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInConnectionMod());
+                                + currentClientTimeInModule);
+                        selectClientsWhoFinishedService[0] +=1;
+                    }                    
                     // Time in execution module
-                    currentIterationStats.getExecutionModStats().setSelectStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInExecMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getExecutionModStats().setSelectStatementTime
                         (currentIterationStats.getExecutionModStats().getSelectStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInExecMod());
+                                + currentClientTimeInModule );
+                        selectClientsWhoFinishedService[1] +=1;
+                    }                    
                     // Time in process managment mod
-                    currentIterationStats.getProcessModStats().setSelectStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInProcMgmtMod();
+                    if ( INVALID_TIME !=  currentClientTimeInModule )
+                    {
+                        currentIterationStats.getProcessModStats().setSelectStatementTime
                         (currentIterationStats.getProcessModStats().getSelectStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInProcMgmtMod());
+                                + currentClientTimeInModule );
+                        selectClientsWhoFinishedService[2] +=1;
+                    }                     
                     // Time in transaction processor module
-                    currentIterationStats.getTransactionModStats().setSelectStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInTransMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getTransactionModStats().setSelectStatementTime
                         (currentIterationStats.getTransactionModStats().getSelectStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInTransMod());
+                                + currentClientTimeInModule );
+                        selectClientsWhoFinishedService[3] +=1;
+                    }                    
                     //Time in query processor module
-                    currentIterationStats.getQueryProcModStats().setSelectStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInQueryProcMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getQueryProcModStats().setSelectStatementTime
                         (currentIterationStats.getQueryProcModStats().getSelectStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInQueryProcMod());                    
+                                + currentClientTimeInModule );
+                        selectClientsWhoFinishedService[4] +=1;
+                    }                       
                     break;
                 case JOIN:
                     // Sum time for JOIN queries
-                    
                     // Time in connection module
-                    currentIterationStats.getConnectionModStats().setJoinStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInConnectionMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getConnectionModStats().setJoinStatementTime
                         (currentIterationStats.getConnectionModStats().getJoinStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInConnectionMod());
+                                + currentClientTimeInModule);
+                        joinClientsWhoFinishedService[0] +=1;
+                    }                    
                     // Time in execution module
-                    currentIterationStats.getExecutionModStats().setJoinStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInExecMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getExecutionModStats().setJoinStatementTime
                         (currentIterationStats.getExecutionModStats().getJoinStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInExecMod());
+                                + currentClientTimeInModule );
+                        joinClientsWhoFinishedService[1] +=1;
+                    }                    
                     // Time in process managment mod
-                    currentIterationStats.getProcessModStats().setJoinStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInProcMgmtMod();
+                    if ( INVALID_TIME !=  currentClientTimeInModule )
+                    {
+                        currentIterationStats.getProcessModStats().setJoinStatementTime
                         (currentIterationStats.getProcessModStats().getJoinStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInProcMgmtMod());
+                                + currentClientTimeInModule );
+                        joinClientsWhoFinishedService[2] +=1;
+                    }                     
                     // Time in transaction processor module
-                    currentIterationStats.getTransactionModStats().setJoinStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInTransMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getTransactionModStats().setJoinStatementTime
                         (currentIterationStats.getTransactionModStats().getJoinStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInTransMod());
+                                + currentClientTimeInModule );
+                        joinClientsWhoFinishedService[3] +=1;
+                    }                    
                     //Time in query processor module
-                    currentIterationStats.getQueryProcModStats().setJoinStatementTime
+                    currentClientTimeInModule = cl.get(index).getQueryStatistics().getTimeInQueryProcMod();
+                    if ( INVALID_TIME != currentClientTimeInModule )
+                    {
+                        currentIterationStats.getQueryProcModStats().setJoinStatementTime
                         (currentIterationStats.getQueryProcModStats().getJoinStatementTime()
-                                + cl.get(index).getQueryStatistics().getTimeInQueryProcMod());                     
+                                + currentClientTimeInModule );
+                        joinClientsWhoFinishedService[4] += 1;
+                    }                    
                     break;
                 default:
                     break;
-            }
-            // Add final query system lifetime            
-            systemLifeTime = (cl.get(index).getQueryStatistics().getSystemLeaveTime()- cl.get(index).getQueryStatistics().getSystemArriveTime());
-            currentIterationStats.setAverageQueryLifeTime( currentIterationStats.getAverageQueryLifeTime() + systemLifeTime );
-        }
-        // For each module calculate its average queue size               
+            }// end switch
+            // Add final query system lifetime 
+            if ( cl.get(index).getQueryStatistics().getSystemLeaveTime() != INVALID_TIME )
+            {
+                systemLifeTime = (cl.get(index).getQueryStatistics().getSystemLeaveTime()- cl.get(index).getQueryStatistics().getSystemArriveTime());
+                currentIterationStats.setAverageQueryLifeTime( currentIterationStats.getAverageQueryLifeTime() + systemLifeTime );
+                clientsWhoFinishedSystemProcess += 1;
+            }            
+        }// end for
+        // For each module calculate its average queue size               // For each module calculate its average queue size               
                 
         //Connection Module will be zero, no queue
         // Process Managment Module
