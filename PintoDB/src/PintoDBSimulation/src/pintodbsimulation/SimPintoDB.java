@@ -28,12 +28,30 @@ public class SimPintoDB {
         return connectionModule;
     }
     
+    
+
+    /**
+     * 
+     * @param connectionModule 
+     */
+    public void setConnectionModule(Module connectionModule) {
+        this.connectionModule = connectionModule;
+    }
+    
     /**
      * 
      * @return 
      */
     public Module getProcessManagemnteModule() {
         return processManagemnteModule;
+    }
+
+    /**
+     * 
+     * @param processManagemnteModule 
+     */
+    public void setProcessManagemnteModule(Module processManagemnteModule) {
+        this.processManagemnteModule = processManagemnteModule;
     }
     
     /**
@@ -46,6 +64,14 @@ public class SimPintoDB {
 
     /**
      * 
+     * @param queryProcessorModule 
+     */
+    public void setQueryProcessorModule(Module queryProcessorModule) {
+        this.queryProcessorModule = queryProcessorModule;
+    }
+
+    /**
+     * 
      * @return 
      */
     public Module getExecutionModule() {
@@ -54,10 +80,26 @@ public class SimPintoDB {
 
     /**
      * 
+     * @param ExecutionModule 
+     */
+    public void setExecutionModule(Module ExecutionModule) {
+        this.ExecutionModule = ExecutionModule;
+    }
+
+    /**
+     * 
      * @return 
      */
     public Module getTransactionModule() {
         return TransactionModule;
+    }
+
+    /**
+     * 
+     * @param TransactionModule 
+     */
+    public void setTransactionModule(Module TransactionModule) {
+        this.TransactionModule = TransactionModule;
     }       
     
     /**
@@ -66,7 +108,15 @@ public class SimPintoDB {
      */        
     public LinkedList<ClientQuery> getClients() {
         return clients;
-    }        
+    }
+
+    /**
+     * 
+     * @param clients 
+     */
+    public void setTransactionModule(LinkedList<ClientQuery> clients) {
+        this.clients = clients;
+    }       
 
     /**
      * 
@@ -82,6 +132,46 @@ public class SimPintoDB {
      */
     double getSimClock() {
         return simClock;
+    }
+
+    /**
+     * 
+     * @param simClock 
+     */
+    public void setSimClock(double simClock) {
+        this.simClock = simClock;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    double getmaxSimClock() {
+        return maxSimClock;
+    }
+
+    /**
+     * 
+     * @param maxSimClock 
+     */
+    public void setMaxSimClock(double maxSimClock) {
+        this.maxSimClock = maxSimClock;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    int gettimeToRunSimulation() {
+        return timeToRunSimulation;
+    }
+
+    /**
+     * 
+     * @param timeToRunSimulation 
+     */
+    public void setTimeToRunSimulation(int timeToRunSimulation) {
+        this.timeToRunSimulation = timeToRunSimulation;
     }
     
     /**
