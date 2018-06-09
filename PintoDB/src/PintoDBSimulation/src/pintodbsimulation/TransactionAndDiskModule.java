@@ -18,22 +18,22 @@ public class TransactionAndDiskModule extends Module {
         outgoingCQ.updateStats();
 
         //I need to check where the outgoing client is
-        if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
-            if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
-                ClientQuery nextCQ = this.queryQueue.getFirst();
+        if (!queryPriorityQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
+            if (queryPriorityQueue.size() > 0) { //If there are waiting clients on the module queue
+                ClientQuery nextCQ = this.queryPriorityQueue.peek();
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
-                        queryQueue.poll();
+                        queryPriorityQueue.poll();
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
-                        queueSizeRegister.add(queryQueue.size());
+                        queueSizeRegister.add(queryPriorityQueue.size());
                     } else {
                         --servers;
                     }
                 } else {
-                    queryQueue.poll();
+                    queryPriorityQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                    queueSizeRegister.add(queryQueue.size());
+                    queueSizeRegister.add(queryPriorityQueue.size());
                 }
             } else { //If there isn't client waiting to be attended
                 --servers;
@@ -49,21 +49,21 @@ public class TransactionAndDiskModule extends Module {
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
-        ClientQuery nextCQ = queryQueue.getFirst();
+        ClientQuery nextCQ = queryPriorityQueue.peek();
         if (nextCQ.getQueryType() != StatementType.DDL) {
             if (servers < maxServers) {
                 ++servers;
                 generateAction(arrivingCQ);
             } else {
-                queryQueue.add(arrivingCQ);
-                queueSizeRegister.add(queryQueue.size());
+                queryPriorityQueue.add(arrivingCQ);
+                queueSizeRegister.add(queryPriorityQueue.size());
             }
         } else if (servers == 0) {
             servers = maxServers;
             generateAction(arrivingCQ);
         } else {
-            queryQueue.add(arrivingCQ);
-            queueSizeRegister.add(queryQueue.size());
+            queryPriorityQueue.add(arrivingCQ);
+            queueSizeRegister.add(queryPriorityQueue.size());
         }
     }
 
@@ -76,9 +76,9 @@ public class TransactionAndDiskModule extends Module {
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
-        if (queryQueue.size() > 0) {
-            generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-            queueSizeRegister.add(queryQueue.size());
+        if (queryPriorityQueue.size() > 0) {
+            generateAction(queryPriorityQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
+            queueSizeRegister.add(queryPriorityQueue.size());
         } else { //If there isn't client waiting to be attended
             --servers;
         }
