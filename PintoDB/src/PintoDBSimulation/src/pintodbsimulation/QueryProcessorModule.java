@@ -1,14 +1,11 @@
 package pintodbsimulation;
 
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class QueryProcessorModule extends Module {
 
     public QueryProcessorModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
-        this.queryQueue = new LinkedList<>();
-        this.queueSizeRegister = new LinkedList<>();
     }
 
     @Override

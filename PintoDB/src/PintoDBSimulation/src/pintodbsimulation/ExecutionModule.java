@@ -7,8 +7,6 @@ public class ExecutionModule extends Module {
 
     public ExecutionModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
-        this.queryQueue = new LinkedList<>();
-        this.queueSizeRegister = new LinkedList<>();
     }
 
     @Override

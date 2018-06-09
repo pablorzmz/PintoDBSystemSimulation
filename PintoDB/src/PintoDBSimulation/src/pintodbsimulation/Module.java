@@ -30,6 +30,8 @@ public abstract class Module {
         this.simPintoDBPointer = simPintoDBPointer;
         this.nextModule = nextModule;
         this.randNoGen = new RandomNumberGenerator();
+        this.queryQueue = new LinkedList<>();
+        this.queryPriorityQueue = new PriorityQueue<>();
     }
 
     /**
