@@ -292,7 +292,9 @@ public class Statistics {
         
         // Store denied connection counter
         ConnectionModule cm = (ConnectionModule)this.pointerSimPintoDB.getConnectionModule();
-        currentIterationStats.setCounterOfDeniedConnection( 0 );        
+        currentIterationStats.setCounterOfDeniedConnection( 0 ); // it must change and use variable cm  
+        
+        // finally, calculate averages
     }
     
     /**
