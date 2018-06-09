@@ -22,12 +22,12 @@ public class ExecutionModule extends Module{
     }
 
     @Override
-    public void genereteAction(ClientQuery clientQuery) {
+    public void generateAction(ClientQuery clientQuery) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void genereteNextModuleAction(ClientQuery clientQuery) {
+    public void generateNextModuleAction(ClientQuery clientQuery) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

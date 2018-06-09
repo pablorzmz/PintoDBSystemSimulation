@@ -73,4 +73,8 @@ public class ClientQuery {
     public QueryStatistics getQueryStatistics() {
         return queryStatistics;
     }             
+
+    QueryStatistics getQueryStats() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

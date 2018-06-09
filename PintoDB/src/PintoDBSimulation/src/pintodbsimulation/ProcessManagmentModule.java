@@ -1,8 +1,9 @@
 package pintodbsimulation;
 
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
-public class ProcessManagmentModule extends Module{
+public class ProcessManagmentModule extends Module {
 
     public ProcessManagmentModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
@@ -12,26 +13,81 @@ public class ProcessManagmentModule extends Module{
 
     @Override
     public void processTimeOut() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PriorityQueue<Event> eQ;
+        eQ = simPintoDBPointer.getSistemEventList();
+        Event e = eQ.poll(); //I need to delete the current event
+        ClientQuery outgoingCQ = e.getClientQuery();
+        QueryStatistics outgoingQS = outgoingCQ.getQueryStats();
+        outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
+        outgoingCQ.updateStats();
+
+        //I need to check where the outgoing client is
+        if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
+            if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
+                generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
+                queueSizeRegister.add(queryQueue.size());
+            } else { //If there isn't client waiting to be attended
+                --servers;
+            }
+        }
     }
 
     @Override
     public void processArrive() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
+        Event e = eQ.poll(); //I need to delete the current event
+        ClientQuery arrivingCQ = e.getClientQuery();
+        QueryStatistics arrivingQS = arrivingCQ.getQueryStats();
+        arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
+        arrivingCQ.updateStats();
+
+        if (servers < maxServers) {
+            ++servers;
+            generateAction(arrivingCQ);
+        } else {
+            queryQueue.add(arrivingCQ);
+            queueSizeRegister.add(queryQueue.size());
+        }
     }
 
     @Override
     public void processExit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
+        Event e = eQ.poll(); //I need to delete the current event
+        ClientQuery leavingCQ = e.getClientQuery();
+        QueryStatistics leavingQS = leavingCQ.getQueryStats();
+        leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
+        leavingCQ.updateStats();
+
+        if (queryQueue.size() > 0) {
+            generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
+            queueSizeRegister.add(queryQueue.size());
+        } else { //If there isn't client waiting to be attended
+            --servers;
+        }
+
+        //I need to generate an ARRIVE on the next module for the leavingCQ
+        generateNextModuleAction(leavingCQ);
     }
 
     @Override
-    public void genereteAction(ClientQuery clientQuery) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void generateAction(ClientQuery clientQuery) {
+        //I need to create a new LEAVE type event on this module for the client cQ
+        double clockTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
+        Event e = new Event(clientQuery, SimEvent.LEAVE, this, clockTime);
+
+        //I need to add the new event to the systemEventList
+        PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
+        eQ.add(e);
     }
 
     @Override
-    public void genereteNextModuleAction(ClientQuery clientQuery) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void generateNextModuleAction(ClientQuery clientQuery) {
+        //I need to create a new ARRIVE type event on the next module for the client cQ
+        Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
+
+        //I need to add the new event to the systemEventList
+        PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
+        eQ.add(e);
     }
 }

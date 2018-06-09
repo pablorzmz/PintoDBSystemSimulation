@@ -50,11 +50,11 @@ public abstract class  Module {
      *
      * @param clientQuery
      */    
-    public abstract void genereteAction( ClientQuery clientQuery);
+    public abstract void generateAction( ClientQuery clientQuery);
     
      /**
      *
      * @param clientQuery
      */    
-    public abstract void genereteNextModuleAction(ClientQuery clientQuery);   
+    public abstract void generateNextModuleAction(ClientQuery clientQuery);   
 }
