@@ -21,12 +21,16 @@ public class ExecutionModule extends Module {
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
+                System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                    + "del modulo " + this.getClass().getName());
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
                 queueSizeRegister.add(queryQueue.size());
             } else { //If there isn't client waiting to be attended
                 --servers;
             }
         }
+        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
+                + "del modulo " + this.getClass().getName());
     }
 
     @Override
@@ -38,9 +42,13 @@ public class ExecutionModule extends Module {
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
+                    + "en el modulo " + this.getClass().getName());
             ++servers;
             generateAction(arrivingCQ);
         } else {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
+                    + "en el modulo " + this.getClass().getName());
             queryQueue.add(arrivingCQ);
             queueSizeRegister.add(queryQueue.size());
         }
@@ -56,9 +64,13 @@ public class ExecutionModule extends Module {
         leavingCQ.updateStats();
 
         if (queryQueue.size() > 0) {
+            System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                    + this.getClass().getName());
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizeRegister.add(queryQueue.size());
         } else { //If there isn't client waiting to be attended
+            System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                    + this.getClass().getName());
             --servers;
         }
 
@@ -69,6 +81,8 @@ public class ExecutionModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
+        System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
+                + this.getClass().getName());
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         StatementType cST = clientQuery.getQueryType();
@@ -104,6 +118,8 @@ public class ExecutionModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on the next module for the client clientQuery
+        System.out.println("Generate Next Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
+                + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName());
         Event e = new Event(clientQuery, SimEvent.LEAVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
