@@ -5,11 +5,20 @@ import java.util.PriorityQueue;
 public class ConnectionModule extends Module {
 
     private int deniedConnectionCounter;
-
+    
+    
     public ConnectionModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
         deniedConnectionCounter = 0;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public int getDeniedConnectionCounter() {
+        return deniedConnectionCounter;
+    }   
 
     @Override
     public void processTimeOut() {
