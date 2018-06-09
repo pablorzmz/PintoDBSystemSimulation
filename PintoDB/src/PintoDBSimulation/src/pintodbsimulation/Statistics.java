@@ -288,7 +288,11 @@ public class Statistics {
         // Execution Module
         this.calculateQueueAverageSizes( this.pointerSimPintoDB.getExecutionModule() );
         // Transaction Module
-        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getTransactionModule() );                
+        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getTransactionModule() );    
+        
+        // Store denied connection counter
+        ConnectionModule cm = (ConnectionModule)this.pointerSimPintoDB.getConnectionModule();
+        currentIterationStats.setCounterOfDeniedConnection( 0 );        
     }
     
     /**
