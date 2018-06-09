@@ -35,6 +35,13 @@ public abstract class Module {
     }
 
     /**
+     * 
+     * @return 
+     */
+    public LinkedList<Integer> getQueueSizeRegister() {
+        return queueSizeRegister;
+    }   
+    /**
      *
      */
     public abstract void processTimeOut();
