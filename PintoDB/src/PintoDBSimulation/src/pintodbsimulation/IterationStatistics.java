@@ -28,6 +28,11 @@ public class IterationStatistics {
     * 
     */    
     public IterationStatistics() {
+        connectionModStats = new StatementPerModuleStats();
+        processModStats = new StatementPerModuleStats();
+        queryProcModStats = new StatementPerModuleStats();
+        transactionModStats = new StatementPerModuleStats();
+        executionModStats = new StatementPerModuleStats();
     }
     public void addOtherValues( IterationStatistics other )
     {
