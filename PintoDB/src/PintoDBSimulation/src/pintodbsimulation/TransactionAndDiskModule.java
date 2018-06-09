@@ -109,7 +109,8 @@ public class TransactionAndDiskModule extends Module{
 		int uB = cQS.getUsedBlocks();
 		eTime += uB * 0.10;
                 
-                    break;        
+                    break;
+                default: break;
             }
         }
         eTime += servers*0.03;
