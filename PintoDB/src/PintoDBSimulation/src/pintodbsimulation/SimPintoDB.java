@@ -6,7 +6,52 @@ import java.util.PriorityQueue;
 public class SimPintoDB {
     
     private LinkedList<ClientQuery> clients;
+    private Module connectionModule;
+    private Module processManagemnteModule;
+    private Module queryProcessorModule;
+    private Module ExecutionModule;
+    private Module TransactionModule;
 
+    /**
+     * 
+     * @return 
+     */
+    public Module getConnectionModule() {
+        return connectionModule;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Module getProcessManagemnteModule() {
+        return processManagemnteModule;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Module getQueryProcessorModule() {
+        return queryProcessorModule;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public Module getExecutionModule() {
+        return ExecutionModule;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public Module getTransactionModule() {
+        return TransactionModule;
+    }       
+    
     /**
      * 
      * @return 
