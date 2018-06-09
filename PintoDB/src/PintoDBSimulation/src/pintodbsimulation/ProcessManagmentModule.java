@@ -68,9 +68,17 @@ public class ProcessManagmentModule extends Module {
 
     @Override
     public void generateAction(ClientQuery clientQuery) {
-        //I need to create a new LEAVE type event on this module for the client cQ
+        //I need to create a new LEAVE type event on this module for the client clientQuery
+        Event e;
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
-        Event e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
+        //I need to check if the client clientQuery will have a timeout
+        QueryStatistics qS = clientQuery.getQueryStatistics();
+        if(eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()){
+            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
+        }
+        else{
+            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
+        }
 
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
@@ -79,7 +87,7 @@ public class ProcessManagmentModule extends Module {
 
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
-        //I need to create a new ARRIVE type event on the next module for the client cQ
+        //I need to create a new ARRIVE type event on the next module for the client clientQuery
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList

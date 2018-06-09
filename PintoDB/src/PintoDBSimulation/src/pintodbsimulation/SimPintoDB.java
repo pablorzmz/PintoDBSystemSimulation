@@ -5,6 +5,14 @@ import java.util.PriorityQueue;
 
 public class SimPintoDB {
     
+    private int timeToRunSimulation;
+    private double simClock;
+    private double maxSimClock;
+    private int k;
+    private int n;
+    private int m;
+    private int p;
+    private double t;
     private LinkedList<ClientQuery> clients;
     private Module connectionModule;
     private Module processManagemnteModule;
@@ -73,6 +81,17 @@ public class SimPintoDB {
      * @return 
      */
     double getSimClock() {
+        return simClock;
+    }
+    
+    /**
+     *
+     */
+    public void run() {
+        
+    }
+
+    double getT() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
