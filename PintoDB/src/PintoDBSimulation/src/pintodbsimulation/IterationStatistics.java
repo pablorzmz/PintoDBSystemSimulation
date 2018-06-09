@@ -17,7 +17,7 @@ public class IterationStatistics {
     private double averageQueueSizeQueryM;
     private double averageQueueSizeTransM;
     private double averageQueueSizeExecM;
-    private int counterOfDeniedConnection;
+    private double counterOfDeniedConnection;
     private StatementPerModuleStats connectionModStats;
     private StatementPerModuleStats processModStats;
     private StatementPerModuleStats queryProcModStats;
@@ -28,21 +28,42 @@ public class IterationStatistics {
     * 
     */    
     public IterationStatistics() {
-        connectionModStats = new StatementPerModuleStats();
-        processModStats = new StatementPerModuleStats();
-        queryProcModStats = new StatementPerModuleStats();
+        connectionModStats  = new StatementPerModuleStats();
+        processModStats     = new StatementPerModuleStats();
+        queryProcModStats   = new StatementPerModuleStats();
         transactionModStats = new StatementPerModuleStats();
-        executionModStats = new StatementPerModuleStats();
+        executionModStats   = new StatementPerModuleStats();
     }
+    
+    /**
+     * 
+     */
+    public void printValues()
+    {
+        System.out.println("This statistics were calculated with clients who finished service in system or in each module");
+        System.out.println();        
+        System.out.println("Average query lifetime in system: " + this.averageQueryLifeTime );
+        System.out.println("Average Connection Module queue size: " + this.averageQueueSizeConnectionM );
+        System.out.println("Average Process Managment Module queue size: " + this.averageQueueSizeProcessM );
+        System.out.println("Average Query Processor Module queue size: " + this.averageQueueSizeQueryM );
+        System.out.println("Average Execution Module queue size: " + this.averageQueueSizeExecM );
+        System.out.println("Average Transaction Module queue size: " + this.averageQueueSizeTransM );
+    }
+    
+    
+    /**
+     * 
+     * @param other 
+     */
     public void addOtherValues( IterationStatistics other )
     {
-        this.averageQueryLifeTime += other.averageQueryLifeTime;
+        this.averageQueryLifeTime        += other.averageQueryLifeTime;
         this.averageQueueSizeConnectionM += other.averageQueueSizeConnectionM;
-        this.averageQueueSizeExecM += other.averageQueueSizeExecM;
-        this.averageQueueSizeProcessM += other.averageQueueSizeProcessM;
-        this.averageQueueSizeQueryM += other.averageQueueSizeQueryM;
-        this.averageQueueSizeTransM += other.averageQueueSizeTransM;
-        this.counterOfDeniedConnection += other.counterOfDeniedConnection;
+        this.averageQueueSizeExecM       += other.averageQueueSizeExecM;
+        this.averageQueueSizeProcessM    += other.averageQueueSizeProcessM;
+        this.averageQueueSizeQueryM      += other.averageQueueSizeQueryM;
+        this.averageQueueSizeTransM      += other.averageQueueSizeTransM;
+        this.counterOfDeniedConnection   += other.counterOfDeniedConnection;
         this.connectionModStats.addOtherValues( other.getConnectionModStats() );
         this.processModStats.addOtherValues( other.getProcessModStats() );
         this.queryProcModStats.addOtherValues( other.getQueryProcModStats() );        
@@ -55,13 +76,13 @@ public class IterationStatistics {
      */
     public void clean()
     {
-        averageQueryLifeTime = 0.0;
+        averageQueryLifeTime        = 0.0;
         averageQueueSizeConnectionM = 0.0;
-        averageQueueSizeProcessM = 0.0;
-        averageQueueSizeQueryM = 0.0;
-        averageQueueSizeTransM = 0.0;
-        averageQueueSizeExecM = 0.0;
-        counterOfDeniedConnection = 0;
+        averageQueueSizeProcessM    = 0.0;
+        averageQueueSizeQueryM      = 0.0;
+        averageQueueSizeTransM      = 0.0;
+        averageQueueSizeExecM       = 0.0;
+        counterOfDeniedConnection   = 0.0;
         connectionModStats.clean();
         processModStats.clean();
         queryProcModStats.clean();
@@ -73,7 +94,7 @@ public class IterationStatistics {
      * 
      * @return 
      */
-    public int getCounterOfDeniedConnection() {
+    public double getCounterOfDeniedConnection() {
         return counterOfDeniedConnection;
     }
 
@@ -81,7 +102,7 @@ public class IterationStatistics {
      * 
      * @param counterOfDeniedConnection 
      */
-    public void setCounterOfDeniedConnection(int counterOfDeniedConnection) {
+    public void setCounterOfDeniedConnection(double counterOfDeniedConnection) {
         this.counterOfDeniedConnection = counterOfDeniedConnection;
     }
         
