@@ -16,7 +16,7 @@ public class Statistics {
     private IterationStatistics currentIterationStats;
     private IterationStatistics finalIterationStats;
     private SimPintoDB pointerSimPintoDB;
-    public final double INVALID_TIME = -1.0;
+    public  final static double INVALID_TIME = -1.0;
 
     /**
      * 

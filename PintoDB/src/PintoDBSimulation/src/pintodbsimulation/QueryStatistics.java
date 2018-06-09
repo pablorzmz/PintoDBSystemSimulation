@@ -26,6 +26,15 @@ public class QueryStatistics {
      *
      */
     public QueryStatistics() {
+        this.systemArriveTime    =  Statistics.INVALID_TIME;
+        this.systemLeaveTime     =  Statistics.INVALID_TIME;
+        this.moduleArriveTime    =  Statistics.INVALID_TIME;
+        this.moduleLeaveTime     =  Statistics.INVALID_TIME;
+        this.timeInConnectionMod =  Statistics.INVALID_TIME;
+        this.timeInQueryProcMod  =  Statistics.INVALID_TIME;
+        this.timeInProcMgmtMod   =  Statistics.INVALID_TIME;
+        this.timeInExecMod       =  Statistics.INVALID_TIME;
+        this.timeInTransMod      =  Statistics.INVALID_TIME;
     }
 
      /**
