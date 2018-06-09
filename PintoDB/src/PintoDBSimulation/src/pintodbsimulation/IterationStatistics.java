@@ -28,7 +28,23 @@ public class IterationStatistics {
     */    
     public IterationStatistics() {
     }
-
+    /**
+     * 
+     */
+    public void clean()
+    {
+        averageQueryLifeTime = 0.0;
+        averageQueueSizeConnectionM = 0.0;
+        averageQueueSizeProcessM = 0.0;
+        averageQueueSizeQueryM = 0.0;
+        averageQueueSizeTransM = 0.0;
+        averageQueueSizeExecM = 0.0;
+        connectionModStats.clean();
+        processModStats.clean();
+        queryProcModStats.clean();
+        transactionModStats.clean();
+        executionModStats.clean();
+    }
     /**
     * 
      * @return 

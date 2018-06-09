@@ -23,6 +23,16 @@ public class StatementPerModuleStats {
     }
 
     /**
+     * 
+     */
+    public void clean()
+    {
+        updateStatementTime = 0.0;
+        selectStatementTime = 0.0;
+        joinStatementTime = 0.0;
+        DLLStatementTime = 0.0;
+    }
+    /**
     * 
      * @return 
     */      
