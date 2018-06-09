@@ -13,7 +13,9 @@ public class ClientQuery {
     
     private StatementType queryType;
     private Module currentMod;
-    private final QueryStatistics queryStatistics;   
+    private final QueryStatistics queryStatistics;
+    //Test
+    public int clientID;
 
      /**
      *

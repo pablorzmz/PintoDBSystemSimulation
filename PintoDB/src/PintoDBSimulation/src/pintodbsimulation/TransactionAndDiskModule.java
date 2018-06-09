@@ -23,14 +23,20 @@ public class TransactionAndDiskModule extends Module {
                 ClientQuery nextCQ = this.queryPriorityQueue.peek();
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
+                        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                                + "del modulo " + this.getClass().getName());
                         queryPriorityQueue.poll();
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
                         queueSizeRegister.add(queryPriorityQueue.size());
                     } else {
                         --servers;
+                        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                                + "del modulo " + this.getClass().getName());
                     }
                 } else {
+                    System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                            + "del modulo " + this.getClass().getName());
                     queryPriorityQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     queueSizeRegister.add(queryPriorityQueue.size());
@@ -39,6 +45,8 @@ public class TransactionAndDiskModule extends Module {
                 --servers;
             }
         }
+        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
+                + "del modulo " + this.getClass().getName());
     }
 
     @Override
@@ -52,16 +60,24 @@ public class TransactionAndDiskModule extends Module {
         ClientQuery nextCQ = queryPriorityQueue.peek();
         if (nextCQ.getQueryType() != StatementType.DDL) {
             if (servers < maxServers) {
+                System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
+                        + "en el modulo " + this.getClass().getName());
                 ++servers;
                 generateAction(arrivingCQ);
             } else {
+                System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
+                        + "en el modulo " + this.getClass().getName());
                 queryPriorityQueue.add(arrivingCQ);
                 queueSizeRegister.add(queryPriorityQueue.size());
             }
         } else if (servers == 0) {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
+                    + "en el modulo " + this.getClass().getName());
             servers = maxServers;
             generateAction(arrivingCQ);
         } else {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
+                    + "en el modulo " + this.getClass().getName());
             queryPriorityQueue.add(arrivingCQ);
             queueSizeRegister.add(queryPriorityQueue.size());
         }
@@ -77,9 +93,13 @@ public class TransactionAndDiskModule extends Module {
         leavingCQ.updateStats();
 
         if (queryPriorityQueue.size() > 0) {
+            System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                    + this.getClass().getName());
             generateAction(queryPriorityQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizeRegister.add(queryPriorityQueue.size());
         } else { //If there isn't client waiting to be attended
+            System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                    + this.getClass().getName());
             --servers;
         }
 
@@ -90,6 +110,8 @@ public class TransactionAndDiskModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
+        System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
+                + this.getClass().getName());
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         StatementType cST = clientQuery.getQueryType();
@@ -111,10 +133,9 @@ public class TransactionAndDiskModule extends Module {
         eTime += maxServers * 0.03;
         //I need to check if the client clientQuery will have a timeout
         QueryStatistics qS = clientQuery.getQueryStatistics();
-        if(eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()){
+        if (eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()) {
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-        }
-        else{
+        } else {
             e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
         }
 
@@ -126,6 +147,8 @@ public class TransactionAndDiskModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
+        System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
+                + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName());
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList

@@ -5,11 +5,13 @@ import java.util.PriorityQueue;
 public class ConnectionModule extends Module {
 
     private int deniedConnectionCounter;
+    public int clientCounter;
     
     
     public ConnectionModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
         deniedConnectionCounter = 0;
+        clientCounter = 0;
     }
     
     /**
@@ -28,6 +30,8 @@ public class ConnectionModule extends Module {
         QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
         outgoingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         outgoingCQ.updateStats();
+        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                    + "del modulo " + this.getClass().getName());
 
         --servers;
     }
@@ -41,14 +45,20 @@ public class ConnectionModule extends Module {
         arrivingQS.setSystemArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
+                    + "en el modulo " + this.getClass().getName());
             ++servers;
             generateNextModuleAction(arrivingCQ);
         } else {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
+                    + "en el modulo " + this.getClass().getName());
             ++deniedConnectionCounter;
         }
 
         //I need to generate a new ARRIVE
         ClientQuery newCQ = new ClientQuery(randNoGen.getConnectionStatementType(), this);
+        ++clientCounter;
+        newCQ.clientID = clientCounter;
         generateAction(newCQ);
     }
 
@@ -60,6 +70,8 @@ public class ConnectionModule extends Module {
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
+        System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                    + this.getClass().getName());
 
         --servers;
     }
@@ -67,6 +79,8 @@ public class ConnectionModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
+        System.out.println("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
+                + this.getClass().getName());
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(30);
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
@@ -78,6 +92,8 @@ public class ConnectionModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
+        System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
+                + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName());
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
