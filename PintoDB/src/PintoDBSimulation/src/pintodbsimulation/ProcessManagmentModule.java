@@ -17,7 +17,7 @@ public class ProcessManagmentModule extends Module {
         eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
-        QueryStatistics outgoingQS = outgoingCQ.getQueryStats();
+        QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
         outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         outgoingCQ.updateStats();
 
@@ -37,9 +37,8 @@ public class ProcessManagmentModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery arrivingCQ = e.getClientQuery();
-        QueryStatistics arrivingQS = arrivingCQ.getQueryStats();
+        QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
-        arrivingCQ.updateStats();
 
         if (servers < maxServers) {
             ++servers;
@@ -55,7 +54,7 @@ public class ProcessManagmentModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery leavingCQ = e.getClientQuery();
-        QueryStatistics leavingQS = leavingCQ.getQueryStats();
+        QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
@@ -73,8 +72,8 @@ public class ProcessManagmentModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client cQ
-        double clockTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
-        Event e = new Event(clientQuery, SimEvent.LEAVE, this, clockTime);
+        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
+        Event e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
 
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();

@@ -13,19 +13,19 @@ public class ClientQuery {
     
     private StatementType queryType;
     private Module currentMod;
-    private QueryStatistics queryStatistics;   
+    private final QueryStatistics queryStatistics;   
 
      /**
      *
      * @param queryType
      * @param currentMod
      */
-    public ClientQuery(StatementType queryType, Module currentMod) {
+    public ClientQuery(StatementType queryType,Module currentMod) {
         this.queryType = queryType;
         this.currentMod = currentMod;
         queryStatistics = new QueryStatistics();
     }
-                
+    
     /**
      *
      */
@@ -73,8 +73,4 @@ public class ClientQuery {
     public QueryStatistics getQueryStatistics() {
         return queryStatistics;
     }             
-
-    QueryStatistics getQueryStats() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
