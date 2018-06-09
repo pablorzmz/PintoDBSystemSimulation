@@ -57,8 +57,7 @@ public class ConnectionModule extends Module {
 
     @Override
     public void generateAction(ClientQuery clientQuery) {
-
-        //I need to create a new ARRIVE type event on this module for the client cQ
+        //I need to create a new ARRIVE type event on this module for the client clientQuery
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(30);
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
@@ -69,7 +68,7 @@ public class ConnectionModule extends Module {
 
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
-        //I need to create a new ARRIVE type event on the next module for the client cQ
+        //I need to create a new ARRIVE type event on the next module for the client clientQuery
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
