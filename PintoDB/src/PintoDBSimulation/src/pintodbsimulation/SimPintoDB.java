@@ -19,6 +19,12 @@ public class SimPintoDB {
     private Module queryProcessorModule;
     private Module ExecutionModule;
     private Module TransactionModule;
+    
+     /**
+     *
+     */
+    public SimPintoDB() {
+    }
 
     /**
      * 
