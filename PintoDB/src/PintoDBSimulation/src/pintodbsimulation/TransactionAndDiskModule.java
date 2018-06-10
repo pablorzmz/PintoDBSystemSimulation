@@ -58,12 +58,23 @@ public class TransactionAndDiskModule extends Module {
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (queryPriorityQueue.size() > 0) {
-        ClientQuery nextCQ = queryPriorityQueue.peek();
-        if (nextCQ.getQueryType() != StatementType.DDL) {
-            if (servers < maxServers) {
+            ClientQuery nextCQ = queryPriorityQueue.peek();
+            if (nextCQ.getQueryType() != StatementType.DDL) {
+                if (servers < maxServers) {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
+                            + "en el modulo " + this.getClass().getName());
+                    ++servers;
+                    generateAction(arrivingCQ);
+                } else {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
+                            + "en el modulo " + this.getClass().getName());
+                    queryPriorityQueue.add(arrivingCQ);
+                    queueSizeRegister.add(queryPriorityQueue.size());
+                }
+            } else if (servers == 0) {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
                         + "en el modulo " + this.getClass().getName());
-                ++servers;
+                servers = maxServers;
                 generateAction(arrivingCQ);
             } else {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
@@ -71,17 +82,6 @@ public class TransactionAndDiskModule extends Module {
                 queryPriorityQueue.add(arrivingCQ);
                 queueSizeRegister.add(queryPriorityQueue.size());
             }
-        } else if (servers == 0) {
-            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
-                    + "en el modulo " + this.getClass().getName());
-            servers = maxServers;
-            generateAction(arrivingCQ);
-        } else {
-            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
-                    + "en el modulo " + this.getClass().getName());
-            queryPriorityQueue.add(arrivingCQ);
-            queueSizeRegister.add(queryPriorityQueue.size());
-        }
         }
     }
 
