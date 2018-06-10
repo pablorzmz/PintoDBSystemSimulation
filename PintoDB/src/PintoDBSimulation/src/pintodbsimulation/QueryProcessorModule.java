@@ -21,7 +21,13 @@ public class QueryProcessorModule extends Module {
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                    + "del modulo " + "procesador de consultas" );
+                    + "del modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 5000 milliseconds
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
                 queueSizeRegister.add(queryQueue.size());
@@ -30,7 +36,13 @@ public class QueryProcessorModule extends Module {
             }
         }
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                + "del modulo " + "procesador de consultas" );
+                + "del modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+        try {
+            // thread to sleep for 5000 milliseconds
+            Thread.sleep(5000);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     @Override
@@ -43,12 +55,24 @@ public class QueryProcessorModule extends Module {
 
         if (servers < maxServers) {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "procesador de consultas" );
+                    + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 5000 milliseconds
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             ++servers;
             generateAction(arrivingCQ);
         } else {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
-                    + "en el modulo " + "procesador de consultas");
+                    + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 5000 milliseconds
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             queryQueue.add(arrivingCQ);
             queueSizeRegister.add(queryQueue.size());
         }
@@ -65,12 +89,24 @@ public class QueryProcessorModule extends Module {
 
         if (queryQueue.size() > 0) {
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "procesador de consultas");
+                    + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 5000 milliseconds
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizeRegister.add(queryQueue.size());
         } else { //If there isn't client waiting to be attended
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "procesador de consultas");
+                    + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 5000 milliseconds
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             --servers;
         }
 
@@ -82,7 +118,13 @@ public class QueryProcessorModule extends Module {
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-                + "procesador de consultas");
+                + "procesador de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+        try {
+            // thread to sleep for 5000 milliseconds
+            Thread.sleep(5000);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         eTime += 0.1; //Lexical Validation
@@ -111,7 +153,13 @@ public class QueryProcessorModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "procesador de consultas" + "al modulo" + "transacciones");
+                + "procesador de consultas" + "al modulo" + "transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+        try {
+            // thread to sleep for 5000 milliseconds
+            Thread.sleep(5000);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
