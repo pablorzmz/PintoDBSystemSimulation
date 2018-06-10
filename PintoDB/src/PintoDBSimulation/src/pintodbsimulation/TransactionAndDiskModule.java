@@ -27,8 +27,8 @@ public class TransactionAndDiskModule extends Module {
                                 + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
 
                         try {
-                            // thread to sleep for 5000 milliseconds
-                            Thread.sleep(5000);
+                            // thread to sleep for 1000 milliseconds
+                            Thread.sleep(1000);
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -42,8 +42,8 @@ public class TransactionAndDiskModule extends Module {
                         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
                                 + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                         try {
-                            // thread to sleep for 5000 milliseconds
-                            Thread.sleep(5000);
+                            // thread to sleep for 1000 milliseconds
+                            Thread.sleep(1000);
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -52,8 +52,8 @@ public class TransactionAndDiskModule extends Module {
                     System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
                             + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                     try {
-                        // thread to sleep for 5000 milliseconds
-                        Thread.sleep(5000);
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(1000);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -68,8 +68,8 @@ public class TransactionAndDiskModule extends Module {
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
                 + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
         try {
-            // thread to sleep for 5000 milliseconds
-            Thread.sleep(5000);
+            // thread to sleep for 1000 milliseconds
+            Thread.sleep(1000);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -90,8 +90,8 @@ public class TransactionAndDiskModule extends Module {
                     System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
                             + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                     try {
-                        // thread to sleep for 5000 milliseconds
-                        Thread.sleep(5000);
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(1000);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -101,8 +101,8 @@ public class TransactionAndDiskModule extends Module {
                     System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
                             + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                     try {
-                        // thread to sleep for 5000 milliseconds
-                        Thread.sleep(5000);
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(1000);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -113,8 +113,8 @@ public class TransactionAndDiskModule extends Module {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
                         + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                 try {
-                    // thread to sleep for 5000 milliseconds
-                    Thread.sleep(5000);
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(1000);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -124,8 +124,8 @@ public class TransactionAndDiskModule extends Module {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
                         + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                 try {
-                    // thread to sleep for 5000 milliseconds
-                    Thread.sleep(5000);
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(1000);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -151,8 +151,8 @@ public class TransactionAndDiskModule extends Module {
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
                             + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                     try {
-                        // thread to sleep for 5000 milliseconds
-                        Thread.sleep(5000);
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(1000);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -165,8 +165,8 @@ public class TransactionAndDiskModule extends Module {
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
                             + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                     try {
-                        // thread to sleep for 5000 milliseconds
-                        Thread.sleep(5000);
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(1000);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -175,8 +175,8 @@ public class TransactionAndDiskModule extends Module {
                 System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
                         + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
                 try {
-                    // thread to sleep for 5000 milliseconds
-                    Thread.sleep(5000);
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(1000);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -197,8 +197,8 @@ public class TransactionAndDiskModule extends Module {
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
                 + this.getClass().getName() + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
-            // thread to sleep for 5000 milliseconds
-            Thread.sleep(5000);
+            // thread to sleep for 1000 milliseconds
+            Thread.sleep(1000);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -240,8 +240,8 @@ public class TransactionAndDiskModule extends Module {
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
                 + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName() + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
-            // thread to sleep for 5000 milliseconds
-            Thread.sleep(5000);
+            // thread to sleep for 1000 milliseconds
+            Thread.sleep(1000);
         } catch (Exception ex) {
             System.out.println(ex);
         }
