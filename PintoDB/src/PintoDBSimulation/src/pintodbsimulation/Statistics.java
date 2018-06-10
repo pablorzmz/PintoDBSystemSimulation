@@ -420,7 +420,11 @@ public class Statistics {
         calculateAverageTimePerStatementPerModule( DDLClientsWhoFinishedService, StatementType.DDL );
         calculateAverageTimePerStatementPerModule( selectClientsWhoFinishedService, StatementType.SELECT );
         calculateAverageTimePerStatementPerModule( joinClientsWhoFinishedService, StatementType.JOIN );
-                
+        
+        // calculate average query system lifetime
+        result = currentIterationStats.getAverageQueryLifeTime()/clientsWhoFinishedSystemProcess==0?1:clientsWhoFinishedSystemProcess;
+        currentIterationStats.setAverageQueryLifeTime( result );
+                       
         // store stats in final stats
         this.finalIterationStats.addOtherValues( currentIterationStats );
         
