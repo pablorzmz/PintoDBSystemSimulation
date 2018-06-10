@@ -22,7 +22,7 @@ public class SimPintoDB {
     private Module queryProcessorModule;
     private Module executionModule;
     private Module transactionModule;
-    public  final static int sleepTime = 1;
+    public final static int sleepTime = 1;
 
     /**
      *
@@ -192,8 +192,8 @@ public class SimPintoDB {
         this.m = 1;
         this.n = 1;
         this.p = 1;
-        this.t = 200.0;
-        this.maxSimClock = 190.0;
+        this.t = 2.0;
+        this.maxSimClock = 20.0;
         this.timesToRunSimulation = 1;
         // Construct client list
         this.clients = new LinkedList<>();
@@ -220,9 +220,6 @@ public class SimPintoDB {
             Event currentEvent = this.systemEventList.peek();
             Module currentMod = currentEvent.getMod();
             simClock = currentEvent.getClockTime();
-            //I need to check if there are clients waiting that already have a timeout
-            //and if there are, I need to generate their timeout
-            //checkGenerateTimeout();
             System.out.println("Current clock time: " + simClock);
             System.out.println("Next Event: " + currentEvent.getEventType());
 
@@ -238,6 +235,10 @@ public class SimPintoDB {
                     break;
             }
             System.out.println();
+
+            //I need to check if there are clients waiting that already have a timeout
+            //and if there are, I need to generate their timeout
+            checkGenerateTimeout();
         }
         // print stats
         stats = new Statistics(this);
@@ -253,19 +254,19 @@ public class SimPintoDB {
 
     private void checkGenerateTimeout() {
         //I need to check if there are client with timeout on all the modules queues
-        LinkedList<ClientQuery>timeoutCQ = new LinkedList<>();
+        LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
         Queue<ClientQuery> moduleQ;
         int queueSize;
         ClientQuery cQ;
         Object moduleQA[];
-        
+
         //ProcessManagmenteModule
         moduleQ = this.processManagemnteModule.getQueryQueue();
         queueSize = moduleQ.size();
         moduleQA = this.processManagemnteModule.getQueryQueue().toArray();
-        for(int i = 0; i < queueSize; ++i){
-            cQ = (ClientQuery)moduleQA[i];
-            if(simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t){ //If the cliente already have a timeout
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
                 timeoutCQ.add(cQ);
             }
         }
@@ -273,9 +274,9 @@ public class SimPintoDB {
         moduleQ = this.queryProcessorModule.getQueryQueue();
         queueSize = moduleQ.size();
         moduleQA = moduleQ.toArray();
-        for(int i = 0; i < queueSize; ++i){
-            cQ = (ClientQuery)moduleQA[i];
-            if(simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t){ //If the cliente already have a timeout
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
                 timeoutCQ.add(cQ);
             }
         }
@@ -283,9 +284,9 @@ public class SimPintoDB {
         moduleQ = this.executionModule.getQueryQueue();
         queueSize = moduleQ.size();
         moduleQA = moduleQ.toArray();
-        for(int i = 0; i < queueSize; ++i){
-            cQ = (ClientQuery)moduleQA[i];
-            if(simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t){ //If the cliente already have a timeout
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
                 timeoutCQ.add(cQ);
             }
         }
@@ -293,19 +294,20 @@ public class SimPintoDB {
         moduleQ = this.transactionModule.getPriorityQueryQueue();
         queueSize = moduleQ.size();
         moduleQA = moduleQ.toArray();
-        for(int i = 0; i < queueSize; ++i){
-            cQ = (ClientQuery)moduleQA[i];
-            if(simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t){ //If the cliente already have a timeout
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
                 timeoutCQ.add(cQ);
             }
         }
         //I need to generate the timeout event for each cliente with time out
         queueSize = timeoutCQ.size();
-        for(int i = 0; i < queueSize; ++i){
+        for (int i = 0; i < queueSize; ++i) {
             cQ = timeoutCQ.get(i);
             Event e = new Event(cQ, SimEvent.TIMEOUT, cQ.getCurrentMod(), simClock);
             this.systemEventList.add(e);
-            
+            e = new Event(cQ, SimEvent.TIMEOUT, this.connectionModule, simClock);
+            this.systemEventList.add(e);
         }
     }
 }

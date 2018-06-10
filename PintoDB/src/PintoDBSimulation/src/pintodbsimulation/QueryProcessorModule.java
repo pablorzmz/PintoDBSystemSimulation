@@ -14,9 +14,9 @@ public class QueryProcessorModule extends Module {
         eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
-        QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
-        outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
-        outgoingCQ.updateStats();
+        //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
+        //outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
+        //outgoingCQ.updateStats();
 
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
@@ -24,7 +24,7 @@ public class QueryProcessorModule extends Module {
                     + "del modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep( SimPintoDB.sleepTime );
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -34,12 +34,13 @@ public class QueryProcessorModule extends Module {
             } else { //If there isn't client waiting to be attended
                 --servers;
             }
+        } else {
+            System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
+                    + "del modulo " + "procesador de consultas " + " y el tiempo actual es " + e.getClockTime());
         }
-        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                + "del modulo " + "procesador de consultas " + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -59,7 +60,7 @@ public class QueryProcessorModule extends Module {
                     + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep( SimPintoDB.sleepTime );
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -70,7 +71,7 @@ public class QueryProcessorModule extends Module {
                     + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep( SimPintoDB.sleepTime );
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -93,7 +94,7 @@ public class QueryProcessorModule extends Module {
                     + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep( SimPintoDB.sleepTime );
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -104,7 +105,7 @@ public class QueryProcessorModule extends Module {
                     + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep( SimPintoDB.sleepTime );
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -122,7 +123,7 @@ public class QueryProcessorModule extends Module {
                 + "procesador de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -137,17 +138,19 @@ public class QueryProcessorModule extends Module {
         } else {
             eTime += 0.25; //NoReadOnly
         }
-        //I need to check if the client clientQuery will have a timeout
-        QueryStatistics qS = clientQuery.getQueryStatistics();
-        if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) {
-            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-        } else {
-            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
-        }
-
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
-        eQ.add(e);
+        //I need to check if the client clientQuery will have a timeout
+        QueryStatistics qS = clientQuery.getQueryStatistics();
+        if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) { //Timeout
+            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
+            eQ.add(e);
+            e = new Event(clientQuery, SimEvent.TIMEOUT, this.simPintoDBPointer.getConnectionModule(), eTime);
+            eQ.add(e);
+        } else {
+            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
+            eQ.add(e);
+        }
     }
 
     @Override
@@ -157,7 +160,7 @@ public class QueryProcessorModule extends Module {
                 + "procesador de consultas" + " al modulo " + "transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }

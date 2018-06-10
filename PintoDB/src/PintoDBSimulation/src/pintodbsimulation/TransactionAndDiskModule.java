@@ -13,9 +13,9 @@ public class TransactionAndDiskModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
-        QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
-        outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
-        outgoingCQ.updateStats();
+        //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
+        //outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
+        //outgoingCQ.updateStats();
 
         //I need to check where the outgoing client is
         if (!queryPriorityQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
@@ -28,7 +28,7 @@ public class TransactionAndDiskModule extends Module {
 
                         try {
                             // thread to sleep for 1000 milliseconds
-                            Thread.sleep( SimPintoDB.sleepTime );
+                            Thread.sleep(SimPintoDB.sleepTime);
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -43,7 +43,7 @@ public class TransactionAndDiskModule extends Module {
                                 + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                         try {
                             // thread to sleep for 1000 milliseconds
-                            Thread.sleep( SimPintoDB.sleepTime );
+                            Thread.sleep(SimPintoDB.sleepTime);
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -53,7 +53,7 @@ public class TransactionAndDiskModule extends Module {
                             + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
+                        Thread.sleep(SimPintoDB.sleepTime);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -66,10 +66,10 @@ public class TransactionAndDiskModule extends Module {
             }
         }
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
-                + "del modulo " + "de transacciones" +" y el tiempo actual es " + e.getClockTime());
+                + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -92,7 +92,7 @@ public class TransactionAndDiskModule extends Module {
                             + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
+                        Thread.sleep(SimPintoDB.sleepTime);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -103,7 +103,7 @@ public class TransactionAndDiskModule extends Module {
                             + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
+                        Thread.sleep(SimPintoDB.sleepTime);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -115,7 +115,7 @@ public class TransactionAndDiskModule extends Module {
                         + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep( SimPintoDB.sleepTime );
+                    Thread.sleep(SimPintoDB.sleepTime);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -126,7 +126,7 @@ public class TransactionAndDiskModule extends Module {
                         + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep( SimPintoDB.sleepTime );
+                    Thread.sleep(SimPintoDB.sleepTime);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -153,7 +153,7 @@ public class TransactionAndDiskModule extends Module {
                             + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
+                        Thread.sleep(SimPintoDB.sleepTime);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -167,7 +167,7 @@ public class TransactionAndDiskModule extends Module {
                             + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
+                        Thread.sleep(SimPintoDB.sleepTime);
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -199,7 +199,7 @@ public class TransactionAndDiskModule extends Module {
                 + "de transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -222,17 +222,19 @@ public class TransactionAndDiskModule extends Module {
             }
         }
         eTime += maxServers * 0.03;
-        //I need to check if the client clientQuery will have a timeout
-        QueryStatistics qS = clientQuery.getQueryStatistics();
-        if (eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()) {
-            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-        } else {
-            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
-        }
-
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
-        eQ.add(e);
+        //I need to check if the client clientQuery will have a timeout
+        QueryStatistics qS = clientQuery.getQueryStatistics();
+        if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) { //Timeout
+            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
+            eQ.add(e);
+            e = new Event(clientQuery, SimEvent.TIMEOUT, this.simPintoDBPointer.getConnectionModule(), eTime);
+            eQ.add(e);
+        } else {
+            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
+            eQ.add(e);
+        }
     }
 
     @Override
@@ -242,7 +244,7 @@ public class TransactionAndDiskModule extends Module {
                 + "de transacciones" + "al modulo " + "ejecucion de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }

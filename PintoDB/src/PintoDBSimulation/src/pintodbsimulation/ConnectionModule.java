@@ -27,11 +27,11 @@ public class ConnectionModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
-        QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
-        outgoingQS.setSystemLeaveTime( e.getClockTime() ); //I need to update the outgoing client data
-        outgoingCQ.updateStats();
+        //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
+        //outgoingQS.setSystemLeaveTime( e.getClockTime() ); //I need to update the outgoing client data
+        //outgoingCQ.updateStats();
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                + " del modulo " + "Conexión" );
+                + " del modulo " + "Conexión");
 
         --servers;
     }
@@ -47,7 +47,7 @@ public class ConnectionModule extends Module {
 
         if (servers < maxServers) {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "Conexión" + " en el tiempo " + e.getClockTime() );
+                    + "en el modulo " + "Conexión" + " en el tiempo " + e.getClockTime());
             ++servers;
             //I need to add the new cliente to the system, ie the clients list.
             LinkedList<ClientQuery> simClients = simPintoDBPointer.getClients();
@@ -75,7 +75,7 @@ public class ConnectionModule extends Module {
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
         System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                + "Conexión" );
+                + "Conexión");
 
         --servers;
     }
@@ -85,7 +85,7 @@ public class ConnectionModule extends Module {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
                 + " de conexiones");
-        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist( 30.0/60.0 );
+        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(30.0 / 60.0);
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
         //I need to add the new event to the systemEventList
@@ -97,7 +97,7 @@ public class ConnectionModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "modulo de conexiones" + "al modulo" + " administrador de proc" );
+                + "modulo de conexiones" + " al modulo" + " administrador de proc");
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
