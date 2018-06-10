@@ -59,7 +59,7 @@ public class RandomNumberGenerator {
      */    
     public double getTimeUsingExponencialDist( double lambda)
     {
-        return -1.0*( Math.log( this.getRandNumb() )/ lambda );
+        return -1.0*( Math.log( this.getRandNumb() )/ (1/lambda) );
     }
     
      /**

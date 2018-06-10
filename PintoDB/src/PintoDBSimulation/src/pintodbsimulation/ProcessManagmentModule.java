@@ -21,7 +21,7 @@ public class ProcessManagmentModule extends Module {
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                    + "del modulo " + this.getClass().getName());
+                    + "del modulo " + "administrador de proc" );
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
                 queueSizeRegister.add(queryQueue.size());
@@ -30,7 +30,7 @@ public class ProcessManagmentModule extends Module {
             }
         }
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                + "del modulo " + this.getClass().getName());
+                + "del modulo " + "administrador de proc" );
     }
 
     @Override
@@ -43,12 +43,12 @@ public class ProcessManagmentModule extends Module {
 
         if (servers < maxServers) {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + this.getClass().getName());
+                    + "en el modulo " + "administrador de proc" );
             ++servers;
             generateAction(arrivingCQ);
         } else {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
-                    + "en el modulo " + this.getClass().getName());
+                    + "en el modulo " + "administrador de proc" );
             queryQueue.add(arrivingCQ);
             queueSizeRegister.add(queryQueue.size());
         }
@@ -65,12 +65,12 @@ public class ProcessManagmentModule extends Module {
 
         if (queryQueue.size() > 0) {
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + this.getClass().getName());
+                    + "administrador de proc");
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizeRegister.add(queryQueue.size());
         } else { //If there isn't client waiting to be attended
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + this.getClass().getName());
+                    + "administrador de proc" );
             --servers;
         }
 
@@ -82,12 +82,12 @@ public class ProcessManagmentModule extends Module {
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-                + this.getClass().getName());
+                + "administrador de proc" );
         Event e;
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
         //I need to check if the client clientQuery will have a timeout
         QueryStatistics qS = clientQuery.getQueryStatistics();
-        if (eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()) {
+        if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) {
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
         } else {
             e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
@@ -102,7 +102,7 @@ public class ProcessManagmentModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName());
+                + "administrador de proc" + "al modulo" + "procesador de consultas" );
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
