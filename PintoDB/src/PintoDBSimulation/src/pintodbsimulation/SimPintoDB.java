@@ -22,7 +22,7 @@ public class SimPintoDB {
     private Module queryProcessorModule;
     private Module executionModule;
     private Module transactionModule;
-    public final static int sleepTime = 1;
+    public final static int sleepTime = 1000;
 
     /**
      *

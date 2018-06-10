@@ -85,7 +85,7 @@ public class ConnectionModule extends Module {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
                 + " de conexiones");
-        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(30.0 / 60.0);
+        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(1/(30.0 / 60.0));
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
         //I need to add the new event to the systemEventList

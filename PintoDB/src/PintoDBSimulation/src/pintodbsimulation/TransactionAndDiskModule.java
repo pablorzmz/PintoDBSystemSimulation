@@ -57,16 +57,25 @@ public class TransactionAndDiskModule extends Module {
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
+                    // if the current client was a DDL and the next one no
+                    if (outgoingCQ.getQueryType() == StatementType.DDL) {
+                        servers = 1;
+                    }
                     queryPriorityQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     queueSizeRegister.add(queryPriorityQueue.size());
                 }
             } else { //If there isn't client waiting to be attended
-                --servers;
+                if (outgoingCQ.getQueryType() == StatementType.DDL) {
+                    servers = 0;
+                } else {
+                    --servers;
+                }
             }
+        } else {
+            System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
+                    + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
         }
-        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
-                + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
             Thread.sleep(SimPintoDB.sleepTime);
@@ -84,7 +93,70 @@ public class TransactionAndDiskModule extends Module {
         arrivingCQ.setCurrentMod(this);
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
-        if (queryPriorityQueue.size() > 0) {
+        if (servers < maxServers) {
+            if (arrivingCQ.getQueryType() == StatementType.DDL) {
+                if (servers == 0) {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+                    try {
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(SimPintoDB.sleepTime);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    servers = maxServers;
+                    generateAction(arrivingCQ);
+                } else {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+                    try {
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(SimPintoDB.sleepTime);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    queryPriorityQueue.add(arrivingCQ);
+                    queueSizeRegister.add(this.queryPriorityQueue.size());
+                }
+            } else {
+                if (queryPriorityQueue.size() > 0) {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+                    try {
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(SimPintoDB.sleepTime);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    queryPriorityQueue.add(arrivingCQ);
+                    queueSizeRegister.add(this.queryPriorityQueue.size());
+
+                } else {
+                    System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+                    try {
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(SimPintoDB.sleepTime);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    ++servers;
+                    generateAction(arrivingCQ);
+                }
+            }
+        } else {
+            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
+                    + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 1000 milliseconds
+                Thread.sleep(SimPintoDB.sleepTime);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+            queryPriorityQueue.add(arrivingCQ);
+            queueSizeRegister.add(this.queryPriorityQueue.size());
+        }
+        /*if ( queryPriorityQueue.size() > 0 ) {
             ClientQuery nextCQ = queryPriorityQueue.peek();
             if (nextCQ.getQueryType() != StatementType.DDL) {
                 if (servers < maxServers) {
@@ -133,7 +205,7 @@ public class TransactionAndDiskModule extends Module {
                 queryPriorityQueue.add(arrivingCQ);
                 queueSizeRegister.add(queryPriorityQueue.size());
             }
-        }
+        }*/
     }
 
     @Override
@@ -145,10 +217,10 @@ public class TransactionAndDiskModule extends Module {
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
-        if (queryPriorityQueue.size() > 0) { //If there are waiting clients on the module queue
+        if ( queryPriorityQueue.size() > 0 ) { //If there are waiting clients on the module queue
             ClientQuery nextCQ = this.queryPriorityQueue.peek();
-            if (nextCQ.getQueryType() == StatementType.DDL) {
-                if (servers == 1) {
+            if ( nextCQ.getQueryType() == StatementType.DDL ) {
+                if ( servers == 1 ) {
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
                             + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
@@ -158,18 +230,18 @@ public class TransactionAndDiskModule extends Module {
                         System.out.println(ex);
                     }
                     queryPriorityQueue.poll();
-                    generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
+                    generateAction( nextCQ ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     servers = maxServers;
-                    queueSizeRegister.add(queryPriorityQueue.size());
+                    queueSizeRegister.add( queryPriorityQueue.size() );
                 } else {
                     --servers;
-                    System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
+                    System.out.println( "Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
+                            + "de transacciones" + " y el tiempo actual es " + e.getClockTime() );
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(SimPintoDB.sleepTime);
-                    } catch (Exception ex) {
-                        System.out.println(ex);
+                        Thread.sleep( SimPintoDB.sleepTime );
+                    } catch ( Exception ex ) {
+                        System.out.println( ex );
                     }
                 }
             } else {
@@ -177,37 +249,64 @@ public class TransactionAndDiskModule extends Module {
                         + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep(1000);
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                    Thread.sleep( SimPintoDB.sleepTime );
+                } catch ( Exception ex ) {
+                    System.out.println( ex );
                 }
+
+                // if the current client was a DDL and the next one no
+                if ( leavingCQ.getQueryType() == StatementType.DDL ) {
+                    servers = 1;
+                }
+
                 queryPriorityQueue.poll();
                 generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizeRegister.add(queryPriorityQueue.size());
+                queueSizeRegister.add( queryPriorityQueue.size() );
             }
         } else { //If there isn't client waiting to be attended
-            --servers;
+            if ( leavingCQ.getQueryType() == StatementType.DDL ) {
+                servers = 0;
+
+            } else {
+                --servers;
+            }
         }
         //I need to generate an ARRIVE on the next module for the leavingCQ
         generateNextModuleAction(leavingCQ);
     }
 
     @Override
-    public void generateAction(ClientQuery clientQuery) {
-        //I need to create a new LEAVE type event on this module for the client clientQuery
+    public void generateAction( ClientQuery clientQuery ) {
+          //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
                 + "de transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(SimPintoDB.sleepTime);
-        } catch (Exception ex) {
-            System.out.println(ex);
+            Thread.sleep( SimPintoDB.sleepTime );
+        } catch ( Exception ex ) {
+            System.out.println( ex );
         }
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         StatementType cST = clientQuery.getQueryType();
-        if (null != cST) {
-            switch (cST) {
+        eTime += maxServers * 0.03;
+        QueryStatistics qS = clientQuery.getQueryStatistics();
+        
+         switch (cST) {
+            case DDL:
+            case UPDATE:
+                qS.setUsedBlocks( 0 );
+                break;
+            case JOIN:
+                qS.setUsedBlocks( ( int )( 1 + ( new RandomNumberGenerator().getRandNumb() ) % 64 ) );
+                break;
+            default:
+                qS.setUsedBlocks( 1 );
+                break;
+        }
+         eTime += qS.getUsedBlocks()*(0.10);
+        /*if ( null != cST ) {
+            switch ( cST ) {
                 case SELECT:
                     eTime += 0.10;
                     break;
@@ -222,10 +321,10 @@ public class TransactionAndDiskModule extends Module {
             }
         }
         eTime += maxServers * 0.03;
+        */
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         //I need to check if the client clientQuery will have a timeout
-        QueryStatistics qS = clientQuery.getQueryStatistics();
         if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) { //Timeout
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
             eQ.add(e);

@@ -132,20 +132,18 @@ public class ExecutionModule extends Module {
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         StatementType cST = clientQuery.getQueryType();
-        if (null != cST) {
-            switch (cST) {
-                case DDL:
-                    eTime += 0.5;
-                    break;
-                case UPDATE:
-                    eTime += 1;
-                    break;
-                default:
-                    QueryStatistics cQS = clientQuery.getQueryStatistics();
-                    int uB = cQS.getUsedBlocks();
-                    eTime += uB * uB + uB / 64;
-                    break;
-            }
+        switch (cST) {
+            case DDL:
+                eTime += 0.5;
+                break;
+            case UPDATE:
+                eTime += 1;
+                break;
+            default:
+                QueryStatistics cQS = clientQuery.getQueryStatistics();
+                int uB = cQS.getUsedBlocks();
+                eTime += uB * uB + uB / 64;
+                break;
         }
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
