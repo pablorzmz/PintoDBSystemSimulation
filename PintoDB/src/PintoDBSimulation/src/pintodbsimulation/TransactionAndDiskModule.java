@@ -57,6 +57,7 @@ public class TransactionAndDiskModule extends Module {
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
+        if (queryPriorityQueue.size() > 0) {
         ClientQuery nextCQ = queryPriorityQueue.peek();
         if (nextCQ.getQueryType() != StatementType.DDL) {
             if (servers < maxServers) {
@@ -80,6 +81,7 @@ public class TransactionAndDiskModule extends Module {
                     + "en el modulo " + this.getClass().getName());
             queryPriorityQueue.add(arrivingCQ);
             queueSizeRegister.add(queryPriorityQueue.size());
+        }
         }
     }
 
