@@ -194,11 +194,12 @@ public class SimPintoDB {
         this.p = 3;
         this.t = 7.0;
         // Construct modules
-        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule );
-        this.processManagemnteModule = new ProcessManagmentModule(0, 1, this,  queryProcessorModule );                
-        this.queryProcessorModule = new QueryProcessorModule(0, n, this, TransactionModule);
+        this.ExecutionModule = new ExecutionModule(0, m, this, null );        
         this.TransactionModule = new TransactionAndDiskModule(0, p, this, ExecutionModule );
-        this.ExecutionModule = new ExecutionModule(0, m, this, connectionModule);        
+        this.queryProcessorModule = new QueryProcessorModule(0, n, this, TransactionModule);
+        this.processManagemnteModule = new ProcessManagmentModule(0, 1, this,  queryProcessorModule );
+        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule );                        
+        
         //Construct event list
         this.systemEventList = new PriorityQueue<>();
         
