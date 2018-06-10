@@ -21,24 +21,14 @@ public class ExecutionModule extends Module {
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
-                System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-<<<<<<< HEAD
-                        + "del modulo " + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime() );
-                        try {
-            // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-=======
+                System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"                 
                         + "del modulo " + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep(1000);
+                    Thread.sleep(SimPintoDB.sleepTime);
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
                 queueSizeRegister.add(queryQueue.size());
             } else { //If there isn't client waiting to be attended
@@ -49,7 +39,7 @@ public class ExecutionModule extends Module {
                 + "del modulo " + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -67,41 +57,23 @@ public class ExecutionModule extends Module {
         if (servers < maxServers) {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
                     + "en el modulo " + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
-<<<<<<< HEAD
-                    try {
-            // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-=======
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
             ++servers;
             generateAction(arrivingCQ);
         } else {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
                     + "en el modulo " + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
-<<<<<<< HEAD
-                    try {
-            // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-=======
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
             queryQueue.add(arrivingCQ);
             queueSizeRegister.add(queryQueue.size());
         }
@@ -119,41 +91,24 @@ public class ExecutionModule extends Module {
         if (queryQueue.size() > 0) {
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                     + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
-<<<<<<< HEAD
-                    try {
-            // thread to sleep for 1000 milliseconds
-           Thread.sleep( SimPintoDB.sleepTime );
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-=======
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizeRegister.add(queryQueue.size());
         } else { //If there isn't client waiting to be attended
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                     + "ejecución de consultas" + " y el tiempo actual es " + e.getClockTime());
-<<<<<<< HEAD
-                    try {
-            // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-=======
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep(SimPintoDB.sleepTime);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
+
             --servers;
         }
 
@@ -165,15 +120,11 @@ public class ExecutionModule extends Module {
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-<<<<<<< HEAD
                 + " ejecución de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
-                try {
-=======
-                + "ejecución de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
+
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -212,15 +163,11 @@ public class ExecutionModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-<<<<<<< HEAD
+                //<<<<<<< HEAD
                 + "ejecución de consultas" + " al modulo " + "de conexiones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
-                try {
-=======
-                + "ejecución de consultas" + "al modulo" + this.nextModule.getClass().getName() + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
->>>>>>> 2b36555a96401cf6cafbc2d46c0d6f0831ca00b8
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
+            Thread.sleep(SimPintoDB.sleepTime);
         } catch (Exception ex) {
             System.out.println(ex);
         }
