@@ -193,7 +193,7 @@ public class SimPintoDB {
         this.n = 3;
         this.p = 3;
         this.t = 7.0;
-        this.maxSimClock = 400.0;
+        this.maxSimClock = 13.0;
         // Construct client list
         this.clients = new LinkedList<>();
         // Construct modules
@@ -213,15 +213,15 @@ public class SimPintoDB {
         ClientQuery firstOne = new ClientQuery( r.getConnectionStatementType(),connectionModule );
         Event firstEvent = new Event( firstOne, SimEvent.ARRIVE, connectionModule , 0.0 );
         this.systemEventList.add( firstEvent );
-                
-        double currentTime = 0.0;
+        this.simClock = 0;
+                        
         
-        while ( currentTime < t )
+        while ( simClock < maxSimClock )
         {
             Event currentEvent = this.systemEventList.peek();            
             Module currentMod = currentEvent.getMod();
-            currentTime = currentEvent.getClockTime();
-            System.out.println("Current clock time: " + currentTime );
+            simClock = currentEvent.getClockTime();
+            System.out.println("Current clock time: " + simClock );
             System.out.println("Event: " + currentEvent.getEventType() );
             
             switch ( currentEvent.getEventType() )
