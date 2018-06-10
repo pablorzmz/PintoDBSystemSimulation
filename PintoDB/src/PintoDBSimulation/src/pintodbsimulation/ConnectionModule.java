@@ -6,21 +6,20 @@ public class ConnectionModule extends Module {
 
     private int deniedConnectionCounter;
     public int clientCounter;
-    
-    
+
     public ConnectionModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
         deniedConnectionCounter = 0;
         clientCounter = 0;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public int getDeniedConnectionCounter() {
         return deniedConnectionCounter;
-    }   
+    }
 
     @Override
     public void processTimeOut() {
@@ -31,7 +30,7 @@ public class ConnectionModule extends Module {
         outgoingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         outgoingCQ.updateStats();
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                    + "del modulo " + this.getClass().getName());
+                + "del modulo " + this.getClass().getName());
 
         --servers;
     }
@@ -71,7 +70,7 @@ public class ConnectionModule extends Module {
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
         System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + this.getClass().getName());
+                + this.getClass().getName());
 
         --servers;
     }

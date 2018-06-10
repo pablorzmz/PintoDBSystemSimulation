@@ -31,16 +31,17 @@ public abstract class Module {
         this.nextModule = nextModule;
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
-        this.queryPriorityQueue = new PriorityQueue<>();
+        this.queryPriorityQueue = new PriorityQueue<>(maxServers, new ClientQueryComparator());
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public LinkedList<Integer> getQueueSizeRegister() {
         return queueSizeRegister;
-    }   
+    }
+
     /**
      *
      */

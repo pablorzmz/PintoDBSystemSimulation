@@ -96,10 +96,9 @@ public class QueryProcessorModule extends Module {
         }
         //I need to check if the client clientQuery will have a timeout
         QueryStatistics qS = clientQuery.getQueryStatistics();
-        if(eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()){
+        if (eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()) {
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-        }
-        else{
+        } else {
             e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
         }
 
