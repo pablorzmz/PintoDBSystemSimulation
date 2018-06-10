@@ -12,7 +12,7 @@ public class RandomNumberGenerator {
      */    
     public RandomNumberGenerator()
     {
-        r = new Random((long)System.nanoTime());
+        r = new Random(46811);
     }
     
      /**
