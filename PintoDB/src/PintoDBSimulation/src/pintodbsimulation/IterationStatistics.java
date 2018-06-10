@@ -40,14 +40,43 @@ public class IterationStatistics {
      */
     public void printValues()
     {
-        System.out.println("This statistics were calculated with clients who finished service in system or in each module");
+        System.out.println("\nThis statistics were calculated with clients who finished service in system or in each module");
         System.out.println();        
-        System.out.println("Average query lifetime in system: " + this.averageQueryLifeTime );
-        System.out.println("Average Connection Module queue size: " + this.averageQueueSizeConnectionM );
-        System.out.println("Average Process Managment Module queue size: " + this.averageQueueSizeProcessM );
-        System.out.println("Average Query Processor Module queue size: " + this.averageQueueSizeQueryM );
-        System.out.println("Average Execution Module queue size: " + this.averageQueueSizeExecM );
-        System.out.println("Average Transaction Module queue size: " + this.averageQueueSizeTransM );
+        System.out.println("\tAverage denied connections: " + this.counterOfDeniedConnection );
+        System.out.println("\tAverage query lifetime in system: " + this.averageQueryLifeTime );
+        System.out.println("\tAverage Connection Module queue size: " + this.averageQueueSizeConnectionM );
+        System.out.println("\tAverage Process Managment Module queue size: " + this.averageQueueSizeProcessM );
+        System.out.println("\tAverage Query Processor Module queue size: " + this.averageQueueSizeQueryM );
+        System.out.println("\tAverage Execution Module queue size: " + this.averageQueueSizeExecM );
+        System.out.println("\tAverage Transaction Module queue size: " + this.averageQueueSizeTransM );
+        System.out.println();        
+        System.out.println("Average time of UPDATE statements per module");
+        System.out.println("\tConnection Module: " + this.getConnectionModStats().getUpdateStatementTime() );
+        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getUpdateStatementTime() );
+        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getUpdateStatementTime() );
+        System.out.println("\tExecution Module: " + this.getExecutionModStats().getUpdateStatementTime() );
+        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getUpdateStatementTime() );
+        System.out.println();        
+        System.out.println("Average time of DDL statements per module");
+        System.out.println("\tConnection Module: " + this.getConnectionModStats().getDLLStatementTime() );
+        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getDLLStatementTime() );
+        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getDLLStatementTime() );
+        System.out.println("\tExecution Module: " + this.getExecutionModStats().getDLLStatementTime() );
+        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getDLLStatementTime() );
+        System.out.println();        
+        System.out.println("Average time of SELECT statements per module");
+        System.out.println("\tConnection Module: " + this.getConnectionModStats().getSelectStatementTime() );
+        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getSelectStatementTime() );
+        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getSelectStatementTime() );
+        System.out.println("\tExecution Module: " + this.getExecutionModStats().getSelectStatementTime() );
+        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getSelectStatementTime() );        
+        System.out.println();        
+        System.out.println("Average time of JOIN statements per module");
+        System.out.println("\tConnection Module: " + this.getConnectionModStats().getJoinStatementTime() );
+        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getJoinStatementTime() );
+        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getJoinStatementTime() );
+        System.out.println("\tExecution Module: " + this.getExecutionModStats().getJoinStatementTime() );
+        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getJoinStatementTime() ); 
     }
     
     
