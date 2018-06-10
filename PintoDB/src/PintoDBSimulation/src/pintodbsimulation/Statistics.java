@@ -148,7 +148,7 @@ public class Statistics {
      * 
      * @param m 
      */
-    private void calculateQueueAverageSizes(Module m)
+    private double calculateQueueAverageSizes(Module m)
     {
         int queueSize;
         double value = 0.0;
@@ -161,7 +161,7 @@ public class Statistics {
             value += m.getQueueSizeRegister().get(index);
         }
         value /= queueSize==0?1:queueSize;
-        currentIterationStats.setAverageQueueSizeProcessM(value);
+        return value;
     }
     /**
      * 
@@ -397,14 +397,19 @@ public class Statistics {
         // For each module calculate its average queue size               // For each module calculate its average queue size               
                 
         //Connection Module will be zero, no queue
+        double result;
         // Process Managment Module
-        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getProcessManagemnteModule() );
+        result = this.calculateQueueAverageSizes( this.pointerSimPintoDB.getProcessManagemnteModule() );
+        this.currentIterationStats.setAverageQueueSizeProcessM( result );        
         // Query Processor Module
-        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getQueryProcessorModule() );
+        result = this.calculateQueueAverageSizes( this.pointerSimPintoDB.getQueryProcessorModule() );
+        this.currentIterationStats.setAverageQueueSizeQueryM( result );
         // Execution Module
-        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getExecutionModule() );
+        result = this.calculateQueueAverageSizes( this.pointerSimPintoDB.getExecutionModule() );
+        this.currentIterationStats.setAverageQueueSizeExecM( result );
         // Transaction Module
-        this.calculateQueueAverageSizes( this.pointerSimPintoDB.getTransactionModule() );    
+        result = this.calculateQueueAverageSizes( this.pointerSimPintoDB.getTransactionModule() );    
+        this.currentIterationStats.setAverageQueueSizeTransM( result );
         
         // Store denied connection counter
         ConnectionModule cm = (ConnectionModule)this.pointerSimPintoDB.getConnectionModule();
@@ -415,7 +420,7 @@ public class Statistics {
         calculateAverageTimePerStatementPerModule( DDLClientsWhoFinishedService, StatementType.DDL );
         calculateAverageTimePerStatementPerModule( selectClientsWhoFinishedService, StatementType.SELECT );
         calculateAverageTimePerStatementPerModule( joinClientsWhoFinishedService, StatementType.JOIN );
-        
+                
         // store stats in final stats
         this.finalIterationStats.addOtherValues( currentIterationStats );
         

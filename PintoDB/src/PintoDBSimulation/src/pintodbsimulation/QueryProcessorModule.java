@@ -24,7 +24,7 @@ public class QueryProcessorModule extends Module {
                     + "del modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -36,10 +36,10 @@ public class QueryProcessorModule extends Module {
             }
         }
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                + "del modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
+                + "del modulo " + "procesador de consultas " + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -51,6 +51,7 @@ public class QueryProcessorModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery arrivingCQ = e.getClientQuery();
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
+        arrivingCQ.setCurrentMod(this);
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
@@ -58,7 +59,7 @@ public class QueryProcessorModule extends Module {
                     + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -69,7 +70,7 @@ public class QueryProcessorModule extends Module {
                     + "en el modulo " + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -92,7 +93,7 @@ public class QueryProcessorModule extends Module {
                     + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -103,7 +104,7 @@ public class QueryProcessorModule extends Module {
                     + "procesador de consultas" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -121,7 +122,7 @@ public class QueryProcessorModule extends Module {
                 + "procesador de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -153,10 +154,10 @@ public class QueryProcessorModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "procesador de consultas" + "al modulo" + "transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+                + "procesador de consultas" + " al modulo " + "transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }

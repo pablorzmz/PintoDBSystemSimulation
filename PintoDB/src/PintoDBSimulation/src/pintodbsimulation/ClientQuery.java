@@ -33,7 +33,37 @@ public class ClientQuery {
      */
     public void updateStats()
     {
-    
+        double timeInModule;
+        String currentModuleName = currentMod.getClass().getSimpleName();
+        String procM = ProcessManagmentModule.class.getSimpleName();
+        String connectionM = ConnectionModule.class.getSimpleName();
+        String queryProcM = QueryProcessorModule.class.getSimpleName();
+        String executionM = ExecutionModule.class.getSimpleName();
+        String transactionM = TransactionAndDiskModule.class.getSimpleName();
+        timeInModule = queryStatistics.getModuleLeaveTime()- queryStatistics.getModuleArriveTime();
+
+        if ( currentModuleName.equals( procM) )
+        {            
+            queryStatistics.setTimeInProcMgmtMod( timeInModule );
+            
+        }else if ( currentModuleName.equals(connectionM) )
+        {
+            queryStatistics.setTimeInConnectionMod( 0.0 );            
+             
+        }else if ( currentModuleName.equals(queryProcM) )
+        {
+            queryStatistics.setTimeInQueryProcMod( timeInModule );            
+            
+        }else if ( currentModuleName.equals(executionM) )
+        {
+            queryStatistics.setTimeInExecMod( timeInModule );
+            
+        }else if ( currentModuleName.equals(transactionM) )
+        {
+            queryStatistics.setTimeInTransMod( timeInModule );
+        }
+        queryStatistics.setModuleArriveTime( Statistics.INVALID_TIME );
+        queryStatistics.setModuleLeaveTime( Statistics.INVALID_TIME );        
     }    
 
     /**

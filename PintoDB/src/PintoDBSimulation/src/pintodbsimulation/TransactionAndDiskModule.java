@@ -24,11 +24,11 @@ public class TransactionAndDiskModule extends Module {
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
                         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                                + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
 
                         try {
                             // thread to sleep for 1000 milliseconds
-                            Thread.sleep(1000);
+                            Thread.sleep( SimPintoDB.sleepTime );
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -40,20 +40,20 @@ public class TransactionAndDiskModule extends Module {
                     } else {
                         --servers;
                         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                                + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                         try {
                             // thread to sleep for 1000 milliseconds
-                            Thread.sleep(1000);
+                            Thread.sleep( SimPintoDB.sleepTime );
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
                     }
                 } else {
                     System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                            + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                            + "del modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(1000);
+                        Thread.sleep( SimPintoDB.sleepTime );
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -66,10 +66,10 @@ public class TransactionAndDiskModule extends Module {
             }
         }
         System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
-                + "del modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                + "del modulo " + "de transacciones" +" y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -81,6 +81,7 @@ public class TransactionAndDiskModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery arrivingCQ = e.getClientQuery();
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
+        arrivingCQ.setCurrentMod(this);
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (queryPriorityQueue.size() > 0) {
@@ -88,10 +89,10 @@ public class TransactionAndDiskModule extends Module {
             if (nextCQ.getQueryType() != StatementType.DDL) {
                 if (servers < maxServers) {
                     System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
-                            + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(1000);
+                        Thread.sleep( SimPintoDB.sleepTime );
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -99,10 +100,10 @@ public class TransactionAndDiskModule extends Module {
                     generateAction(arrivingCQ);
                 } else {
                     System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
-                            + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                            + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(1000);
+                        Thread.sleep( SimPintoDB.sleepTime );
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -111,10 +112,10 @@ public class TransactionAndDiskModule extends Module {
                 }
             } else if (servers == 0) {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue pasado de ser antendido "
-                        + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                        + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep(1000);
+                    Thread.sleep( SimPintoDB.sleepTime );
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -122,10 +123,10 @@ public class TransactionAndDiskModule extends Module {
                 generateAction(arrivingCQ);
             } else {
                 System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo " + arrivingCQ.getQueryType() + " fue encolado "
-                        + "en el modulo " + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                        + "en el modulo " + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep(1000);
+                    Thread.sleep( SimPintoDB.sleepTime );
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -149,10 +150,10 @@ public class TransactionAndDiskModule extends Module {
             if (nextCQ.getQueryType() == StatementType.DDL) {
                 if (servers == 1) {
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                            + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(1000);
+                        Thread.sleep( SimPintoDB.sleepTime );
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
@@ -163,17 +164,17 @@ public class TransactionAndDiskModule extends Module {
                 } else {
                     --servers;
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                            + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(1000);
+                        Thread.sleep( SimPintoDB.sleepTime );
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
                 }
             } else {
                 System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                        + this.getClass().getName() + " y el tiempo actual es " + e.getClockTime());
+                        + "de transacciones" + " y el tiempo actual es " + e.getClockTime());
                 try {
                     // thread to sleep for 1000 milliseconds
                     Thread.sleep(1000);
@@ -195,10 +196,10 @@ public class TransactionAndDiskModule extends Module {
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + this.getClass().getName() + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+                + "de transacciones" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -238,10 +239,10 @@ public class TransactionAndDiskModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + this.getClass().getName() + "al modulo" + this.nextModule.getClass().getName() + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+                + "de transacciones" + "al modulo " + "ejecucion de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }

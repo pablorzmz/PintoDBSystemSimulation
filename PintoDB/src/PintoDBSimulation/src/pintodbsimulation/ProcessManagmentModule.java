@@ -24,7 +24,7 @@ public class ProcessManagmentModule extends Module {
                     + "del modulo " + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -39,7 +39,7 @@ public class ProcessManagmentModule extends Module {
                 + "del modulo " + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -51,6 +51,7 @@ public class ProcessManagmentModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery arrivingCQ = e.getClientQuery();
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
+        arrivingCQ.setCurrentMod(this);
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
@@ -58,24 +59,24 @@ public class ProcessManagmentModule extends Module {
                     + "en el modulo " + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
             ++servers;
-            generateAction(arrivingCQ);
+            generateAction(arrivingCQ);            
         } else {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
                     + "en el modulo " + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
-            queryQueue.add(arrivingCQ);
+            queryQueue.add(arrivingCQ);        
             queueSizeRegister.add(queryQueue.size());
-        }
+        }          
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ProcessManagmentModule extends Module {
                     + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -103,13 +104,13 @@ public class ProcessManagmentModule extends Module {
                     + "administrador de proc" + " y el tiempo actual es " + e.getClockTime());
             try {
                 // thread to sleep for 1000 milliseconds
-                Thread.sleep(1000);
+                Thread.sleep( SimPintoDB.sleepTime );
             } catch (Exception ex) {
                 System.out.println(ex);
             }
             --servers;
         }
-
+        
         //I need to generate an ARRIVE on the next module for the leavingCQ
         generateNextModuleAction(leavingCQ);
     }
@@ -121,7 +122,7 @@ public class ProcessManagmentModule extends Module {
                 + "administrador de proc" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -144,10 +145,10 @@ public class ProcessManagmentModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "administrador de proc" + "al modulo" + "procesador de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
+                + "administrador de proc" + "al modulo" + " procesador de consultas" + " y el tiempo actual es " + simPintoDBPointer.getSimClock());
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep(1000);
+            Thread.sleep( SimPintoDB.sleepTime );
         } catch (Exception ex) {
             System.out.println(ex);
         }

@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public class SimPintoDB {
 
-    private int timeToRunSimulation;
+    private int timesToRunSimulation;
     private double simClock;
     private double maxSimClock;
     private int k;
@@ -22,6 +22,7 @@ public class SimPintoDB {
     private Module queryProcessorModule;
     private Module executionModule;
     private Module transactionModule;
+    public  final static int sleepTime = 1;
 
     /**
      *
@@ -171,15 +172,15 @@ public class SimPintoDB {
      * @return
      */
     int gettimeToRunSimulation() {
-        return timeToRunSimulation;
+        return timesToRunSimulation;
     }
 
     /**
      *
-     * @param timeToRunSimulation
+     * @param timesToRunSimulation
      */
-    public void setTimeToRunSimulation(int timeToRunSimulation) {
-        this.timeToRunSimulation = timeToRunSimulation;
+    public void setTimesToRunSimulation(int timesToRunSimulation) {
+        this.timesToRunSimulation = timesToRunSimulation;
     }
 
     /**
@@ -187,12 +188,13 @@ public class SimPintoDB {
      */
     public void run() {
         // Values for debugging
-        this.k = 3;
-        this.m = 3;
-        this.n = 3;
-        this.p = 3;
-        this.t = 7.0;
-        this.maxSimClock = 13.0;
+        this.k = 30;
+        this.m = 1;
+        this.n = 1;
+        this.p = 1;
+        this.t = 200.0;
+        this.maxSimClock = 190.0;
+        this.timesToRunSimulation = 1;
         // Construct client list
         this.clients = new LinkedList<>();
         // Construct modules
@@ -220,9 +222,9 @@ public class SimPintoDB {
             simClock = currentEvent.getClockTime();
             //I need to check if there are clients waiting that already have a timeout
             //and if there are, I need to generate their timeout
-            checkGenerateTimeout();
+            //checkGenerateTimeout();
             System.out.println("Current clock time: " + simClock);
-            System.out.println("Event: " + currentEvent.getEventType());
+            System.out.println("Next Event: " + currentEvent.getEventType());
 
             switch (currentEvent.getEventType()) {
                 case ARRIVE:
@@ -235,6 +237,7 @@ public class SimPintoDB {
                     currentMod.processTimeOut();
                     break;
             }
+            System.out.println();
         }
         // print stats
         stats = new Statistics(this);
@@ -302,6 +305,7 @@ public class SimPintoDB {
             cQ = timeoutCQ.get(i);
             Event e = new Event(cQ, SimEvent.TIMEOUT, cQ.getCurrentMod(), simClock);
             this.systemEventList.add(e);
+            
         }
     }
 }
