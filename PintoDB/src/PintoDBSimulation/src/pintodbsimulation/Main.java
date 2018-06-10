@@ -4,8 +4,7 @@ import java.util.PriorityQueue;
 
 public class Main {
 
-        public void TestingEventList()
-    {                
+    public void TestingEventList() {
         /*PriorityQueue<Event> pq = new PriorityQueue<>(new EventComparator());
         ClientQuery dummy = new ClientQuery(StatementType.UPDATE, null);
         Event e;
@@ -38,10 +37,10 @@ public class Main {
             Event temp = pq.poll();
             System.out.println(temp.getEventType() + ": " + temp.getClockTime() );
         }*/
-        
+
         PriorityQueue<ClientQuery> cq = new PriorityQueue<>(10, new ClientQueryComparator());
         ClientQuery cQ;
-        
+
         cQ = new ClientQuery(StatementType.UPDATE, null);
         cq.add(cQ);
         cQ = new ClientQuery(StatementType.SELECT, null);
@@ -58,18 +57,18 @@ public class Main {
         cq.add(cQ);
         cQ = new ClientQuery(StatementType.DDL, null);
         cq.add(cQ);
-        
-        for(int w = 0; w < 8; ++w )
-        {
+
+        for (int w = 0; w < 8; ++w) {
             ClientQuery temp = cq.poll();
             System.out.println(temp.getQueryType());
         }
     }
+
     public static void main(String[] args) {
         SimPintoDB pintoDB = new SimPintoDB();
         //pintoDB.run();
         Main m = new Main();
         m.TestingEventList();
-        
-    }    
+
+    }
 }
