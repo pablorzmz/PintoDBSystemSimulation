@@ -35,6 +35,15 @@ public abstract class Module {
     }
 
     /**
+     * 
+     * @param nextModule 
+     */
+    public void setNextModule(Module nextModule) {
+        this.nextModule = nextModule;
+    }
+    
+    
+    /**
      *
      * @return
      */

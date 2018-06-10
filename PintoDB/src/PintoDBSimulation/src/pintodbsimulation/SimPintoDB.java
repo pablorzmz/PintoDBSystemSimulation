@@ -193,15 +193,18 @@ public class SimPintoDB {
         this.n = 3;
         this.p = 3;
         this.t = 7.0;
+        this.maxSimClock = 400.0;
         // Construct modules
         this.ExecutionModule = new ExecutionModule(0, m, this, null );        
         this.TransactionModule = new TransactionAndDiskModule(0, p, this, ExecutionModule );
         this.queryProcessorModule = new QueryProcessorModule(0, n, this, TransactionModule);
         this.processManagemnteModule = new ProcessManagmentModule(0, 1, this,  queryProcessorModule );
-        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule );                        
+        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule );    
+        this.ExecutionModule.setNextModule( connectionModule );
         
         //Construct event list
-        this.systemEventList = new PriorityQueue<>();
+        EventComparator e = new EventComparator();
+        this.systemEventList = new PriorityQueue<>( e );
         
         // Initialize simulation
         RandomNumberGenerator r = new RandomNumberGenerator();
@@ -213,10 +216,11 @@ public class SimPintoDB {
         
         while ( currentTime < t )
         {
-            Event currentEvent = this.systemEventList.peek();
+            Event currentEvent = this.systemEventList.peek();            
             Module currentMod = currentEvent.getMod();
             currentTime = currentEvent.getClockTime();
             System.out.println("Current clock time: " + currentTime );
+            System.out.println("Event: " + currentEvent.getEventType() );
             
             switch ( currentEvent.getEventType() )
             {
@@ -243,6 +247,6 @@ public class SimPintoDB {
     }
 
     double getT() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.t;
     }
 }
