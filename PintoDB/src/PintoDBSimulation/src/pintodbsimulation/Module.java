@@ -36,14 +36,13 @@ public abstract class Module {
     }
 
     /**
-     * 
-     * @param nextModule 
+     *
+     * @param nextModule
      */
     public void setNextModule(Module nextModule) {
         this.nextModule = nextModule;
     }
-    
-    
+
     /**
      *
      * @return
@@ -78,4 +77,20 @@ public abstract class Module {
      * @param clientQuery
      */
     public abstract void generateNextModuleAction(ClientQuery clientQuery);
+
+    /**
+     *
+     * @return
+     */
+    public LinkedList<ClientQuery> getQueryQueue() {
+        return queryQueue;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public PriorityQueue<ClientQuery> getPriorityQueryQueue() {
+        return queryPriorityQueue;
+    }
 }

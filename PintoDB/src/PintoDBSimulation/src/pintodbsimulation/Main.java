@@ -36,7 +36,7 @@ public class Main {
         {
             Event temp = pq.poll();
             System.out.println(temp.getEventType() + ": " + temp.getClockTime() );
-        }*/
+        }
 
         PriorityQueue<ClientQuery> cq = new PriorityQueue<>(10, new ClientQueryComparator());
         ClientQuery cQ;
@@ -61,7 +61,7 @@ public class Main {
         for (int w = 0; w < 8; ++w) {
             ClientQuery temp = cq.poll();
             System.out.println(temp.getQueryType());
-        }
+        }*/
     }
 
     public static void main(String[] args) {

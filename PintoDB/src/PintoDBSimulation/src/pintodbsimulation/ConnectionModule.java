@@ -1,5 +1,6 @@
 package pintodbsimulation;
 
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class ConnectionModule extends Module {
@@ -47,6 +48,9 @@ public class ConnectionModule extends Module {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
                     + "en el modulo " + "Conexión" );
             ++servers;
+            //I need to add the new cliente to the system, ie the clients list.
+            LinkedList<ClientQuery> simClients = simPintoDBPointer.getClients();
+            simClients.add(arrivingCQ);
             generateNextModuleAction(arrivingCQ);
         } else {
             System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
