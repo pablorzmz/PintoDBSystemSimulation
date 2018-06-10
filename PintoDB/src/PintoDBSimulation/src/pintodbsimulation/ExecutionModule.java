@@ -22,7 +22,7 @@ public class ExecutionModule extends Module {
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
                 System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                    + "del modulo " + this.getClass().getName());
+                        + "del modulo " + this.getClass().getName());
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
                 queueSizeRegister.add(queryQueue.size());
             } else { //If there isn't client waiting to be attended
@@ -103,10 +103,9 @@ public class ExecutionModule extends Module {
         }
         //I need to check if the client clientQuery will have a timeout
         QueryStatistics qS = clientQuery.getQueryStatistics();
-        if(eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()){
+        if (eTime - qS.getSystemArriveTime() < simPintoDBPointer.getT()) {
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-        }
-        else{
+        } else {
             e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
         }
 
