@@ -19,36 +19,37 @@ public class EventComparator implements Comparator< Event > {
         SimEvent eA = a.getEventType();
         SimEvent eB = b.getEventType();
         
-        if ( eA == SimEvent.TIMEOUT && ( eB == SimEvent.ARRIVE || eB == SimEvent.LEAVE ))
+        if ( a.getClockTime() > b.getClockTime() )
         {
-            return -1;
-            
-        }else if ( eA == eB )
-        {
-            if ( a.getClockTime() > b.getClockTime() )
-            {
                 return 1;
                 
-            }else if ( a.getClockTime() < b.getClockTime() )
-            {
-                return -1;
-                
-            }else
-            {
-                return 0;
-            }
-            
-        }else if ( eA == SimEvent.LEAVE && eB == SimEvent.ARRIVE )
+        }else if ( a.getClockTime() < b.getClockTime())
         {
             return -1;
             
-        }else if ( eA == SimEvent.ARRIVE && eB == SimEvent.LEAVE )
+        }else
         {
-            return 1;
-            
-        }else if ( ( eA == SimEvent.ARRIVE || eA ==  SimEvent.LEAVE ) && eB ==SimEvent.TIMEOUT )
-        {
-            return 1;
+            if ( eA == SimEvent.TIMEOUT && ( eB == SimEvent.ARRIVE || eB == SimEvent.LEAVE ))
+            {
+                return -1;
+
+            }else if ( eA == eB )
+            {
+                return 0;
+
+            }else if ( eA == SimEvent.LEAVE && eB == SimEvent.ARRIVE )
+            {
+                return -1;
+
+            }else if ( eA == SimEvent.ARRIVE && eB == SimEvent.LEAVE )
+            {
+                return 1;
+
+            }else if ( ( eA == SimEvent.ARRIVE || eA ==  SimEvent.LEAVE ) && eB ==SimEvent.TIMEOUT )
+            {
+                return 1;
+
+            }                
         }        
         return 0;
     }
