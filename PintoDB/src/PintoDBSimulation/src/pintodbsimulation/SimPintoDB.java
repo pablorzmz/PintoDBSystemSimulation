@@ -194,6 +194,8 @@ public class SimPintoDB {
         this.p = 3;
         this.t = 7.0;
         this.maxSimClock = 400.0;
+        // Construct client list
+        this.clients = new LinkedList<>();
         // Construct modules
         this.ExecutionModule = new ExecutionModule(0, m, this, null );        
         this.TransactionModule = new TransactionAndDiskModule(0, p, this, ExecutionModule );
