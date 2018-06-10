@@ -32,6 +32,7 @@ public abstract class Module {
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
         this.queryPriorityQueue = new PriorityQueue<>(maxServers, new ClientQueryComparator());
+        this.queueSizeRegister = new LinkedList<>();
     }
 
     /**
