@@ -308,6 +308,14 @@ public class SimPintoDB {
             this.systemEventList.add(e);
             e = new Event(cQ, SimEvent.TIMEOUT, this.connectionModule, simClock);
             this.systemEventList.add(e);
+            System.out.println("TimeOut: El cliente: " + cQ.clientID + " fue sacado de ser antendido"
+                    + " por estar en cola en el modulo " + cQ.getCurrentMod().getClass().getSimpleName() + " y el tiempo actual es " + e.getClockTime());
+            try {
+                // thread to sleep for 1000 milliseconds
+                Thread.sleep(SimPintoDB.sleepTime);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
         }
     }
 }
