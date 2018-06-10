@@ -14,6 +14,8 @@ public class SimPintoDB {
     private int p;
     private double t;
     private LinkedList<ClientQuery> clients;
+    private PriorityQueue<Event> systemEventList;
+    private Statistics stats;
     private Module connectionModule;
     private Module processManagemnteModule;
     private Module queryProcessorModule;
@@ -129,7 +131,8 @@ public class SimPintoDB {
      * @return 
      */
     PriorityQueue<Event> getSistemEventList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.systemEventList;
     }
 
     /**
@@ -184,6 +187,57 @@ public class SimPintoDB {
      *
      */
     public void run() {
+        // Values for debugging
+        this.k = 3;
+        this.m = 3;
+        this.n = 3;
+        this.p = 3;
+        this.t = 7.0;
+        // Construct modules
+        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule );
+        this.processManagemnteModule = new ProcessManagmentModule(0, 1, this,  queryProcessorModule );                
+        this.queryProcessorModule = new QueryProcessorModule(0, n, this, TransactionModule);
+        this.TransactionModule = new TransactionAndDiskModule(0, p, this, ExecutionModule );
+        this.ExecutionModule = new ExecutionModule(0, m, this, connectionModule);        
+        //Construct event list
+        this.systemEventList = new PriorityQueue<>();
+        
+        // Initialize simulation
+        RandomNumberGenerator r = new RandomNumberGenerator();
+        ClientQuery firstOne = new ClientQuery( r.getConnectionStatementType(),connectionModule );
+        Event firstEvent = new Event( firstOne, SimEvent.ARRIVE, connectionModule , 0.0 );
+        this.systemEventList.add( firstEvent );
+                
+        double currentTime = 0.0;
+        
+        while ( currentTime < t )
+        {
+            Event currentEvent = this.systemEventList.peek();
+            Module currentMod = currentEvent.getMod();
+            currentTime = currentEvent.getClockTime();
+            System.out.println("Current clock time: " + currentTime );
+            
+            switch ( currentEvent.getEventType() )
+            {
+                case ARRIVE:
+                    currentMod.processArrive();
+                break;
+                case LEAVE:
+                    currentMod.processExit();
+                break;
+                case TIMEOUT:
+                    currentMod.processTimeOut();
+                break;
+            }
+        }
+        // print stats
+        stats = new Statistics( this );
+        stats.generateStatistics();
+        stats.generateFinalStatistics();
+        IterationStatistics f = stats.getFinalIterationStats();
+        f.printValues();
+        
+        
         
     }
 

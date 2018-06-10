@@ -27,6 +27,23 @@ public class Statistics {
         this.currentIterationStats = new IterationStatistics();
         this.finalIterationStats = new IterationStatistics();
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public IterationStatistics getCurrentIterationStats() {
+        return currentIterationStats;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public IterationStatistics getFinalIterationStats() {
+        return finalIterationStats;
+    }
+    
+    
     /**
      * 
      * @param arraySizes
