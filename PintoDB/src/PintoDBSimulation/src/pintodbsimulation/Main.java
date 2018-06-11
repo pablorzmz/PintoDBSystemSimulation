@@ -5,39 +5,51 @@ import java.util.PriorityQueue;
 public class Main {
 
     public void TestingEventList() {
-        /*PriorityQueue<Event> pq = new PriorityQueue<>(new EventComparator());
+        PriorityQueue<Event> pq = new PriorityQueue<>(new EventComparator());
         ClientQuery dummy = new ClientQuery(StatementType.UPDATE, null);
         Event e;
+        SimPintoDB x = new SimPintoDB();
         
-        e = new Event(dummy, SimEvent.LEAVE, null, 4);
-        pq.add(e);
-        e = new Event(dummy, SimEvent.LEAVE, null, 3);
-        pq.add(e);
-        e = new Event(dummy, SimEvent.LEAVE, null, 2);
-        pq.add(e);
+        Module c, pm, qp, tr, ex;
         
-        
-        e = new Event(dummy, SimEvent.ARRIVE, null, 3);
-        pq.add(e);
-        e = new Event(dummy, SimEvent.ARRIVE, null, 2);
-        pq.add(e);
-        e = new Event(dummy, SimEvent.ARRIVE, null, 3);
-        pq.add(e);
+        c = new ConnectionModule(0, 2, x, null);
+        pm = new ProcessManagmentModule(0, 2, x, null);
+        qp = new QueryProcessorModule(0, 2, x, null);
+        tr = new TransactionAndDiskModule(0, 2, x, null);
+        ex = new ExecutionModule(0, 2, x, null);
         
         
-        e = new Event(dummy, SimEvent.TIMEOUT, null, 3);
+        e = new Event(dummy, SimEvent.LEAVE, c, 2);
         pq.add(e);
-        e = new Event(dummy, SimEvent.TIMEOUT, null, 2);
+        e = new Event(dummy, SimEvent.LEAVE, tr, 2);
         pq.add(e);
-        e = new Event(dummy, SimEvent.TIMEOUT, null, 1);
+        e = new Event(dummy, SimEvent.LEAVE, c, 2);
         pq.add(e);
         
-        for(int w = 0; w < 9; ++w )
+        
+        e = new Event(dummy, SimEvent.ARRIVE, c, 2);
+        pq.add(e);
+        e = new Event(dummy, SimEvent.ARRIVE, qp, 2);
+        pq.add(e);
+        e = new Event(dummy, SimEvent.ARRIVE, tr, 2);
+        pq.add(e);
+        
+        
+        e = new Event(dummy, SimEvent.TIMEOUT, pm, 2);
+        pq.add(e);
+        e = new Event(dummy, SimEvent.TIMEOUT, ex, 2);
+        pq.add(e);
+        e = new Event(dummy, SimEvent.TIMEOUT, qp, 2);
+        pq.add(e);
+        
+        for( int w = 0; w < 9; ++w )
         {
             Event temp = pq.poll();
-            System.out.println(temp.getEventType() + ": " + temp.getClockTime() );
+            System.out.println(temp.getEventType() + ", " + temp.getClockTime() 
+                    + ", " + temp.getMod().getClass().getSimpleName() );
         }
-
+        
+        /*
         PriorityQueue<ClientQuery> cq = new PriorityQueue<>(10, new ClientQueryComparator());
         ClientQuery cQ;
 
@@ -66,9 +78,9 @@ public class Main {
 
     public static void main(String[] args) {
         SimPintoDB pintoDB = new SimPintoDB();
-        pintoDB.run();
-        //Main m = new Main();
-        //m.TestingEventList();
+        //pintoDB.run();
+        Main m = new Main();
+        m.TestingEventList();
 
     }
 }
