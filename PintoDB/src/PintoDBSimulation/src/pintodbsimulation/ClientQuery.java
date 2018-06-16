@@ -1,9 +1,21 @@
+package pintodbsimulation;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pintodbsimulation;
+
+
+import pintodbsimulation.ConnectionModule;
+import pintodbsimulation.ExecutionModule;
+import pintodbsimulation.Module;
+import pintodbsimulation.ProcessManagmentModule;
+import pintodbsimulation.QueryProcessorModule;
+import pintodbsimulation.QueryStatistics;
+import pintodbsimulation.StatementType;
+import pintodbsimulation.Statistics;
+import pintodbsimulation.TransactionAndDiskModule;
 
 /**
  *

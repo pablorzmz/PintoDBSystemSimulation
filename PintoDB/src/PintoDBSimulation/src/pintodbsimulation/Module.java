@@ -36,6 +36,17 @@ public abstract class Module {
     }
 
     /**
+     * 
+     */
+    public void clear()
+    {
+        servers = 0;
+        queryQueue.clear();
+        queryPriorityQueue.clear();
+        queueSizeRegister.clear();
+    }
+    
+    /**
      *
      * @param nextModule
      */

@@ -36,6 +36,7 @@ public class Main {
         
         
         e = new Event(dummy, SimEvent.TIMEOUT, pm, 2);
+        e.setQueueTimeOut(true);
         pq.add(e);
         e = new Event(dummy, SimEvent.TIMEOUT, ex, 2);
         pq.add(e);
@@ -76,11 +77,14 @@ public class Main {
         }*/
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SimPintoDB pintoDB = new SimPintoDB();
-        //pintoDB.run();
+        pintoDB.run();
+        MainForm mf = new MainForm();
+        
         Main m = new Main();
-        m.TestingEventList();
+        //m.TestingEventList();
 
     }
+*/
 }

@@ -12,7 +12,8 @@ public class RandomNumberGenerator {
      */    
     public RandomNumberGenerator()
     {
-        r = new Random(46811);
+        long seed = System.nanoTime();
+        r = new Random(seed);
     }
     
      /**
@@ -59,7 +60,7 @@ public class RandomNumberGenerator {
      */    
     public double getTimeUsingExponencialDist( double lambda)
     {
-        return -1.0*( Math.log( this.getRandNumb() )/ (lambda) );
+        return ( Math.log( this.getRandNumb() )* (-1.0/lambda));
     }
     
      /**

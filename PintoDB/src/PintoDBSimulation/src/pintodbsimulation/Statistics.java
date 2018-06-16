@@ -157,7 +157,7 @@ public class Statistics {
         // Process Managment Module
         queueSize = m.getQueueSizeRegister().size();
         for( int index = 0; index < queueSize; ++index )
-        {
+        {                     
             value += m.getQueueSizeRegister().get(index);
         }
         value /= queueSize==0?1:queueSize;
@@ -388,9 +388,9 @@ public class Statistics {
             }// end switch
             // Add final query system lifetime 
             if ( cl.get(index).getQueryStatistics().getSystemLeaveTime() != INVALID_TIME )
-            {
-                systemLifeTime = (cl.get(index).getQueryStatistics().getSystemLeaveTime()- cl.get(index).getQueryStatistics().getSystemArriveTime());
-                currentIterationStats.setAverageQueryLifeTime( currentIterationStats.getAverageQueryLifeTime() + systemLifeTime );
+            {                
+                systemLifeTime = (cl.get(index).getQueryStatistics().getSystemLeaveTime()- cl.get(index).getQueryStatistics().getSystemArriveTime());                
+                currentIterationStats.setAverageQueryLifeTime( (long)systemLifeTime + currentIterationStats.getAverageQueryLifeTime() );
                 clientsWhoFinishedSystemProcess += 1;
             }            
         }// end for
@@ -422,13 +422,14 @@ public class Statistics {
         calculateAverageTimePerStatementPerModule( joinClientsWhoFinishedService, StatementType.JOIN );
         
         // calculate average query system lifetime
-        result = currentIterationStats.getAverageQueryLifeTime()/clientsWhoFinishedSystemProcess==0?1:clientsWhoFinishedSystemProcess;
+        
+        result = currentIterationStats.getAverageQueryLifeTime()/(clientsWhoFinishedSystemProcess==0?1:clientsWhoFinishedSystemProcess);        
         currentIterationStats.setAverageQueryLifeTime( result );
                        
         // store stats in final stats
         this.finalIterationStats.addOtherValues( currentIterationStats );
         
-        // clean current stats
+        // clear current stats
         this.currentIterationStats.clean();
     }
     
@@ -442,7 +443,7 @@ public class Statistics {
         
         // Final average query lifetime
         dummy = finalIterationStats.getAverageQueryLifeTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimeToRunSimulation();        
         finalIterationStats.setAverageQueryLifeTime( dummy );
         
         // Final averages sizes of queues per module

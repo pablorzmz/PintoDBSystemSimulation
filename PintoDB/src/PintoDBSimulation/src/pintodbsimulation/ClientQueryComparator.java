@@ -9,6 +9,7 @@ package pintodbsimulation;
  *
  * @author luis
  */
+
 import java.util.Comparator;
 
 class ClientQueryComparator implements Comparator<ClientQuery> {

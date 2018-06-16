@@ -30,8 +30,8 @@ public class ConnectionModule extends Module {
         //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
         //outgoingQS.setSystemLeaveTime( e.getClockTime() ); //I need to update the outgoing client data
         //outgoingCQ.updateStats();
-        System.out.println("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                + " del modulo " + "Conexión");
+        System.out.println( SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                + " del modulo " + "Conexión" + SimPintoDB.RESET );
 
         --servers;
     }
@@ -54,8 +54,8 @@ public class ConnectionModule extends Module {
             simClients.add(arrivingCQ);
             generateNextModuleAction(arrivingCQ);
         } else {
-            System.out.println("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
-                    + "en el modulo " + "Conexión");
+            System.out.println( SimPintoDB.PURPLE + "Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
+                    + "en el modulo " + "Conexión" + SimPintoDB.RESET );
             ++deniedConnectionCounter;
         }
 
@@ -63,7 +63,7 @@ public class ConnectionModule extends Module {
         ClientQuery newCQ = new ClientQuery(randNoGen.getConnectionStatementType(), this);
         ++clientCounter;
         newCQ.clientID = clientCounter;
-        System.out.println("Nuevo cliente con id:" + newCQ.clientID + " y el tiempo actual es " + e.getClockTime());
+        System.out.println("Nuevo cliente llegará con id: " + newCQ.clientID);        
         try {
             // thread to sleep for 1000 milliseconds
             Thread.sleep(SimPintoDB.sleepTime);
@@ -78,21 +78,25 @@ public class ConnectionModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery leavingCQ = e.getClientQuery();
+        leavingCQ.setCurrentMod(this);
+        /* Transmition time = blocks into seconds*/
+        double R = leavingCQ.getQueryStatistics().getUsedBlocks();
+        R = 0;
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
-        leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
+        leavingQS.setSystemLeaveTime(e.getClockTime() + R ); //I need to update the outgoing client data
         leavingCQ.updateStats();
-        System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                + "Conexión");
+        System.out.println( SimPintoDB.CYAN +"Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                + "Conexión" +  SimPintoDB.RESET );
 
         --servers;
     }
 
     @Override
-    public void generateAction(ClientQuery clientQuery) {
+    public void generateAction( ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
                 + " de conexiones");
-        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist(1 / (30.0 / 60.0));
+        double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist((30.0 / 60.0));
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
         //I need to add the new event to the systemEventList

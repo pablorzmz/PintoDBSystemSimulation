@@ -15,6 +15,7 @@ public class Event {
     private final SimEvent eventType;
     private final Module mod;
     private final double clockTime;
+    private boolean queueTimeOut;
 
      /**
      *
@@ -28,8 +29,25 @@ public class Event {
         this.eventType = eventType;
         this.mod = mod;
         this.clockTime = clockTime;
+        this.queueTimeOut = false;
     }
     
+    /**
+     * 
+     * @param queueTimeOut 
+     */
+    public void setQueueTimeOut( boolean queueTimeOut ) {
+        this.queueTimeOut = queueTimeOut;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean isQueueTimeOut() {
+        return queueTimeOut;
+    }
+        
      /**
      *
      * @return 

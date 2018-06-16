@@ -28,6 +28,13 @@ public class IterationStatistics {
     * 
     */    
     public IterationStatistics() {
+        averageQueryLifeTime        = 0.0;
+        averageQueueSizeConnectionM = 0.0;
+        averageQueueSizeProcessM    = 0.0;
+        averageQueueSizeQueryM      = 0.0;
+        averageQueueSizeTransM      = 0.0;
+        averageQueueSizeExecM       = 0.0;
+        counterOfDeniedConnection   = 0.0;
         connectionModStats  = new StatementPerModuleStats();
         processModStats     = new StatementPerModuleStats();
         queryProcModStats   = new StatementPerModuleStats();

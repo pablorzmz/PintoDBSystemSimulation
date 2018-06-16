@@ -22,8 +22,8 @@ public class EventComparator implements Comparator< Event > {
         String  mA = a.getMod().getClass().getSimpleName();
         String  mB = b.getMod().getClass().getSimpleName();
         
-        int priorityEventA = returnEventPriority(eA);
-        int priorityEventB = returnEventPriority(eB);
+        int priorityEventA = returnEventPriority(eA ,a.isQueueTimeOut() );
+        int priorityEventB = returnEventPriority(eB, b.isQueueTimeOut() );
         
         int priorityModuleA = returnModulePriority(mA);
         int priorityModuleB = returnModulePriority(mB);
@@ -98,22 +98,29 @@ public class EventComparator implements Comparator< Event > {
      * @param event
      * @return 
      */
-    private int returnEventPriority( SimEvent event )
+    private int returnEventPriority( SimEvent event, boolean queueTimeOut )
     {
         int returnValue = -1;
         
         switch( event )
         {
             case TIMEOUT:
-                returnValue = 1;
+                if ( queueTimeOut )
+                { 
+                    returnValue = 0;
+                }else
+                {
+                    returnValue = 1;
+                }                
             break;
             
             case LEAVE:
-                returnValue = 2;
+                
+                    returnValue = 3;          
             break;
             
             case ARRIVE:
-                returnValue = 3;
+                returnValue = 4;
             break;            
         }
         
