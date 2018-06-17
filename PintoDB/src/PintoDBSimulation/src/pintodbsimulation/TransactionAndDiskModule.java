@@ -23,9 +23,9 @@ public class TransactionAndDiskModule extends Module {
                 ClientQuery nextCQ = this.queryPriorityQueue.peek();
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
-                        System.out.println( SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                                + (simPintoDBPointer.getSimClock()- outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET );
+                        System.out.println(SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
+                                + "del modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                                + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET);
 
                         try {
                             // thread to sleep for 1000 milliseconds
@@ -37,12 +37,14 @@ public class TransactionAndDiskModule extends Module {
                         queryPriorityQueue.poll();
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
-                        queueSizeRegister.add(queryPriorityQueue.size());
+                        //queueSizeRegister.add(queryPriorityQueue.size());
+                        queueSizesAccumulator += queryQueue.size();
+                        ++queueSizesCounter;
                     } else {
                         --servers;
                         System.out.println(SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                                    + (simPintoDBPointer.getSimClock()- outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET );
+                                + "del modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                                + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET);
                         try {
                             // thread to sleep for 1000 milliseconds
                             Thread.sleep(SimPintoDB.sleepTime);
@@ -52,8 +54,8 @@ public class TransactionAndDiskModule extends Module {
                     }
                 } else {
                     System.out.println(SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                            + "del modulo " + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                            + (simPintoDBPointer.getSimClock()- outgoingCQ.getQueryStatistics().getSystemArriveTime() ) + SimPintoDB.RESET );
+                            + "del modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                            + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET);
                     try {
                         // thread to sleep for 1000 milliseconds
                         Thread.sleep(SimPintoDB.sleepTime);
@@ -66,19 +68,20 @@ public class TransactionAndDiskModule extends Module {
                     }
                     queryPriorityQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                    queueSizeRegister.add(queryPriorityQueue.size());
+                    //queueSizeRegister.add(queryPriorityQueue.size());
+                    queueSizesAccumulator += queryQueue.size();
+                    ++queueSizesCounter;
                 }
-            } else { //If there isn't client waiting to be attended
-                if (outgoingCQ.getQueryType() == StatementType.DDL) {
-                    servers = 0;
-                } else {
-                    --servers;
-                }
+            } else //If there isn't client waiting to be attended
+            if (outgoingCQ.getQueryType() == StatementType.DDL) {
+                servers = 0;
+            } else {
+                --servers;
             }
         } else {
-            System.out.println( SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
-                    + "del modulo " + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- outgoingCQ.getQueryStatistics().getSystemArriveTime() )  +  SimPintoDB.RESET);
+            System.out.println(SimPintoDB.RED + "TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
+                    + "del modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                    + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()) + SimPintoDB.RESET);
         }
         try {
             // thread to sleep for 1000 milliseconds
@@ -101,10 +104,10 @@ public class TransactionAndDiskModule extends Module {
             if (arrivingCQ.getQueryType() == StatementType.DDL) {
                 if (servers == 0) {
                     System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
-                    System.out.print(SimPintoDB.YELLOW +" ("+ arrivingCQ.getQueryType() +") "+ SimPintoDB.RESET );
+                    System.out.print(SimPintoDB.YELLOW + " (" + arrivingCQ.getQueryType() + ") " + SimPintoDB.RESET);
                     System.out.println(" fue pasado de ser antendido "
-                            + "en el modulo " + "de transacciones" +  " y su tiempo en el sistema es de: "                             
-                    + (simPintoDBPointer.getSimClock()- arrivingCQ.getQueryStatistics().getSystemArriveTime() ) );
+                            + "en el modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                            + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
                     try {
                         // thread to sleep for 1000 milliseconds
                         Thread.sleep(SimPintoDB.sleepTime);
@@ -115,10 +118,10 @@ public class TransactionAndDiskModule extends Module {
                     generateAction(arrivingCQ);
                 } else {
                     System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
-                    System.out.print(SimPintoDB.YELLOW +" ("+ arrivingCQ.getQueryType() +") "+ SimPintoDB.RESET );
+                    System.out.print(SimPintoDB.YELLOW + " (" + arrivingCQ.getQueryType() + ") " + SimPintoDB.RESET);
                     System.out.println(" fue encolado "
-                            + "en el modulo " + "de transacciones" +  " y su tiempo en el sistema es de: "                             
-                    + (simPintoDBPointer.getSimClock()- arrivingCQ.getQueryStatistics().getSystemArriveTime() ) );
+                            + "en el modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                            + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
                     try {
                         // thread to sleep for 1000 milliseconds
                         Thread.sleep(SimPintoDB.sleepTime);
@@ -126,46 +129,48 @@ public class TransactionAndDiskModule extends Module {
                         System.out.println(ex);
                     }
                     queryPriorityQueue.add(arrivingCQ);
-                    queueSizeRegister.add(this.queryPriorityQueue.size());
+                    //queueSizeRegister.add(this.queryPriorityQueue.size());
+                    queueSizesAccumulator += queryQueue.size();
+                    ++queueSizesCounter;
                 }
-            } else {
-                if (queryPriorityQueue.size() > 0) {
-                    System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
-                    System.out.print(SimPintoDB.YELLOW +" ("+ arrivingCQ.getQueryType() +") "+ SimPintoDB.RESET );
-                    System.out.println(" fue encolado "
-                            + "en el modulo " + "de transacciones" +  " y su tiempo en el sistema es de: "                             
-                    + (simPintoDBPointer.getSimClock()- arrivingCQ.getQueryStatistics().getSystemArriveTime() ) );
-                    try {
-                        // thread to sleep for 1000 milliseconds
-                        Thread.sleep(SimPintoDB.sleepTime);
-                    } catch (Exception ex) {
-                        System.out.println(ex);
-                    }
-                    queryPriorityQueue.add(arrivingCQ);
-                    queueSizeRegister.add(this.queryPriorityQueue.size());
+            } else if (queryPriorityQueue.size() > 0) {
+                System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
+                System.out.print(SimPintoDB.YELLOW + " (" + arrivingCQ.getQueryType() + ") " + SimPintoDB.RESET);
+                System.out.println(" fue encolado "
+                        + "en el modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                        + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
+                try {
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(SimPintoDB.sleepTime);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+                queryPriorityQueue.add(arrivingCQ);
+                //queueSizeRegister.add(this.queryPriorityQueue.size());
+                queueSizesAccumulator += queryQueue.size();
+                ++queueSizesCounter;
 
-                } else {
-                    System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
-                    System.out.print(SimPintoDB.YELLOW +" ("+ arrivingCQ.getQueryType() +") "+ SimPintoDB.RESET );
-                    System.out.println(" fue pasado a ser atendido "
-                            + "en el modulo " + "de transacciones" +  " y su tiempo en el sistema es de: "                             
-                    + (simPintoDBPointer.getSimClock()- arrivingCQ.getQueryStatistics().getSystemArriveTime() ) );
-                    try {
-                        // thread to sleep for 1000 milliseconds
-                        Thread.sleep(SimPintoDB.sleepTime);
-                    } catch (Exception ex) {
-                        System.out.println(ex);
-                    }
-                    ++servers;
-                    generateAction(arrivingCQ);
+            } else {
+                System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
+                System.out.print(SimPintoDB.YELLOW + " (" + arrivingCQ.getQueryType() + ") " + SimPintoDB.RESET);
+                System.out.println(" fue pasado a ser atendido "
+                        + "en el modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                        + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
+                try {
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(SimPintoDB.sleepTime);
+                } catch (Exception ex) {
+                    System.out.println(ex);
                 }
+                ++servers;
+                generateAction(arrivingCQ);
             }
         } else {
-                    System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
-                    System.out.print(SimPintoDB.YELLOW +" ("+ arrivingCQ.getQueryType() +") "+ SimPintoDB.RESET );
-                    System.out.println(" fue encolado "
-                            + "en el modulo " + "de transacciones" +  " y su tiempo en el sistema es de: "                             
-                    + (simPintoDBPointer.getSimClock()- arrivingCQ.getQueryStatistics().getSystemArriveTime() ) );
+            System.out.print("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : ");
+            System.out.print(SimPintoDB.YELLOW + " (" + arrivingCQ.getQueryType() + ") " + SimPintoDB.RESET);
+            System.out.println(" fue encolado "
+                    + "en el modulo " + "de transacciones" + " y su tiempo en el sistema es de: "
+                    + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
             try {
                 // thread to sleep for 1000 milliseconds
                 Thread.sleep(SimPintoDB.sleepTime);
@@ -173,7 +178,9 @@ public class TransactionAndDiskModule extends Module {
                 System.out.println(ex);
             }
             queryPriorityQueue.add(arrivingCQ);
-            queueSizeRegister.add(this.queryPriorityQueue.size());
+            //queueSizeRegister.add(this.queryPriorityQueue.size());
+            queueSizesAccumulator += queryQueue.size();
+            ++queueSizesCounter;
         }
         /*if ( queryPriorityQueue.size() > 0 ) {
             ClientQuery nextCQ = queryPriorityQueue.peek();
@@ -236,64 +243,71 @@ public class TransactionAndDiskModule extends Module {
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
-        if ( queryPriorityQueue.size() > 0 ) { //If there are waiting clients on the module queue
+        if (queryPriorityQueue.size() > 0) { //If there are waiting clients on the module queue
             ClientQuery nextCQ = this.queryPriorityQueue.peek();
-            if ( nextCQ.getQueryType() == StatementType.DDL ) {
-                if ( leavingCQ.getQueryType() == StatementType.DDL ) {
+            if (nextCQ.getQueryType() == StatementType.DDL) {
+                if (leavingCQ.getQueryType() == StatementType.DDL) {
                     System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- leavingCQ.getQueryStatistics().getSystemArriveTime() ) );
+                            + "de transacciones" + " y su tiempo en el sistema es de: "
+                            + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
                     try {
                         // thread to sleep for 1000 milliseconds
                         Thread.sleep(SimPintoDB.sleepTime);
-                    } catch ( Exception ex ) {
+                    } catch (Exception ex) {
                         System.out.println(ex);
                     }
                     nextCQ = queryPriorityQueue.poll();
-                    generateAction( nextCQ ); //I need to generate the LEAVE of the waiting client that I put to be attended
+                    generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     servers = maxServers;
-                    queueSizeRegister.add( queryPriorityQueue.size() );
-                } else {                    
-                    System.out.println( "Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- leavingCQ.getQueryStatistics().getSystemArriveTime() ) );
+                    //queueSizeRegister.add(queryPriorityQueue.size());
+                    queueSizesAccumulator += queryQueue.size();
+                    ++queueSizesCounter;
+                } else {
+                    System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
+                            + "de transacciones" + " y su tiempo en el sistema es de: "
+                            + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep( SimPintoDB.sleepTime );
-                    } catch ( Exception ex ) {
-                        System.out.println( ex );
+                        Thread.sleep(SimPintoDB.sleepTime);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
                     }
                     --servers;
-                    if( servers == 0) // I was the last one no DDL and the next one is a DDL
+                    if (servers == 0) // I was the last one no DDL and the next one is a DDL
                     {
                         nextCQ = queryPriorityQueue.poll();
-                        generateAction( nextCQ ); //I need to generate the LEAVE of the waiting client that I put to be attended
+                        generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
-                        queueSizeRegister.add( queryPriorityQueue.size() );  
+                        //queueSizeRegister.add(queryPriorityQueue.size());
+                        queueSizesAccumulator += queryQueue.size();
+                        ++queueSizesCounter;
                     }
                 }
             } else {
                 System.out.println("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                        + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- leavingCQ.getQueryStatistics().getSystemArriveTime() ) );
+                        + "de transacciones" + " y su tiempo en el sistema es de: "
+                        + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
                 try {
                     // thread to sleep for 1000 milliseconds
-                    Thread.sleep( SimPintoDB.sleepTime );
-                } catch ( Exception ex ) {
-                    System.out.println( ex );
+                    Thread.sleep(SimPintoDB.sleepTime);
+                } catch (Exception ex) {
+                    System.out.println(ex);
                 }
 
                 // if the current client was a DDL and the next one no
-                if ( leavingCQ.getQueryType() == StatementType.DDL ) {
+                if (leavingCQ.getQueryType() == StatementType.DDL) {
                     servers = 1;
                 }
 
                 queryPriorityQueue.poll();
-                generateAction( nextCQ ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizeRegister.add( queryPriorityQueue.size() );
+                generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
+                //queueSizeRegister.add(queryPriorityQueue.size());
+                queueSizesAccumulator += queryQueue.size();
+                ++queueSizesCounter;
             }
-        } else { //If there isn't client waiting to be attended
-            if ( leavingCQ.getQueryType() == StatementType.DDL ) {
+        } else //If there isn't client waiting to be attended
+        {
+            if (leavingCQ.getQueryType() == StatementType.DDL) {
                 servers = 0;
 
             } else {
@@ -305,37 +319,37 @@ public class TransactionAndDiskModule extends Module {
     }
 
     @Override
-    public void generateAction( ClientQuery clientQuery ) {
-          //I need to create a new LEAVE type event on this module for the client clientQuery
+    public void generateAction(ClientQuery clientQuery) {
+        //I need to create a new LEAVE type event on this module for the client clientQuery
         System.out.println("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + "de transacciones" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- clientQuery.getQueryStatistics().getSystemArriveTime() ) );
+                + "de transacciones" + " y su tiempo en el sistema es de: "
+                + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
         try {
             // thread to sleep for 1000 milliseconds
-            Thread.sleep( SimPintoDB.sleepTime );
-        } catch ( Exception ex ) {
-            System.out.println( ex );
+            Thread.sleep(SimPintoDB.sleepTime);
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
         StatementType cST = clientQuery.getQueryType();
         eTime += maxServers * 0.03;
         QueryStatistics qS = clientQuery.getQueryStatistics();
-        
-         switch (cST) {
+
+        switch (cST) {
             case DDL:
             case UPDATE:
-                qS.setUsedBlocks( 0 );
+                qS.setUsedBlocks(0);
                 break;
             case JOIN:
-                int blocks = ( int )( 1 + ( new RandomNumberGenerator().getRandNumb() ) * 64 ) ;                
-                qS.setUsedBlocks(  blocks );
+                int blocks = (int) (1 + (new RandomNumberGenerator().getRandNumb()) * 64);
+                qS.setUsedBlocks(blocks);
                 break;
             default:
-                qS.setUsedBlocks( 1 );
+                qS.setUsedBlocks(1);
                 break;
         }
-         eTime += qS.getUsedBlocks()*(0.10);
+        eTime += qS.getUsedBlocks() * (0.10);
         /*if ( null != cST ) {
             switch ( cST ) {
                 case SELECT:
@@ -352,18 +366,18 @@ public class TransactionAndDiskModule extends Module {
             }
         }
         eTime += maxServers * 0.03;
-        */
+         */
         //I need to add the new event to the systemEventList
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         //I need to check if the client clientQuery will have a timeout
         if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) { //Timeout
-            System.out.println( SimPintoDB.RED + "Y tendra time out porque va a llevar en el sistema: " + (eTime - qS.getSystemArriveTime()) + " > " + simPintoDBPointer.getT() + SimPintoDB.RED);
+            System.out.println(SimPintoDB.RED + "Y tendra time out porque va a llevar en el sistema: " + (eTime - qS.getSystemArriveTime()) + " > " + simPintoDBPointer.getT() + SimPintoDB.RED);
             e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
             eQ.add(e);
             e = new Event(clientQuery, SimEvent.TIMEOUT, this.simPintoDBPointer.getConnectionModule(), eTime);
             eQ.add(e);
         } else {
-            System.out.println("Y NO time out porque va a llevar en el sistema: " + (eTime - qS.getSystemArriveTime()) + " < " + simPintoDBPointer.getT() );
+            System.out.println("Y NO time out porque va a llevar en el sistema: " + (eTime - qS.getSystemArriveTime()) + " < " + simPintoDBPointer.getT());
             e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
             eQ.add(e);
         }
@@ -373,8 +387,8 @@ public class TransactionAndDiskModule extends Module {
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
         System.out.println("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + "de transacciones" + "al modulo " + "ejecucion de consultas" +  " y su tiempo en el sistema es de: " 
-                    + (simPintoDBPointer.getSimClock()- clientQuery.getQueryStatistics().getSystemArriveTime() ) );
+                + "de transacciones" + "al modulo " + "ejecucion de consultas" + " y su tiempo en el sistema es de: "
+                + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
         try {
             // thread to sleep for 1000 milliseconds
             Thread.sleep(SimPintoDB.sleepTime);

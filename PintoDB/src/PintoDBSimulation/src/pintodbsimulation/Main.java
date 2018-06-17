@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 public class Main {
 
     public void TestingEventList() {
-        PriorityQueue<Event> pq = new PriorityQueue<>(new EventComparator());
+        /*PriorityQueue<Event> pq = new PriorityQueue<>(new EventComparator());
         ClientQuery dummy = new ClientQuery(StatementType.UPDATE, null);
         Event e;
         SimPintoDB x = new SimPintoDB();
@@ -50,7 +50,7 @@ public class Main {
                     + ", " + temp.getMod().getClass().getSimpleName() );
         }
         
-        /*
+        
         PriorityQueue<ClientQuery> cq = new PriorityQueue<>(10, new ClientQueryComparator());
         ClientQuery cQ;
 
@@ -77,14 +77,12 @@ public class Main {
         }*/
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         SimPintoDB pintoDB = new SimPintoDB();
         pintoDB.run();
-        MainForm mf = new MainForm();
+        //MainForm mf = new MainForm();
         
-        Main m = new Main();
+        //Main m = new Main();
         //m.TestingEventList();
-
     }
-*/
 }

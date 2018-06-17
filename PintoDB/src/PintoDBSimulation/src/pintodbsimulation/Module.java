@@ -13,7 +13,9 @@ public abstract class Module {
     protected RandomNumberGenerator randNoGen;
     protected LinkedList<ClientQuery> queryQueue;
     protected PriorityQueue<ClientQuery> queryPriorityQueue;
-    protected LinkedList<Integer> queueSizeRegister;
+    //protected LinkedList<Integer> queueSizeRegister;
+    protected int queueSizesCounter;
+    protected int queueSizesAccumulator;
     protected SimPintoDB simPintoDBPointer;
     protected Module nextModule;
 
@@ -32,7 +34,9 @@ public abstract class Module {
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
         this.queryPriorityQueue = new PriorityQueue<>(maxServers, new ClientQueryComparator());
-        this.queueSizeRegister = new LinkedList<>();
+        //this.queueSizeRegister = new LinkedList<>();
+        this.queueSizesCounter = 0;
+        this.queueSizesAccumulator = 0;
     }
 
     /**
@@ -43,7 +47,9 @@ public abstract class Module {
         servers = 0;
         queryQueue.clear();
         queryPriorityQueue.clear();
-        queueSizeRegister.clear();
+        //queueSizeRegister.clear();
+        queueSizesCounter = 0;
+        queueSizesAccumulator = 0;
     }
     
     /**
@@ -58,8 +64,25 @@ public abstract class Module {
      *
      * @return
      */
-    public LinkedList<Integer> getQueueSizeRegister() {
+    
+    /*public LinkedList<Integer> getQueueSizeRegister() {
         return queueSizeRegister;
+    }*/
+    
+    /**
+     *
+     * @return
+     */
+    public int getQueueSizesCounter(){
+        return this.queueSizesCounter;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public int getQueueSizesAccumulator(){
+        return this.queueSizesAccumulator;
     }
 
     /**

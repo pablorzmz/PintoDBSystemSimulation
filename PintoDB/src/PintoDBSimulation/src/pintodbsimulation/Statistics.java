@@ -155,12 +155,14 @@ public class Statistics {
                 
         //Connection Module will be zero, no queue
         // Process Managment Module
-        queueSize = m.getQueueSizeRegister().size();
+        /*queueSize = m.getQueueSizeRegister().size();
         for( int index = 0; index < queueSize; ++index )
         {                     
             value += m.getQueueSizeRegister().get(index);
         }
-        value /= queueSize==0?1:queueSize;
+        value /= queueSize==0?1:queueSize;*/
+        value = m.getQueueSizesAccumulator();
+        value /= m.getQueueSizesCounter()==0?1:m.getQueueSizesCounter();
         return value;
     }
     /**

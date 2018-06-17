@@ -32,7 +32,9 @@ public class QueryProcessorModule extends Module {
             }
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizeRegister.add(queryQueue.size());
+                //queueSizeRegister.add(queryQueue.size());
+                queueSizesAccumulator += queryQueue.size();
+                ++queueSizesCounter;
             } else { //If there isn't client waiting to be attended
                 --servers;
             }
@@ -81,7 +83,9 @@ public class QueryProcessorModule extends Module {
                 System.out.println(ex);
             }
             queryQueue.add(arrivingCQ);
-            queueSizeRegister.add(queryQueue.size());
+            //queueSizeRegister.add(queryQueue.size());
+            queueSizesAccumulator += queryQueue.size();
+            ++queueSizesCounter;
         }
     }
 
@@ -105,7 +109,9 @@ public class QueryProcessorModule extends Module {
                 System.out.println(ex);
             }
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-            queueSizeRegister.add(queryQueue.size());
+            //queueSizeRegister.add(queryQueue.size());
+            queueSizesAccumulator += queryQueue.size();
+            ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                     + "procesador de consultas" +  " y su tiempo en el sistema es de: " 

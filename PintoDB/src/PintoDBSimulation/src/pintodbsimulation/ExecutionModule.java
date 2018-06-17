@@ -31,7 +31,9 @@ public class ExecutionModule extends Module {
                     System.out.println(ex);
                 }
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizeRegister.add(queryQueue.size());
+                //queueSizeRegister.add(queryQueue.size());
+                queueSizesAccumulator += queryQueue.size();
+                ++queueSizesCounter;
             } else { //If there isn't client waiting to be attended
                 --servers;
             }
@@ -80,7 +82,9 @@ public class ExecutionModule extends Module {
                 System.out.println(ex);
             }
             queryQueue.add(arrivingCQ);
-            queueSizeRegister.add(queryQueue.size());
+            //queueSizeRegister.add(queryQueue.size());
+            queueSizesAccumulator += queryQueue.size();
+            ++queueSizesCounter;
         }
     }
 
@@ -104,7 +108,9 @@ public class ExecutionModule extends Module {
                 System.out.println(ex);
             }
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-            queueSizeRegister.add(queryQueue.size());
+            //queueSizeRegister.add(queryQueue.size());
+            queueSizesAccumulator += queryQueue.size();
+            ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
             System.out.println("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                     + "ejecución de consultas" +  " y su tiempo en el sistema es de: " 
@@ -149,7 +155,7 @@ public class ExecutionModule extends Module {
             default:
                 QueryStatistics cQS = clientQuery.getQueryStatistics();
                 int uB = cQS.getUsedBlocks();
-                eTime += ((uB * uB)/1000.0) /*it was in miliseconds*/ + uB / 64;
+                eTime += ((uB * uB)/1000.0) /*it was in miliseconds*/ + uB / 64 /*R*/;
                 break;
         }
                 

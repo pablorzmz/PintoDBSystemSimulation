@@ -79,11 +79,8 @@ public class ConnectionModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery leavingCQ = e.getClientQuery();
         leavingCQ.setCurrentMod(this);
-        /* Transmition time = blocks into seconds*/
-        double R = leavingCQ.getQueryStatistics().getUsedBlocks();
-        R = 0;
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
-        leavingQS.setSystemLeaveTime(e.getClockTime() + R ); //I need to update the outgoing client data
+        leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
         System.out.println( SimPintoDB.CYAN +"Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                 + "Conexión" +  SimPintoDB.RESET );
