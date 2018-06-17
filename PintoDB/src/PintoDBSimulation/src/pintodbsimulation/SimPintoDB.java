@@ -22,6 +22,7 @@ public class SimPintoDB {
     private Module queryProcessorModule;
     private Module executionModule;
     private Module transactionModule;
+    private final MainForm interFace;
     public final static int sleepTime = 0;
     public static final String YELLOW = "\033[0;33m";
     public static final String GREEN = "\033[0;32m";
@@ -34,7 +35,8 @@ public class SimPintoDB {
     /**
      *
      */
-    public SimPintoDB() {
+    public SimPintoDB(MainForm intf) {
+        this.interFace = intf;
     }
 
     /**
@@ -199,8 +201,8 @@ public class SimPintoDB {
         this.m = 5;
         this.n = 5;
         this.p = 5;
-        this.t = 100.0;
-        this.maxSimClock = 10.0;
+        this.t = 60.0;
+        this.maxSimClock = 60.0;
         this.timesToRunSimulation = 1;
         // Construct client list
         this.clients = new LinkedList<>();
