@@ -3,8 +3,9 @@ package pintodbsimulation;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import javax.swing.JOptionPane;
 
-public class SimPintoDB {
+public class SimPintoDB extends Thread  {
 
     private int timesToRunSimulation;
     private double simClock;
@@ -23,7 +24,7 @@ public class SimPintoDB {
     private Module executionModule;
     private Module transactionModule;
     private final MainForm interFace;
-    public final static int sleepTime = 0;
+    public final static int sleepTime = 100;
     public static final String YELLOW = "\033[0;33m";
     public static final String GREEN = "\033[0;32m";
     public static final String RESET = "\033[0m";
@@ -31,12 +32,49 @@ public class SimPintoDB {
     public static final String RED = "\033[0;31m";
     public static final String CYAN = "\u001B[36m";
     public static final String PURPLE = "\u001B[35m";
-
+    
+    /**
+     * 
+     * @param k
+     * @param m
+     * @param n
+     * @param p
+     * @param timesToRunSim
+     * @param maxTimeToRunSim
+     * @param t 
+     */
+    public void setSimParams(int k, int m, int n, int p, int timesToRunSim, double maxTimeToRunSim, double t)
+    {
+        this.k = k;
+        this.m = m;
+        this.n = n;
+        this.t = t;
+        this.p = p;
+        this.maxSimClock = maxTimeToRunSim;
+        this.timesToRunSimulation = timesToRunSim;
+    }
     /**
      *
      */
     public SimPintoDB(MainForm intf) {
+        //pointer to interface
         this.interFace = intf;
+        
+        // list of clients and stats
+        this.clients = new LinkedList<>();
+        stats = new Statistics(this);
+        
+        // Construct modules
+        this.executionModule = new ExecutionModule(0, 1, this, null);
+        this.transactionModule = new TransactionAndDiskModule(0, 1, this, executionModule);
+        this.queryProcessorModule = new QueryProcessorModule(0, 1, this, transactionModule);
+        this.processManagemnteModule = new ProcessManagmentModule(0, 1, this, queryProcessorModule);
+        this.connectionModule = new ConnectionModule(0, 1, this, processManagemnteModule);
+        this.executionModule.setNextModule( connectionModule );
+
+        //Construct event list
+        EventComparator e = new EventComparator();
+        this.systemEventList = new PriorityQueue<>(e);
     }
 
     /**
@@ -195,50 +233,30 @@ public class SimPintoDB {
     /**
      *
      */
+    @Override
     public void run() {
-        // Values for debugging
-        this.k = 10;
-        this.m = 5;
-        this.n = 5;
-        this.p = 5;
-        this.t = 60.0;
-        this.maxSimClock = 60.0;
-        this.timesToRunSimulation = 1;
-        // Construct client list
-        this.clients = new LinkedList<>();
-        // Construct modules
-        this.executionModule = new ExecutionModule(0, m, this, null);
-        this.transactionModule = new TransactionAndDiskModule(0, p, this, executionModule);
-        this.queryProcessorModule = new QueryProcessorModule(0, n, this, transactionModule);
-        this.processManagemnteModule = new ProcessManagmentModule(0, 1, this, queryProcessorModule);
-        this.connectionModule = new ConnectionModule(0, k, this, processManagemnteModule);
-        this.executionModule.setNextModule(connectionModule);
-
-        //Construct event list
-        EventComparator e = new EventComparator();
-        this.systemEventList = new PriorityQueue<>(e);
-
         // Initialize simulation
         initializeSimCicle();        
         // descomentar esto para probar un modulo especifico y comentar la parte de arriba entre los @
         //this.forTestingAModule( transactionModule );        
         //stats
-        stats = new Statistics(this);
 
-        for (int times = 0; times < timesToRunSimulation; ++times) {
-            while (simClock < maxSimClock && systemEventList.size() > 0) {
+        for (int times = 0; times < timesToRunSimulation && !interFace.stopSimulation ; ++times) {
+            while ( simClock < maxSimClock && systemEventList.size() > 0 && !interFace.stopSimulation ) {
                 Event currentEvent = this.systemEventList.peek();
                 Module currentMod = currentEvent.getMod();
-                simClock = currentEvent.getClockTime();
-                System.out.println("Current clock time: " + simClock);
-
+                simClock = currentEvent.getClockTime();  
+                this.interFace.refreshClockTime( simClock );
+                this.interFace.refreshDeniendConnection( ((ConnectionModule)connectionModule).getDeniedConnectionCounter() );
+                this.interFace.refreshConsoleAreaContent( "Current clock time: " + simClock );
+                this.interFace.refreshConsoleAreaContent( "Next Event: " + currentEvent.getEventType());                                                                                    
                 switch (currentEvent.getEventType()) {
-                    case ARRIVE:                                                
-                        System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
+                    case ARRIVE:                        
+                        //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
                         currentMod.processArrive();
                         break;
                     case LEAVE:
-                        System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
+                        //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
                         currentMod.processExit();
                         break;
                     case TIMEOUT:
@@ -263,16 +281,27 @@ public class SimPintoDB {
             executionModule.clear();
             initializeSimCicle();
         }
-        stats.generateFinalStatistics();
-        IterationStatistics f = stats.getFinalIterationStats();
-        f.printValues();
+        if ( !interFace.stopSimulation )
+        {
+            stats.generateFinalStatistics();
+            IterationStatistics f = stats.getFinalIterationStats();
+            f.printValues();
+        }        
+        interFace.activeRunButton( true );
+        interFace.activeTextFiles( true );
     }
 
     double getT() {
         return this.t;
     }
 
-    private void initializeSimCicle() {
+    private void initializeSimCicle() {        
+        this.connectionModule.setMaxServers( k ); 
+        this.executionModule.setMaxServers( m );
+        this.transactionModule.setMaxServers( p );
+        this.queryProcessorModule.setMaxServers( n );
+        this.processManagemnteModule.setMaxServers( 1 );
+        
         RandomNumberGenerator r = new RandomNumberGenerator();
         ClientQuery firstOne = new ClientQuery(r.getConnectionStatementType(), connectionModule);
         Event firstEvent = new Event(firstOne, SimEvent.ARRIVE, connectionModule, 0.0);

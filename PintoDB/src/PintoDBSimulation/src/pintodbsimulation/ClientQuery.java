@@ -6,17 +6,6 @@ package pintodbsimulation;
  * and open the template in the editor.
  */
 
-
-import pintodbsimulation.ConnectionModule;
-import pintodbsimulation.ExecutionModule;
-import pintodbsimulation.Module;
-import pintodbsimulation.ProcessManagmentModule;
-import pintodbsimulation.QueryProcessorModule;
-import pintodbsimulation.QueryStatistics;
-import pintodbsimulation.StatementType;
-import pintodbsimulation.Statistics;
-import pintodbsimulation.TransactionAndDiskModule;
-
 /**
  *
  * @author pablo

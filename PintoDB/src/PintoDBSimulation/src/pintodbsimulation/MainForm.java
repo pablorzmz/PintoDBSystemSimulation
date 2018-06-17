@@ -5,6 +5,8 @@
  */
 package pintodbsimulation;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author pablo
@@ -90,7 +92,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel8.setText("Max time to run simulation:");
 
         txt_k.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_k.setText("0");
+        txt_k.setText("1");
         txt_k.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_kKeyTyped(evt);
@@ -98,7 +100,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_t.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_t.setText("0");
+        txt_t.setText("15");
         txt_t.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_tKeyTyped(evt);
@@ -106,7 +108,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_m.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_m.setText("0");
+        txt_m.setText("1");
         txt_m.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_mKeyTyped(evt);
@@ -114,7 +116,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_n.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_n.setText("0");
+        txt_n.setText("1");
         txt_n.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_nKeyTyped(evt);
@@ -122,7 +124,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_p.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_p.setText("0");
+        txt_p.setText("1");
         txt_p.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_pKeyTyped(evt);
@@ -130,7 +132,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_MaxTimeToRunSim.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_MaxTimeToRunSim.setText("0");
+        txt_MaxTimeToRunSim.setText("15");
         txt_MaxTimeToRunSim.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_MaxTimeToRunSimKeyTyped(evt);
@@ -138,7 +140,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txt_timesToRunSim.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_timesToRunSim.setText("0");
+        txt_timesToRunSim.setText("1");
         txt_timesToRunSim.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_timesToRunSimKeyTyped(evt);
@@ -148,10 +150,20 @@ public class MainForm extends javax.swing.JFrame {
         btnStop.setBackground(new java.awt.Color(255, 153, 153));
         btnStop.setText("Stop");
         btnStop.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
+            }
+        });
 
         btnRun.setBackground(new java.awt.Color(153, 255, 153));
         btnRun.setText("Run");
         btnRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRunActionPerformed(evt);
+            }
+        });
 
         chkDelayMode.setText("Delay mode");
 
@@ -162,7 +174,6 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chkDelayMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,7 +201,8 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btnRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnStop)))
+                        .addComponent(btnStop))
+                    .addComponent(chkDelayMode))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -236,7 +248,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(25, 25, 25))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock time"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock time ( seconds )"));
 
         txtClockTime.setEditable(false);
         txtClockTime.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -390,7 +402,7 @@ public class MainForm extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 162, Short.MAX_VALUE)
+            .addGap(0, 197, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Statistics", jPanel3);
@@ -411,7 +423,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -437,8 +449,8 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addComponent(jTabbedPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -450,7 +462,7 @@ public class MainForm extends javax.swing.JFrame {
      * @param evt 
      */
     private void controlJustNumber(java.awt.event.KeyEvent evt)
-    {
+    {      
       char c = evt.getKeyChar();
       if (!((c >= '0') && (c <= '9') ||
          (c == evt.VK_BACK_SPACE) ||
@@ -460,38 +472,152 @@ public class MainForm extends javax.swing.JFrame {
       }
     }
     
-    public void refreshConsoleAreaContent( String newContent )
+    private boolean validateData()
     {
+        int k,p,m,n,timesToRunSim;
+        double t, maxSimTime;
+        
+        k = Integer.parseInt( txt_k.getText() );
+        m = Integer.parseInt( txt_m.getText() );
+        n = Integer.parseInt( txt_n.getText() );
+        p = Integer.parseInt( txt_p.getText() );
+        timesToRunSim = Integer.parseInt( txt_timesToRunSim.getText() );
+        
+        try {
+            t = Double.parseDouble( txt_t.getText() );
+        } catch  (Exception e ) {
+            JOptionPane.showMessageDialog( this,
+            "Error input in parameter timeout time ( t )",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_t.requestFocus();
+            return false;
+        }
+        
+        try {
+            maxSimTime = Double.parseDouble( txt_MaxTimeToRunSim.getText() );
+        } catch  ( Exception e ) {
+            JOptionPane.showMessageDialog( this,
+            "Error input in parameter max time to run simulation ",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_MaxTimeToRunSim.requestFocus();
+            return false;
+        }
+        this.pintoDB.setSimParams( k, m, n, p, timesToRunSim, maxSimTime, t );
+        return true;
+    }
+    
+    public void refreshConsoleAreaContent( String newContent )
+    {     
         String oldContent = txtConsoleArea.getText();
-        this.txtConsoleArea.setText( oldContent + newContent );
+        this.txtConsoleArea.setText( oldContent + newContent  + "\n" );
+        this.txtConsoleArea.setCaretPosition( txtConsoleArea.getDocument().getLength() );
     }
     
     private void txt_MaxTimeToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MaxTimeToRunSimKeyTyped
-
+        if ( (txt_MaxTimeToRunSim.getText()).length() > MAX_LENGHT ) {
+            evt.consume();
+        }     
     }//GEN-LAST:event_txt_MaxTimeToRunSimKeyTyped
 
     private void txt_timesToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_timesToRunSimKeyTyped
-        controlJustNumber( evt );
+        if ( (txt_timesToRunSim.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
     }//GEN-LAST:event_txt_timesToRunSimKeyTyped
 
     private void txt_tKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_tKeyTyped
-         
+        if ( (txt_t.getText()).length() > MAX_LENGHT ) {
+            evt.consume();
+        }         
     }//GEN-LAST:event_txt_tKeyTyped
 
     private void txt_pKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_pKeyTyped
-         controlJustNumber( evt );
+        if ( (txt_p.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
     }//GEN-LAST:event_txt_pKeyTyped
 
     private void txt_nKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nKeyTyped
-        controlJustNumber( evt );
+        if ( (txt_n.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
     }//GEN-LAST:event_txt_nKeyTyped
 
+    public void activeTextFiles( boolean action)
+    {
+        this.txt_k.setEnabled( action );
+        this.txt_n.setEnabled( action );
+        this.txt_m.setEnabled( action );
+        this.txt_p.setEnabled( action );
+        this.txt_t.setEnabled( action );
+        this.txt_MaxTimeToRunSim.setEnabled( action );
+        this.txt_timesToRunSim.setEnabled( action );
+    }
+    private void btnRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunActionPerformed
+        if ( validateData() ) 
+        {
+            //run simulation
+            this.txtConsoleArea.setText("");
+            stopSimulation = false;
+            activeTextFiles( false );
+            if ( this.pintoDB == null )
+                 this.pintoDB = new SimPintoDB( this );
+            this.pintoDB.start();
+            activeRunButton( false );
+        }        
+        this.pintoDB = new SimPintoDB(this);
+    }//GEN-LAST:event_btnRunActionPerformed
+    
+    /**
+     * 
+     * @param cond 
+     */
+    public void activeRunButton( boolean cond )
+    {
+            this.btnRun.setEnabled( cond );
+    }
+    
+    /**
+     * 
+     * @param time 
+     */
+    public void refreshClockTime( double time )
+    {
+        this.txtClockTime.setText( String.valueOf( time ) );
+    }
+    
+    public void refreshDeniendConnection( int count )
+    {
+        this.txtDeniendConnections.setText( String.valueOf( count ) );
+    }
+    
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        activeTextFiles( true );         
+        stopSimulation = true;        
+    }//GEN-LAST:event_btnStopActionPerformed
+
     private void txt_mKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_mKeyTyped
-        controlJustNumber( evt );
+        if ( (txt_m.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }        
     }//GEN-LAST:event_txt_mKeyTyped
 
     private void txt_kKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_kKeyTyped
-        controlJustNumber( evt );
+        if ( (txt_k.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
     }//GEN-LAST:event_txt_kKeyTyped
 
     /**
@@ -526,15 +652,17 @@ public class MainForm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MainForm m = new  MainForm();
-                m.setLocationRelativeTo(null);
-                m.setVisible(true); 
-                SimPintoDB pintoDB = new SimPintoDB(m);
-                pintoDB.run();    
+                m.setLocationRelativeTo( null );
+                m.setVisible( true );                 
+                m.pintoDB = new SimPintoDB( m );
             }
         });
         
     }
 
+    private final int MAX_LENGHT = 4;
+    public SimPintoDB pintoDB;
+    volatile boolean stopSimulation = false;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRun;
     private javax.swing.JButton btnStop;

@@ -33,7 +33,7 @@ public abstract class Module {
         this.nextModule = nextModule;
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
-        this.queryPriorityQueue = new PriorityQueue<>(maxServers, new ClientQueryComparator());
+        this.queryPriorityQueue = new PriorityQueue<>( new ClientQueryComparator());
         //this.queueSizeRegister = new LinkedList<>();
         this.queueSizesCounter = 0;
         this.queueSizesAccumulator = 0;
@@ -127,4 +127,9 @@ public abstract class Module {
     public PriorityQueue<ClientQuery> getPriorityQueryQueue() {
         return queryPriorityQueue;
     }
+
+    public void setMaxServers(int maxServers) {
+        this.maxServers = maxServers;
+    }
+    
 }
