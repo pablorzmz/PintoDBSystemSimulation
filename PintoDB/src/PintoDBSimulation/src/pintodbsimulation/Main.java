@@ -76,11 +76,4 @@ public class Main {
             System.out.println(temp.getQueryType());
         }*/
     }
-
-    public static void main(String[] args) {
-        //MainForm mf = new MainForm();
-        
-        //Main m = new Main();
-        //m.TestingEventList();
-    }
 }

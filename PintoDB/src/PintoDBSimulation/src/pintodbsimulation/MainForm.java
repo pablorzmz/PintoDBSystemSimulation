@@ -17,6 +17,9 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form MainForm
      */
     public MainForm() {
+        stopSimulation = false;
+        sleepMode = true ;
+        showConsole = true;
         initComponents();
     }
 
@@ -47,6 +50,7 @@ public class MainForm extends javax.swing.JFrame {
         btnStop = new javax.swing.JButton();
         btnRun = new javax.swing.JButton();
         chkDelayMode = new javax.swing.JCheckBox();
+        chkShowOuput = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         txtClockTime = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
@@ -57,15 +61,20 @@ public class MainForm extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtTransacMod = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        txtProMgmtcModule = new javax.swing.JTextField();
+        txtQueryProcMod = new javax.swing.JTextField();
+        txtExecMod = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtConsoleArea = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtIterarionStats = new javax.swing.JTextArea();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtFinalIterarionStats = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -165,7 +174,21 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        chkDelayMode.setSelected(true);
         chkDelayMode.setText("Delay mode");
+        chkDelayMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkDelayModeActionPerformed(evt);
+            }
+        });
+
+        chkShowOuput.setSelected(true);
+        chkShowOuput.setText("Show output");
+        chkShowOuput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkShowOuputActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -202,7 +225,10 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(btnRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnStop))
-                    .addComponent(chkDelayMode))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(chkDelayMode)
+                        .addGap(18, 18, 18)
+                        .addComponent(chkShowOuput)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -240,7 +266,9 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(txt_MaxTimeToRunSim))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkDelayMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkDelayMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chkShowOuput))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRun)
@@ -306,25 +334,25 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel13.setText("Execution Module:");
 
-        jTextField1.setEditable(false);
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField1.setText("0");
+        txtTransacMod.setEditable(false);
+        txtTransacMod.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTransacMod.setText("0");
 
         jTextField2.setEditable(false);
         jTextField2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField2.setText("0");
 
-        jTextField3.setEditable(false);
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField3.setText("0");
+        txtProMgmtcModule.setEditable(false);
+        txtProMgmtcModule.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtProMgmtcModule.setText("0");
 
-        jTextField4.setEditable(false);
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField4.setText("0");
+        txtQueryProcMod.setEditable(false);
+        txtQueryProcMod.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtQueryProcMod.setText("0");
 
-        jTextField5.setEditable(false);
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField5.setText("0");
+        txtExecMod.setEditable(false);
+        txtExecMod.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtExecMod.setText("0");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -336,7 +364,7 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTransacMod, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -347,12 +375,12 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
-                            .addComponent(jTextField3)))
+                            .addComponent(txtQueryProcMod, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                            .addComponent(txtProMgmtcModule)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(12, 12, 12)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtExecMod, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -365,19 +393,19 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtProMgmtcModule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtQueryProcMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTransacMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField5))
+                    .addComponent(txtExecMod))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -386,7 +414,6 @@ public class MainForm extends javax.swing.JFrame {
         txtConsoleArea.setColumns(20);
         txtConsoleArea.setForeground(new java.awt.Color(255, 255, 255));
         txtConsoleArea.setRows(5);
-        txtConsoleArea.setText(" Console Area\n");
         txtConsoleArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane1.setViewportView(txtConsoleArea);
 
@@ -394,18 +421,43 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 2));
 
+        txtIterarionStats.setBackground(new java.awt.Color(51, 51, 51));
+        txtIterarionStats.setColumns(20);
+        txtIterarionStats.setForeground(new java.awt.Color(255, 255, 255));
+        txtIterarionStats.setRows(5);
+        jScrollPane2.setViewportView(txtIterarionStats);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 989, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 989, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 197, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Statistics", jPanel3);
+        jTabbedPane1.addTab("Iteration statistics", jPanel3);
+
+        txtFinalIterarionStats.setBackground(new java.awt.Color(51, 51, 51));
+        txtFinalIterarionStats.setColumns(20);
+        txtFinalIterarionStats.setForeground(new java.awt.Color(255, 255, 255));
+        txtFinalIterarionStats.setRows(5);
+        jScrollPane3.setViewportView(txtFinalIterarionStats);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 993, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Final iterarion statistics", jPanel6);
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -460,6 +512,58 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * 
      * @param evt 
+     */    
+    private void txt_MaxTimeToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MaxTimeToRunSimKeyTyped
+        if ( (txt_MaxTimeToRunSim.getText()).length() > MAX_LENGHT ) {
+            evt.consume();
+        }     
+    }//GEN-LAST:event_txt_MaxTimeToRunSimKeyTyped
+    /**
+     * 
+     * @param evt 
+     */
+    private void txt_timesToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_timesToRunSimKeyTyped
+        if ( (txt_timesToRunSim.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txt_timesToRunSimKeyTyped
+    /**
+     * 
+     * @param evt 
+     */
+    private void txt_tKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_tKeyTyped
+        if ( (txt_t.getText()).length() > MAX_LENGHT ) {
+            evt.consume();
+        }         
+    }//GEN-LAST:event_txt_tKeyTyped
+    /**
+     * 
+     * @param evt 
+     */
+    private void txt_pKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_pKeyTyped
+        if ( (txt_p.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txt_pKeyTyped
+    /**
+     * 
+     * @param evt 
+     */
+    private void txt_nKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nKeyTyped
+        if ( (txt_n.getText()).length() <= MAX_LENGHT ) {
+            controlJustNumber( evt );
+        } else {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txt_nKeyTyped
+    
+    /**
+     * 
+     * @param evt 
      */
     private void controlJustNumber(java.awt.event.KeyEvent evt)
     {      
@@ -472,17 +576,65 @@ public class MainForm extends javax.swing.JFrame {
       }
     }
     
+    /**
+     * 
+     * @return 
+     */
     private boolean validateData()
     {
         int k,p,m,n,timesToRunSim;
         double t, maxSimTime;
         
         k = Integer.parseInt( txt_k.getText() );
+        if ( k <= 0 )
+        {
+            JOptionPane.showMessageDialog( this,
+            "Parameter k must be positive and greater than zero",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_k.requestFocus();
+            return false;            
+        }
         m = Integer.parseInt( txt_m.getText() );
+        if ( m <= 0 )
+        {
+            JOptionPane.showMessageDialog( this,
+            "Parameter m must be positive and greater than zero",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_m.requestFocus();
+            return false;            
+        }
         n = Integer.parseInt( txt_n.getText() );
+        if ( n <= 0 )
+        {
+            JOptionPane.showMessageDialog( this,
+            "Parameter n must be positive and greater than zero",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_n.requestFocus();
+            return false;            
+        }        
         p = Integer.parseInt( txt_p.getText() );
+        if ( p <= 0 )
+        {
+            JOptionPane.showMessageDialog( this,
+            "Parameter p must be positive and greater than zero",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_p.requestFocus();
+            return false;            
+        }        
         timesToRunSim = Integer.parseInt( txt_timesToRunSim.getText() );
-        
+        if ( timesToRunSim <= 0 )
+        {
+            JOptionPane.showMessageDialog( this,
+            "Parameter timesToRunSim must be positive and greater than zero",
+            "Error",
+            JOptionPane.ERROR_MESSAGE );
+            this.txt_timesToRunSim.requestFocus();
+            return false;            
+        }        
         try {
             t = Double.parseDouble( txt_t.getText() );
         } catch  (Exception e ) {
@@ -508,49 +660,47 @@ public class MainForm extends javax.swing.JFrame {
         return true;
     }
     
+    /**
+     * 
+     * @param newContent 
+     */
     public void refreshConsoleAreaContent( String newContent )
-    {     
-        String oldContent = txtConsoleArea.getText();
-        this.txtConsoleArea.setText( oldContent + newContent  + "\n" );
-        this.txtConsoleArea.setCaretPosition( txtConsoleArea.getDocument().getLength() );
+    {   
+        if ( showConsole )
+        {
+            String oldContent = txtConsoleArea.getText();
+            this.txtConsoleArea.setText( oldContent + newContent  + "\n" );
+            this.txtConsoleArea.setCaretPosition( txtConsoleArea.getDocument().getLength() );            
+        }else
+        {
+            this.txtConsoleArea.setText("");
+        }
     }
     
-    private void txt_MaxTimeToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MaxTimeToRunSimKeyTyped
-        if ( (txt_MaxTimeToRunSim.getText()).length() > MAX_LENGHT ) {
-            evt.consume();
-        }     
-    }//GEN-LAST:event_txt_MaxTimeToRunSimKeyTyped
-
-    private void txt_timesToRunSimKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_timesToRunSimKeyTyped
-        if ( (txt_timesToRunSim.getText()).length() <= MAX_LENGHT ) {
-            controlJustNumber( evt );
-        } else {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txt_timesToRunSimKeyTyped
-
-    private void txt_tKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_tKeyTyped
-        if ( (txt_t.getText()).length() > MAX_LENGHT ) {
-            evt.consume();
-        }         
-    }//GEN-LAST:event_txt_tKeyTyped
-
-    private void txt_pKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_pKeyTyped
-        if ( (txt_p.getText()).length() <= MAX_LENGHT ) {
-            controlJustNumber( evt );
-        } else {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txt_pKeyTyped
-
-    private void txt_nKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nKeyTyped
-        if ( (txt_n.getText()).length() <= MAX_LENGHT ) {
-            controlJustNumber( evt );
-        } else {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txt_nKeyTyped
-
+    public void refresQueueSizesPerModule(int pM, int qM, int tM, int eM)
+    {
+        this.txtProMgmtcModule.setText( String.valueOf( pM ) );
+        this.txtQueryProcMod.setText( String.valueOf( qM ) );
+        this.txtTransacMod.setText( String.valueOf( tM ) );
+        this.txtExecMod.setText( String.valueOf( eM ) );
+    }
+    /**
+     * 
+     * @param time 
+     */
+    public void refreshClockTime( double time )
+    {
+        this.txtClockTime.setText( String.valueOf( time ) );
+    }
+    
+    public void refreshDeniendConnection( int count )
+    {
+        this.txtDeniendConnections.setText( String.valueOf( count ) );
+    }    
+    /**
+     * 
+     * @param action 
+     */
     public void activeTextFiles( boolean action)
     {
         this.txt_k.setEnabled( action );
@@ -561,11 +711,44 @@ public class MainForm extends javax.swing.JFrame {
         this.txt_MaxTimeToRunSim.setEnabled( action );
         this.txt_timesToRunSim.setEnabled( action );
     }
+    
+    /**
+     * 
+     * @param newContent 
+     */
+    public void refreshIterationStats( String newContent )
+    {
+        String oldContent = this.txtIterarionStats.getText();
+        this.txtIterarionStats.setText( oldContent + newContent );
+        this.txtIterarionStats.setCaretPosition( txtIterarionStats.getDocument().getLength() );         
+    }
+    /**
+     * 
+     * @param newContent 
+     */
+    public void refreshFinalIterationStats( String newContent )
+    {
+        String oldContent = this.txtFinalIterarionStats.getText();
+        this.txtFinalIterarionStats.setText( oldContent + newContent );        
+    }    
+    /**
+     * 
+     * @param evt 
+     */
     private void btnRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunActionPerformed
         if ( validateData() ) 
         {
-            //run simulation
+            // clear data
             this.txtConsoleArea.setText("");
+            this.txtClockTime.setText("");
+            this.txtDeniendConnections.setText("");
+            this.txtProMgmtcModule.setText("");
+            this.txtQueryProcMod.setText("");
+            this.txtExecMod.setText("");
+            this.txtTransacMod.setText("");
+            this.txtFinalIterarionStats.setText("");
+            this.txtIterarionStats.setText("");
+            //run simulation
             stopSimulation = false;
             activeTextFiles( false );
             if ( this.pintoDB == null )
@@ -584,21 +767,7 @@ public class MainForm extends javax.swing.JFrame {
     {
             this.btnRun.setEnabled( cond );
     }
-    
-    /**
-     * 
-     * @param time 
-     */
-    public void refreshClockTime( double time )
-    {
-        this.txtClockTime.setText( String.valueOf( time ) );
-    }
-    
-    public void refreshDeniendConnection( int count )
-    {
-        this.txtDeniendConnections.setText( String.valueOf( count ) );
-    }
-    
+        
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         activeTextFiles( true );         
         stopSimulation = true;        
@@ -619,6 +788,14 @@ public class MainForm extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txt_kKeyTyped
+
+    private void chkDelayModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkDelayModeActionPerformed
+        this.sleepMode = chkDelayMode.isSelected();
+    }//GEN-LAST:event_chkDelayModeActionPerformed
+
+    private void chkShowOuputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowOuputActionPerformed
+        this.showConsole = chkShowOuput.isSelected();
+    }//GEN-LAST:event_chkShowOuputActionPerformed
 
     /**
      * @param args the command line arguments
@@ -649,7 +826,7 @@ public class MainForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater( new Runnable() {
             public void run() {
                 MainForm m = new  MainForm();
                 m.setLocationRelativeTo( null );
@@ -661,12 +838,15 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private final int MAX_LENGHT = 4;
+    private boolean showConsole;
     public SimPintoDB pintoDB;
-    volatile boolean stopSimulation = false;
+    public volatile boolean stopSimulation;
+    public volatile boolean sleepMode;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRun;
     private javax.swing.JButton btnStop;
     private javax.swing.JCheckBox chkDelayMode;
+    private javax.swing.JCheckBox chkShowOuput;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -687,16 +867,21 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField txtClockTime;
     private javax.swing.JTextArea txtConsoleArea;
     private javax.swing.JTextField txtDeniendConnections;
+    private javax.swing.JTextField txtExecMod;
+    private javax.swing.JTextArea txtFinalIterarionStats;
+    private javax.swing.JTextArea txtIterarionStats;
+    private javax.swing.JTextField txtProMgmtcModule;
+    private javax.swing.JTextField txtQueryProcMod;
+    private javax.swing.JTextField txtTransacMod;
     private javax.swing.JTextField txt_MaxTimeToRunSim;
     private javax.swing.JTextField txt_k;
     private javax.swing.JTextField txt_m;

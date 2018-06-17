@@ -3,9 +3,10 @@ package pintodbsimulation;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class SimPintoDB extends Thread  {
+public class SimPintoDB extends Thread {
 
     private int timesToRunSimulation;
     private double simClock;
@@ -24,7 +25,7 @@ public class SimPintoDB extends Thread  {
     private Module executionModule;
     private Module transactionModule;
     private final MainForm interFace;
-    public final static int sleepTime = 100;
+    public final static int sleepTime = 750;
     public static final String YELLOW = "\033[0;33m";
     public static final String GREEN = "\033[0;32m";
     public static final String RESET = "\033[0m";
@@ -32,19 +33,18 @@ public class SimPintoDB extends Thread  {
     public static final String RED = "\033[0;31m";
     public static final String CYAN = "\u001B[36m";
     public static final String PURPLE = "\u001B[35m";
-    
+
     /**
-     * 
+     *
      * @param k
      * @param m
      * @param n
      * @param p
      * @param timesToRunSim
      * @param maxTimeToRunSim
-     * @param t 
+     * @param t
      */
-    public void setSimParams(int k, int m, int n, int p, int timesToRunSim, double maxTimeToRunSim, double t)
-    {
+    public void setSimParams(int k, int m, int n, int p, int timesToRunSim, double maxTimeToRunSim, double t) {
         this.k = k;
         this.m = m;
         this.n = n;
@@ -53,28 +53,198 @@ public class SimPintoDB extends Thread  {
         this.maxSimClock = maxTimeToRunSim;
         this.timesToRunSimulation = timesToRunSim;
     }
+
     /**
      *
+     * @param intf
      */
     public SimPintoDB(MainForm intf) {
         //pointer to interface
         this.interFace = intf;
-        
+
         // list of clients and stats
         this.clients = new LinkedList<>();
         stats = new Statistics(this);
-        
+
         // Construct modules
         this.executionModule = new ExecutionModule(0, 1, this, null);
         this.transactionModule = new TransactionAndDiskModule(0, 1, this, executionModule);
         this.queryProcessorModule = new QueryProcessorModule(0, 1, this, transactionModule);
         this.processManagemnteModule = new ProcessManagmentModule(0, 1, this, queryProcessorModule);
         this.connectionModule = new ConnectionModule(0, 1, this, processManagemnteModule);
-        this.executionModule.setNextModule( connectionModule );
+        this.executionModule.setNextModule(connectionModule);
 
         //Construct event list
         EventComparator e = new EventComparator();
         this.systemEventList = new PriorityQueue<>(e);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void run() {
+        // Initialize simulation
+        initializeSimCicle();
+        // descomentar esto para probar un modulo especifico y comentar la parte de arriba entre los @
+        //this.forTestingAModule( transactionModule );        
+        //stats
+
+        for (int times = 0; times < timesToRunSimulation && !interFace.stopSimulation; ++times) {
+            while (simClock < maxSimClock && systemEventList.size() > 0 && !interFace.stopSimulation) {
+                Event currentEvent = this.systemEventList.peek();
+                Module currentMod = currentEvent.getMod();
+                simClock = currentEvent.getClockTime();
+
+                refreshInterfaceInfo( currentEvent );
+
+                switch (currentEvent.getEventType()) {
+                    case ARRIVE:
+                        //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
+                        currentMod.processArrive();
+                        break;
+                    case LEAVE:
+                        //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
+                        currentMod.processExit();
+                        break;
+                    case TIMEOUT:
+                        currentMod.processTimeOut();
+                        break;
+                }
+                this.interFace.refreshConsoleAreaContent("");
+
+                //We need to check if there are clients waiting that already have a timeout
+                //and if there are, I need to generate their timeout
+                checkGenerateTimeout();
+
+                if (interFace.sleepMode == true) {
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(SimPintoDB.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            // calculate stats            
+            stats.generateStatistics();
+            this.interFace.refreshIterationStats("Results for iteration number: " + (int)(times + 1)  );
+            this.interFace.refreshIterationStats( stats.getCurrentIterationStats().resultStats() );
+            // clear everything
+            systemEventList.clear();
+            clients.clear();
+            connectionModule.clear();
+            ((ConnectionModule) connectionModule).setDeniedConnectionCounter(0);
+            processManagemnteModule.clear();
+            queryProcessorModule.clear();
+            transactionModule.clear();
+            executionModule.clear();
+            initializeSimCicle();
+        }
+        if ( !interFace.stopSimulation ) {
+            stats.generateFinalStatistics(); 
+            this.interFace.refreshFinalIterationStats("Final results");
+            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );                        
+        }
+        interFace.activeRunButton(true);
+        interFace.activeTextFiles(true);
+    }
+
+    private void refreshInterfaceInfo( Event currentEvent ) {
+        int pM, qM, tM, eM;
+        this.interFace.refreshClockTime(simClock);
+        this.interFace.refreshDeniendConnection(((ConnectionModule) connectionModule).getDeniedConnectionCounter());
+        this.interFace.refreshConsoleAreaContent("Current clock time: " + simClock);
+        this.interFace.refreshConsoleAreaContent("Next Event: " + currentEvent.getEventType());
+        pM = this.processManagemnteModule.getQueryQueue().size();
+        qM = this.queryProcessorModule.getQueryQueue().size();
+        tM = this.transactionModule.getPriorityQueryQueue().size();
+        eM = this.executionModule.getQueryQueue().size();
+        this.interFace.refresQueueSizesPerModule(pM, qM, tM, eM);
+    }
+
+    /**
+     *
+     */
+    private void initializeSimCicle() {
+        this.connectionModule.setMaxServers(k);
+        this.executionModule.setMaxServers(m);
+        this.transactionModule.setMaxServers(p);
+        this.queryProcessorModule.setMaxServers(n);
+        this.processManagemnteModule.setMaxServers(1);
+
+        RandomNumberGenerator r = new RandomNumberGenerator();
+        ClientQuery firstOne = new ClientQuery(r.getConnectionStatementType(), connectionModule);
+        Event firstEvent = new Event(firstOne, SimEvent.ARRIVE, connectionModule, 0.0);
+        this.systemEventList.add(firstEvent);
+        this.simClock = 0;
+    }
+
+    /**
+     *
+     */
+    private void checkGenerateTimeout() {
+        //I need to check if there are client with timeout on all the modules queues
+        LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
+        Queue<ClientQuery> moduleQ;
+        int queueSize;
+        ClientQuery cQ;
+        Object moduleQA[];
+
+        //ProcessManagmenteModule
+        moduleQ = this.processManagemnteModule.getQueryQueue();
+        queueSize = moduleQ.size();
+        moduleQA = this.processManagemnteModule.getQueryQueue().toArray();
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
+                timeoutCQ.add(cQ);
+            }
+        }
+        //QueryProcessorModule
+        moduleQ = this.queryProcessorModule.getQueryQueue();
+        queueSize = moduleQ.size();
+        moduleQA = moduleQ.toArray();
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
+                timeoutCQ.add(cQ);
+            }
+        }
+        //ExecutionModule
+        moduleQ = this.executionModule.getQueryQueue();
+        queueSize = moduleQ.size();
+        moduleQA = moduleQ.toArray();
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
+                timeoutCQ.add(cQ);
+            }
+        }
+        //TransactionAndDiskModule
+        moduleQ = this.transactionModule.getPriorityQueryQueue();
+        queueSize = moduleQ.size();
+        moduleQA = moduleQ.toArray();
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = (ClientQuery) moduleQA[i];
+            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
+                timeoutCQ.add(cQ);
+            }
+        }
+        //I need to generate the timeout event for each cliente with time out
+        queueSize = timeoutCQ.size();
+        for (int i = 0; i < queueSize; ++i) {
+            cQ = timeoutCQ.get(i);
+            Event e = new Event(cQ, SimEvent.TIMEOUT, cQ.getCurrentMod(), simClock);
+            // this timeout will be for queue
+            e.setQueueTimeOut(true);
+            this.systemEventList.add(e);
+            e = new Event(cQ, SimEvent.TIMEOUT, this.connectionModule, simClock);
+            this.systemEventList.add(e);
+            this.interFace.refreshConsoleAreaContent("Generate Queue TimeOut : El cliente: " + cQ.clientID + " fue sacado de ser antendido"
+                    + " por estar en cola en el modulo " + cQ.getCurrentMod().getClass().getSimpleName()
+                    + " porque ya lleva en el sistema " + (simClock - cQ.getQueryStatistics().getSystemArriveTime()) + " > " + this.t);
+
+        }
     }
 
     /**
@@ -232,86 +402,23 @@ public class SimPintoDB extends Thread  {
 
     /**
      *
+     * @return
      */
-    @Override
-    public void run() {
-        // Initialize simulation
-        initializeSimCicle();        
-        // descomentar esto para probar un modulo especifico y comentar la parte de arriba entre los @
-        //this.forTestingAModule( transactionModule );        
-        //stats
-
-        for (int times = 0; times < timesToRunSimulation && !interFace.stopSimulation ; ++times) {
-            while ( simClock < maxSimClock && systemEventList.size() > 0 && !interFace.stopSimulation ) {
-                Event currentEvent = this.systemEventList.peek();
-                Module currentMod = currentEvent.getMod();
-                simClock = currentEvent.getClockTime();  
-                this.interFace.refreshClockTime( simClock );
-                this.interFace.refreshDeniendConnection( ((ConnectionModule)connectionModule).getDeniedConnectionCounter() );
-                this.interFace.refreshConsoleAreaContent( "Current clock time: " + simClock );
-                this.interFace.refreshConsoleAreaContent( "Next Event: " + currentEvent.getEventType());                                                                                    
-                switch (currentEvent.getEventType()) {
-                    case ARRIVE:                        
-                        //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
-                        currentMod.processArrive();
-                        break;
-                    case LEAVE:
-                        //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
-                        currentMod.processExit();
-                        break;
-                    case TIMEOUT:
-                        currentMod.processTimeOut();
-                        break;
-                }
-                System.out.println();
-
-                //I need to check if there are clients waiting that already have a timeout
-                //and if there are, I need to generate their timeout
-                checkGenerateTimeout();
-            }
-            // calculate stats            
-            stats.generateStatistics();
-            // clear everything
-            systemEventList.clear();
-            clients.clear();
-            connectionModule.clear();
-            processManagemnteModule.clear();
-            queryProcessorModule.clear();
-            transactionModule.clear();
-            executionModule.clear();
-            initializeSimCicle();
-        }
-        if ( !interFace.stopSimulation )
-        {
-            stats.generateFinalStatistics();
-            IterationStatistics f = stats.getFinalIterationStats();
-            f.printValues();
-        }        
-        interFace.activeRunButton( true );
-        interFace.activeTextFiles( true );
-    }
-
-    double getT() {
-        return this.t;
-    }
-
-    private void initializeSimCicle() {        
-        this.connectionModule.setMaxServers( k ); 
-        this.executionModule.setMaxServers( m );
-        this.transactionModule.setMaxServers( p );
-        this.queryProcessorModule.setMaxServers( n );
-        this.processManagemnteModule.setMaxServers( 1 );
-        
-        RandomNumberGenerator r = new RandomNumberGenerator();
-        ClientQuery firstOne = new ClientQuery(r.getConnectionStatementType(), connectionModule);
-        Event firstEvent = new Event(firstOne, SimEvent.ARRIVE, connectionModule, 0.0);
-        this.systemEventList.add(firstEvent);
-        this.simClock = 0;
+    public MainForm getInterFace() {
+        return interFace;
     }
 
     /**
-     * ******************* METODOS PARA TESTEAR UN MÓDULO
-     * **********************************
+     *
+     * @return
+     */
+    public double getT() {
+        return this.t;
+    }
+
+    /**
+     * ******************* METODOS PARA TESTEAR UN
+     * MÓDULO******************************
      */
     private void forTestingAModule(Module m) {
         // add events to module
@@ -348,77 +455,5 @@ public class SimPintoDB extends Thread  {
         e = new Event(c, SimEvent.ARRIVE, m, 0.04);
         systemEventList.add(e);
 
-    }
-
-    private void checkGenerateTimeout() {
-        //I need to check if there are client with timeout on all the modules queues
-        LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
-        Queue<ClientQuery> moduleQ;
-        int queueSize;
-        ClientQuery cQ;
-        Object moduleQA[];
-
-        //ProcessManagmenteModule
-        moduleQ = this.processManagemnteModule.getQueryQueue();
-        queueSize = moduleQ.size();
-        moduleQA = this.processManagemnteModule.getQueryQueue().toArray();
-        for (int i = 0; i < queueSize; ++i) {
-            cQ = (ClientQuery) moduleQA[i];
-            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
-                timeoutCQ.add(cQ);
-            }
-        }
-        //QueryProcessorModule
-        moduleQ = this.queryProcessorModule.getQueryQueue();
-        queueSize = moduleQ.size();
-        moduleQA = moduleQ.toArray();
-        for (int i = 0; i < queueSize; ++i) {
-            cQ = (ClientQuery) moduleQA[i];
-            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
-                timeoutCQ.add(cQ);
-            }
-        }
-        //ExecutionModule
-        moduleQ = this.executionModule.getQueryQueue();
-        queueSize = moduleQ.size();
-        moduleQA = moduleQ.toArray();
-        for (int i = 0; i < queueSize; ++i) {
-            cQ = (ClientQuery) moduleQA[i];
-            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
-                timeoutCQ.add(cQ);
-            }
-        }
-        //TransactionAndDiskModule
-        moduleQ = this.transactionModule.getPriorityQueryQueue();
-        queueSize = moduleQ.size();
-        moduleQA = moduleQ.toArray();
-        for (int i = 0; i < queueSize; ++i) {
-            cQ = (ClientQuery) moduleQA[i];
-            if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
-                timeoutCQ.add(cQ);
-            }
-        }
-        //I need to generate the timeout event for each cliente with time out
-        queueSize = timeoutCQ.size();
-        for (int i = 0; i < queueSize; ++i) {
-            cQ = timeoutCQ.get(i);
-            Event e = new Event(cQ, SimEvent.TIMEOUT, cQ.getCurrentMod(), simClock);
-            // this timeout will be for queue
-            e.setQueueTimeOut(true);
-            this.systemEventList.add(e);
-            e = new Event(cQ, SimEvent.TIMEOUT, this.connectionModule, simClock);
-            this.systemEventList.add(e);
-            System.out.println("");
-            System.out.println(BLUE + "Generate Queue TimeOut : El cliente: " + cQ.clientID + " fue sacado de ser antendido"
-                    + " por estar en cola en el modulo " + cQ.getCurrentMod().getClass().getSimpleName()
-                    + " porque ya lleva en el sistema " + (simClock - cQ.getQueryStatistics().getSystemArriveTime()) + " > " + this.t + RESET);
-            System.out.println("");
-            try {
-                // thread to sleep for 1000 milliseconds
-                Thread.sleep(SimPintoDB.sleepTime);
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-        }
     }
 }

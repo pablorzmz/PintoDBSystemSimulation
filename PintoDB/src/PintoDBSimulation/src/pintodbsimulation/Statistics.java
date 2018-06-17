@@ -429,10 +429,7 @@ public class Statistics {
         currentIterationStats.setAverageQueryLifeTime( result );
                        
         // store stats in final stats
-        this.finalIterationStats.addOtherValues( currentIterationStats );
-        
-        // clear current stats
-        this.currentIterationStats.clean();
+        this.finalIterationStats.addOtherValues( currentIterationStats );        
     }
     
     /**

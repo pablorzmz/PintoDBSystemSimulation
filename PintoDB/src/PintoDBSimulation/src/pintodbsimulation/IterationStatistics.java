@@ -45,45 +45,49 @@ public class IterationStatistics {
     /**
      * 
      */
-    public void printValues()
+    public String resultStats()
     {
-        System.out.println("\nThis statistics were calculated with clients who finished service in system or in each module");
-        System.out.println();        
-        System.out.println("\tAverage denied connections: " + this.counterOfDeniedConnection );
-        System.out.println("\tAverage query lifetime in system: " + this.averageQueryLifeTime );
-        System.out.println("\tAverage Connection Module queue size: " + this.averageQueueSizeConnectionM );
-        System.out.println("\tAverage Process Managment Module queue size: " + this.averageQueueSizeProcessM );
-        System.out.println("\tAverage Query Processor Module queue size: " + this.averageQueueSizeQueryM );
-        System.out.println("\tAverage Execution Module queue size: " + this.averageQueueSizeExecM );
-        System.out.println("\tAverage Transaction Module queue size: " + this.averageQueueSizeTransM );
-        System.out.println();        
-        System.out.println("Average time of UPDATE statements per module");
-        System.out.println("\tConnection Module: " + this.getConnectionModStats().getUpdateStatementTime() );
-        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getUpdateStatementTime() );
-        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getUpdateStatementTime() );
-        System.out.println("\tExecution Module: " + this.getExecutionModStats().getUpdateStatementTime() );
-        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getUpdateStatementTime() );
-        System.out.println();        
-        System.out.println("Average time of DDL statements per module");
-        System.out.println("\tConnection Module: " + this.getConnectionModStats().getDLLStatementTime() );
-        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getDLLStatementTime() );
-        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getDLLStatementTime() );
-        System.out.println("\tExecution Module: " + this.getExecutionModStats().getDLLStatementTime() );
-        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getDLLStatementTime() );
-        System.out.println();        
-        System.out.println("Average time of SELECT statements per module");
-        System.out.println("\tConnection Module: " + this.getConnectionModStats().getSelectStatementTime() );
-        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getSelectStatementTime() );
-        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getSelectStatementTime() );
-        System.out.println("\tExecution Module: " + this.getExecutionModStats().getSelectStatementTime() );
-        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getSelectStatementTime() );        
-        System.out.println();        
-        System.out.println("Average time of JOIN statements per module");
-        System.out.println("\tConnection Module: " + this.getConnectionModStats().getJoinStatementTime() );
-        System.out.println("\tProcess Managment Module: " + this.getProcessModStats().getJoinStatementTime() );
-        System.out.println("\tQuery Processor Module: " + this.getQueryProcModStats().getJoinStatementTime() );
-        System.out.println("\tExecution Module: " + this.getExecutionModStats().getJoinStatementTime() );
-        System.out.println("\tTransaction Module: " + this.getTransactionModStats().getJoinStatementTime() ); 
+        String data =
+        "\nThis statistics were calculated with clients who finished service in system or in each module\n"+
+        "\n"+        
+        "\tAverage denied connections: " + this.counterOfDeniedConnection + "\n" +
+        "\tAverage query lifetime in system: " + this.averageQueryLifeTime + "\n" +
+        "\tAverage Connection Module queue size: " + this.averageQueueSizeConnectionM + "\n" +
+        "\tAverage Process Managment Module queue size: " + this.averageQueueSizeProcessM + "\n" +
+        "\tAverage Query Processor Module queue size: " + this.averageQueueSizeQueryM + "\n" +
+        "\tAverage Execution Module queue size: " + this.averageQueueSizeExecM + "\n" +
+        "\tAverage Transaction Module queue size: " + this.averageQueueSizeTransM + "\n" +
+        "\n"+       
+        "Average time of UPDATE statements per module"+ "\n" +
+        "\tConnection Module: " + this.getConnectionModStats().getUpdateStatementTime()+ "\n" +
+        "\tProcess Managment Module: " + this.getProcessModStats().getUpdateStatementTime()+ "\n" +
+        "\tQuery Processor Module: " + this.getQueryProcModStats().getUpdateStatementTime()+ "\n" +
+        "\tExecution Module: " + this.getExecutionModStats().getUpdateStatementTime()+ "\n" +
+        "\tTransaction Module: " + this.getTransactionModStats().getUpdateStatementTime()+ "\n" +
+        "\n"+        
+        "Average time of DDL statements per module"+ "\n" +
+        "\tConnection Module: " + this.getConnectionModStats().getDLLStatementTime()+ "\n" +
+        "\tProcess Managment Module: " + this.getProcessModStats().getDLLStatementTime()+ "\n" +
+        "\tQuery Processor Module: " + this.getQueryProcModStats().getDLLStatementTime()+ "\n" +
+        "\tExecution Module: " + this.getExecutionModStats().getDLLStatementTime()+ "\n" +
+        "\tTransaction Module: " + this.getTransactionModStats().getDLLStatementTime()+ "\n" +
+        "\n" + 
+        "Average time of SELECT statements per module"+ "\n" +
+        "\tConnection Module: " + this.getConnectionModStats().getSelectStatementTime()+ "\n" +
+        "\tProcess Managment Module: " + this.getProcessModStats().getSelectStatementTime()+ "\n" +
+        "\tQuery Processor Module: " + this.getQueryProcModStats().getSelectStatementTime()+ "\n" +
+        "\tExecution Module: " + this.getExecutionModStats().getSelectStatementTime()+ "\n" +
+        "\tTransaction Module: " + this.getTransactionModStats().getSelectStatementTime()+ "\n" +
+        "\n"+        
+        "Average time of JOIN statements per module"+ "\n" +
+        "\tConnection Module: " + this.getConnectionModStats().getJoinStatementTime()+ "\n" +
+        "\tProcess Managment Module: " + this.getProcessModStats().getJoinStatementTime()+ "\n" +
+        "\tQuery Processor Module: " + this.getQueryProcModStats().getJoinStatementTime()+ "\n" +
+        "\tExecution Module: " + this.getExecutionModStats().getJoinStatementTime() + "\n" + 
+        "\tTransaction Module: " + this.getTransactionModStats().getJoinStatementTime()+ "\n\n"; 
+        // clear current stats
+        clean();
+        return data;
     }
     
     
