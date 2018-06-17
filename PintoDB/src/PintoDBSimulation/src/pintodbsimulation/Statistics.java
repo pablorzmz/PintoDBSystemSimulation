@@ -6,6 +6,7 @@
 package pintodbsimulation;
 
 import java.util.LinkedList;
+import org.apache.commons.math3.distribution.TDistribution;
 
 /**
  *
@@ -17,6 +18,8 @@ public class Statistics {
     private final IterationStatistics finalIterationStats;
     private final SimPintoDB pointerSimPintoDB;
     public  final static double INVALID_TIME = -1.0;
+    private LinkedList<Double> itemForVariance;
+    private String confidentInterval;
 
     /**
      * 
@@ -26,8 +29,18 @@ public class Statistics {
         this.pointerSimPintoDB = pointerSimPintoDB;
         this.currentIterationStats = new IterationStatistics();
         this.finalIterationStats = new IterationStatistics();
+        itemForVariance = new LinkedList<>();
+        confidentInterval = "";
     }
-    
+    /**
+     * 
+     * @return 
+     */
+    public String getConfidentInterval() {
+        String copy = confidentInterval;
+        confidentInterval = "";
+        return copy;
+    }        
     /**
      * 
      * @return 
@@ -390,7 +403,7 @@ public class Statistics {
             }// end switch
             // Add final query system lifetime 
             if ( cl.get(index).getQueryStatistics().getSystemLeaveTime() != INVALID_TIME )
-            {                
+            {                  
                 systemLifeTime = (cl.get(index).getQueryStatistics().getSystemLeaveTime()- cl.get(index).getQueryStatistics().getSystemArriveTime());                
                 currentIterationStats.setAverageQueryLifeTime( (long)systemLifeTime + currentIterationStats.getAverageQueryLifeTime() );
                 clientsWhoFinishedSystemProcess += 1;
@@ -427,6 +440,7 @@ public class Statistics {
         
         result = currentIterationStats.getAverageQueryLifeTime()/(clientsWhoFinishedSystemProcess==0?1:clientsWhoFinishedSystemProcess);        
         currentIterationStats.setAverageQueryLifeTime( result );
+        itemForVariance.add( result );
                        
         // store stats in final stats
         this.finalIterationStats.addOtherValues( currentIterationStats );        
@@ -437,129 +451,148 @@ public class Statistics {
      */
     public void generateFinalStatistics ()
     {
+        //calculate confident interval for 95%
+        double alpha = 0.05;
+        double average = finalIterationStats.getAverageQueryLifeTime() / itemForVariance.size() ;
+        double variance = 0;                
+        if ( pointerSimPintoDB.gettimesToRunSimulation() > 1 )
+        {
+            TDistribution t = new TDistribution( itemForVariance.size() - 1 ); 
+            double tValue = Math.abs( t.inverseCumulativeProbability( alpha/2 ) );
+            for (int index = 0; index < itemForVariance.size(); ++index )
+            {                
+                variance += Math.pow( (itemForVariance.get( index ) - average) , 2);
+            }            
+            variance = variance / ( itemForVariance.size() - 1 ); 
+
+            double limit1 = average - tValue
+                    * (Math.sqrt( variance / itemForVariance.size() ));
+            double limit2 = average + tValue
+                    * (Math.sqrt( variance / itemForVariance.size()));            
+            confidentInterval = "With probability of " + ((1-alpha)*100) + "% the average query lifetime in system"+
+                    " with " + itemForVariance.size() + " samples will be in interval: "+
+                    " [ " + limit1 + ", " + limit2 + " ]";
+        }
+               
         // Now just divide each time by the amount of times simulation run
-        double dummy;
-        
-        // Final average query lifetime
-        dummy = finalIterationStats.getAverageQueryLifeTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();        
-        finalIterationStats.setAverageQueryLifeTime( dummy );
+        double dummy;        
+        // Final average query lifetime       
+        finalIterationStats.setAverageQueryLifeTime( average );
         
         // Final averages sizes of queues per module
         ////Connection Module
         dummy = finalIterationStats.getAverageQueueSizeConnectionM();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setAverageQueueSizeConnectionM( dummy );
         ////Process Management Module
         dummy = finalIterationStats.getAverageQueueSizeProcessM();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setAverageQueueSizeProcessM( dummy );
         ////Query Processor Module
         dummy = finalIterationStats.getAverageQueueSizeQueryM();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setAverageQueueSizeQueryM( dummy );
         ////Execution Module        
         dummy = finalIterationStats.getAverageQueueSizeExecM();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setAverageQueueSizeExecM( dummy );
         //// Transaction Module
         dummy = finalIterationStats.getAverageQueueSizeTransM();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setAverageQueueSizeTransM( dummy );
         
         // Final count of denied connections
         dummy = finalIterationStats.getCounterOfDeniedConnection();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setCounterOfDeniedConnection( dummy );
         
         // Final average time per statemente and per module
         ////UPDATE
         /////Connection Module
         dummy = finalIterationStats.getConnectionModStats().getUpdateStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getConnectionModStats().setUpdateStatementTime( dummy );
         /////Process Management Module
         dummy = finalIterationStats.getProcessModStats().getUpdateStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getProcessModStats().setUpdateStatementTime( dummy );
         /////Query Processor Module
         dummy = finalIterationStats.getQueryProcModStats().getUpdateStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getQueryProcModStats().setUpdateStatementTime( dummy );
         /////Execution Module
         dummy = finalIterationStats.getExecutionModStats().getUpdateStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getExecutionModStats().setUpdateStatementTime( dummy );
         /////Transaction Module
         dummy = finalIterationStats.getTransactionModStats().getUpdateStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getTransactionModStats().setUpdateStatementTime( dummy );
         
         ////SELECT
         /////Connection Module
         dummy = finalIterationStats.getConnectionModStats().getSelectStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getConnectionModStats().setSelectStatementTime( dummy );
         /////Process Management Module
         dummy = finalIterationStats.getProcessModStats().getSelectStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getProcessModStats().setSelectStatementTime( dummy );
         /////Query Processor Module
         dummy = finalIterationStats.getQueryProcModStats().getSelectStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getQueryProcModStats().setSelectStatementTime( dummy );
         /////Execution Module
         dummy = finalIterationStats.getExecutionModStats().getSelectStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getExecutionModStats().setSelectStatementTime( dummy );
         /////Transaction Module
         dummy = finalIterationStats.getTransactionModStats().getSelectStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getTransactionModStats().setSelectStatementTime( dummy );                
         
         ////JOIN
         /////Connection Module
         dummy = finalIterationStats.getConnectionModStats().getJoinStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getConnectionModStats().setJoinStatementTime(dummy );
         /////Process Management Module
         dummy = finalIterationStats.getProcessModStats().getJoinStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getProcessModStats().setJoinStatementTime( dummy );
         /////Query Processor Module
         dummy = finalIterationStats.getQueryProcModStats().getJoinStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getQueryProcModStats().setJoinStatementTime( dummy );
         /////Execution Module
         dummy = finalIterationStats.getExecutionModStats().getJoinStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getExecutionModStats().setJoinStatementTime( dummy );
         /////Transaction Module
         dummy = finalIterationStats.getTransactionModStats().getJoinStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getTransactionModStats().setJoinStatementTime( dummy );  
         
         ////DDL
         /////Connection Module
         dummy = finalIterationStats.getConnectionModStats().getDLLStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getConnectionModStats().setDLLStatementTime(dummy );
         /////Process Management Module
         dummy = finalIterationStats.getProcessModStats().getDLLStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getProcessModStats().setDLLStatementTime( dummy );
         /////Query Processor Module
         dummy = finalIterationStats.getQueryProcModStats().getDLLStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getQueryProcModStats().setDLLStatementTime( dummy );
         /////Execution Module
         dummy = finalIterationStats.getExecutionModStats().getDLLStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.getExecutionModStats().setDLLStatementTime( dummy );
         /////Transaction Module
         dummy = finalIterationStats.getTransactionModStats().getDLLStatementTime();
-        dummy /= pointerSimPintoDB.gettimeToRunSimulation();
-        finalIterationStats.getTransactionModStats().setDLLStatementTime( dummy );          
-        
+        dummy /= pointerSimPintoDB.gettimesToRunSimulation();
+        finalIterationStats.getTransactionModStats().setDLLStatementTime( dummy );                  
     }
 }

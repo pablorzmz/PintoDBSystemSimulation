@@ -143,7 +143,8 @@ public class SimPintoDB extends Thread {
         if ( !interFace.stopSimulation ) {
             stats.generateFinalStatistics(); 
             this.interFace.refreshFinalIterationStats("Final results");
-            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );                        
+            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );
+            this.interFace.refreshFinalIterationStats( stats.getConfidentInterval() );
         }
         interFace.activeRunButton(true);
         interFace.activeTextFiles(true);
@@ -388,7 +389,7 @@ public class SimPintoDB extends Thread {
      *
      * @return
      */
-    int gettimeToRunSimulation() {
+    int gettimesToRunSimulation() {
         return timesToRunSimulation;
     }
 
