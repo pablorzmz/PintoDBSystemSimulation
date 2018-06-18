@@ -115,7 +115,12 @@ public class SimPintoDB extends Thread {
 
                 //We need to check if there are clients waiting that already have a timeout
                 //and if there are, I need to generate their timeout
-                checkGenerateTimeout();
+                //checkGenerateTimeout();
+                checkGenerateTimeout(this.connectionModule);
+                checkGenerateTimeout(this.processManagemnteModule);
+                checkGenerateTimeout(this.queryProcessorModule);
+                checkGenerateTimeout(this.transactionModule);
+                checkGenerateTimeout(this.executionModule);
 
                 if (interFace.sleepMode == true) {
                     try {
@@ -183,7 +188,7 @@ public class SimPintoDB extends Thread {
     /**
      *
      */
-    private void checkGenerateTimeout() {
+    /*private void checkGenerateTimeout() {
         //I need to check if there are client with timeout on all the modules queues
         LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
         Queue<ClientQuery> moduleQ;
@@ -245,6 +250,45 @@ public class SimPintoDB extends Thread {
                     + " por estar en cola en el modulo " + cQ.getCurrentMod().getClass().getSimpleName()
                     + " porque ya lleva en el sistema " + (simClock - cQ.getQueryStatistics().getSystemArriveTime()) + " > " + this.t);
 
+        }
+    }*/
+    
+    private void checkGenerateTimeout(Module m) {
+        if (m != this.connectionModule) {
+            //I need to check if there are client with timeout on all the modules queues
+            LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
+            Queue<ClientQuery> moduleQ;
+            int queueSize;
+            ClientQuery cQ;
+            Object moduleQA[];
+            if(m == this.transactionModule){
+                moduleQ = m.getPriorityQueryQueue();
+            }else{
+                moduleQ = m.getQueryQueue();
+            }
+            queueSize = moduleQ.size();
+            moduleQA = m.getQueryQueue().toArray();
+            for (int i = 0; i < queueSize; ++i) {
+                cQ = (ClientQuery) moduleQA[i];
+                if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout
+                    timeoutCQ.add(cQ);
+                }
+            }
+            //I need to generate the timeout event for each cliente with time out
+            queueSize = timeoutCQ.size();
+            for (int i = 0; i < queueSize; ++i) {
+                cQ = timeoutCQ.get(i);
+                Event e = new Event(cQ, SimEvent.TIMEOUT, cQ.getCurrentMod(), simClock);
+                // this timeout will be for queue
+                e.setQueueTimeOut(true);
+                this.systemEventList.add(e);
+                e = new Event(cQ, SimEvent.TIMEOUT, this.connectionModule, simClock);
+                this.systemEventList.add(e);
+                this.interFace.refreshConsoleAreaContent("Generate Queue TimeOut : El cliente: " + cQ.clientID + " fue sacado de ser antendido"
+                        + " por estar en cola en el modulo " + cQ.getCurrentMod().getClass().getSimpleName()
+                        + " porque ya lleva en el sistema " + (simClock - cQ.getQueryStatistics().getSystemArriveTime()) + " > " + this.t);
+
+            }
         }
     }
 
