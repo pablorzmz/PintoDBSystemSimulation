@@ -52,8 +52,11 @@ public class ConnectionModule extends Module {
         ClientQuery arrivingCQ = e.getClientQuery();
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
         arrivingCQ.setCurrentMod(this);
-        arrivingQS.setSystemArriveTime(e.getClockTime()); //I need to update the outgoing client data
-
+        arrivingQS.setSystemArriveTime(e.getClockTime()); //I need to update the outgoing client data        
+        
+        double old = this.simPintoDBPointer.getStats().getCurrentIterationStats().getTotalConnections();
+        this.simPintoDBPointer.getStats().getCurrentIterationStats().setTotalConnections( old + 1 );
+        
         if (servers < maxServers) {
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
             ("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "

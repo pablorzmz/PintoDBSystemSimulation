@@ -23,6 +23,7 @@ public class IterationStatistics {
     private StatementPerModuleStats queryProcModStats;
     private StatementPerModuleStats transactionModStats;
     private StatementPerModuleStats executionModStats;
+    private double totalConnections;
 
     /**
     * 
@@ -35,6 +36,7 @@ public class IterationStatistics {
         averageQueueSizeTransM      = 0.0;
         averageQueueSizeExecM       = 0.0;
         counterOfDeniedConnection   = 0.0;
+        totalConnections = 0;
         connectionModStats  = new StatementPerModuleStats();
         processModStats     = new StatementPerModuleStats();
         queryProcModStats   = new StatementPerModuleStats();
@@ -44,13 +46,14 @@ public class IterationStatistics {
     
     /**
      * 
+     * @param totalConnections
      */
     public String resultStats()
     {
         String data =
         "\nThis statistics were calculated with clients who finished service in system or in each module\n"+
         "\n"+        
-        "\tAverage denied connections: " + this.counterOfDeniedConnection + "\n" +
+        "\tAverage denied connections: " + this.counterOfDeniedConnection +" and the 5% of total connections( "+ totalConnections +" ) is "+ (totalConnections*0.05) +"\n" +
         "\tAverage query lifetime in system: " + this.averageQueryLifeTime + "\n" +
         "\tAverage Connection Module queue size: " + this.averageQueueSizeConnectionM + "\n" +
         "\tAverage Process Managment Module queue size: " + this.averageQueueSizeProcessM + "\n" +
@@ -104,6 +107,7 @@ public class IterationStatistics {
         this.averageQueueSizeQueryM      += other.averageQueueSizeQueryM;
         this.averageQueueSizeTransM      += other.averageQueueSizeTransM;
         this.counterOfDeniedConnection   += other.counterOfDeniedConnection;
+        this.totalConnections            += other.totalConnections;
         this.connectionModStats.addOtherValues( other.getConnectionModStats() );
         this.processModStats.addOtherValues( other.getProcessModStats() );
         this.queryProcModStats.addOtherValues( other.getQueryProcModStats() );        
@@ -123,13 +127,29 @@ public class IterationStatistics {
         averageQueueSizeTransM      = 0.0;
         averageQueueSizeExecM       = 0.0;
         counterOfDeniedConnection   = 0.0;
+        totalConnections            = 0;
         connectionModStats.clean();
         processModStats.clean();
         queryProcModStats.clean();
         transactionModStats.clean();
         executionModStats.clean();
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
+    public double getTotalConnections() {
+        return totalConnections;
+    }
+    /**
+     * 
+     * @param totalConnections 
+     */
+    public void setTotalConnections(double totalConnections) {
+        this.totalConnections = totalConnections;
+    }
+    
     /**
      * 
      * @return 

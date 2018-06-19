@@ -26,13 +26,6 @@ public class SimPintoDB extends Thread {
     private Module transactionModule;
     private final MainForm interFace;
     public final static int sleepTime = 750;
-    public static final String YELLOW = "\033[0;33m";
-    public static final String GREEN = "\033[0;32m";
-    public static final String RESET = "\033[0m";
-    public static final String BLUE = "\033[0;34m";
-    public static final String RED = "\033[0;31m";
-    public static final String CYAN = "\u001B[36m";
-    public static final String PURPLE = "\u001B[35m";
 
     /**
      *
@@ -55,10 +48,18 @@ public class SimPintoDB extends Thread {
     }
 
     /**
+     * 
+     * @return 
+     */
+    public Statistics getStats() {
+        return stats;
+    }
+    
+    /**
      *
      * @param intf
      */
-    public SimPintoDB(MainForm intf) {
+    public SimPintoDB( MainForm intf ) {
         //pointer to interface
         this.interFace = intf;
 
@@ -111,20 +112,20 @@ public class SimPintoDB extends Thread {
                         currentMod.processTimeOut();
                         break;
                 }
-                this.interFace.refreshConsoleAreaContent("");
+                //this.interFace.refreshConsoleAreaContent("");
 
                 //We need to check if there are clients waiting that already have a timeout
                 //and if there are, I need to generate their timeout
                 //checkGenerateTimeout();
-                checkGenerateTimeout(this.connectionModule);
-                checkGenerateTimeout(this.processManagemnteModule);
-                checkGenerateTimeout(this.queryProcessorModule);
-                checkGenerateTimeout(this.transactionModule);
-                checkGenerateTimeout(this.executionModule);
+                checkGenerateTimeout( this.connectionModule );
+                checkGenerateTimeout( this.processManagemnteModule );
+                checkGenerateTimeout( this.queryProcessorModule );
+                checkGenerateTimeout( this.transactionModule );
+                checkGenerateTimeout( this.executionModule );
 
                 if (interFace.sleepMode == true) {
                     try {
-                        Thread.sleep(sleepTime);
+                        Thread.sleep( sleepTime );
                     } catch (InterruptedException ex) {
                         Logger.getLogger(SimPintoDB.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -148,7 +149,7 @@ public class SimPintoDB extends Thread {
         if ( !interFace.stopSimulation ) {
             stats.generateFinalStatistics(); 
             this.interFace.refreshFinalIterationStats("Final results");
-            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );
+            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats( ) );
             this.interFace.refreshFinalIterationStats( stats.getConfidentInterval() );
         }
         interFace.activeRunButton(true);
@@ -258,16 +259,16 @@ public class SimPintoDB extends Thread {
             //I need to check if there are client with timeout on all the modules queues
             LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
             Queue<ClientQuery> moduleQ;
-            int queueSize;
+            int queueSize = 0;
             ClientQuery cQ;
             Object moduleQA[];
-            if(m == this.transactionModule){
+            if(m.getClass().getSimpleName().equals( this.transactionModule.getClass().getSimpleName())){
                 moduleQ = m.getPriorityQueryQueue();
             }else{
                 moduleQ = m.getQueryQueue();
             }
             queueSize = moduleQ.size();
-            moduleQA = m.getQueryQueue().toArray();
+            moduleQA = moduleQ.toArray();
             for (int i = 0; i < queueSize; ++i) {
                 cQ = (ClientQuery) moduleQA[i];
                 if (simClock - cQ.getQueryStatistics().getSystemArriveTime() >= t) { //If the cliente already have a timeout

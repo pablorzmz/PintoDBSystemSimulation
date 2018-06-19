@@ -18,7 +18,7 @@ public class Statistics {
     private final IterationStatistics finalIterationStats;
     private final SimPintoDB pointerSimPintoDB;
     public  final static double INVALID_TIME = -1.0;
-    private LinkedList<Double> itemForVariance;
+    private LinkedList<Double> itemsForVariance;
     private String confidentInterval;
 
     /**
@@ -29,9 +29,9 @@ public class Statistics {
         this.pointerSimPintoDB = pointerSimPintoDB;
         this.currentIterationStats = new IterationStatistics();
         this.finalIterationStats = new IterationStatistics();
-        itemForVariance = new LinkedList<>();
+        itemsForVariance = new LinkedList<>();
         confidentInterval = "";
-    }
+    }        
     /**
      * 
      * @return 
@@ -440,7 +440,7 @@ public class Statistics {
         
         result = currentIterationStats.getAverageQueryLifeTime()/(clientsWhoFinishedSystemProcess==0?1:clientsWhoFinishedSystemProcess);        
         currentIterationStats.setAverageQueryLifeTime( result );
-        itemForVariance.add( result );
+        itemsForVariance.add( result );                
                        
         // store stats in final stats
         this.finalIterationStats.addOtherValues( currentIterationStats );        
@@ -453,32 +453,32 @@ public class Statistics {
     {
         //calculate confident interval for 95%
         double alpha = 0.05;
-        double average = finalIterationStats.getAverageQueryLifeTime() / itemForVariance.size() ;
+        double average = finalIterationStats.getAverageQueryLifeTime() / itemsForVariance.size() ;
         double variance = 0;                
         if ( pointerSimPintoDB.gettimesToRunSimulation() > 1 )
         {
-            TDistribution t = new TDistribution( itemForVariance.size() - 1 ); 
+            TDistribution t = new TDistribution( itemsForVariance.size() - 1 ); 
             double tValue = Math.abs( t.inverseCumulativeProbability( alpha/2 ) );
-            for (int index = 0; index < itemForVariance.size(); ++index )
+            for (int index = 0; index < itemsForVariance.size(); ++index )
             {                
-                variance += Math.pow( (itemForVariance.get( index ) - average) , 2);
+                variance += Math.pow((itemsForVariance.get( index ) - average) , 2);
             }            
-            variance = variance / ( itemForVariance.size() - 1 ); 
+            variance = variance / ( itemsForVariance.size() - 1 ); 
 
             double limit1 = average - tValue
-                    * (Math.sqrt( variance / itemForVariance.size() ));
+                    * (Math.sqrt(variance / itemsForVariance.size() ));
             double limit2 = average + tValue
-                    * (Math.sqrt( variance / itemForVariance.size()));            
+                    * (Math.sqrt(variance / itemsForVariance.size()));            
             confidentInterval = "With probability of " + ((1-alpha)*100) + "% the average query lifetime in system"+
-                    " with " + itemForVariance.size() + " samples will be in interval: "+
+                    " with " + itemsForVariance.size() + " samples will be in interval: "+
                     " [ " + limit1 + ", " + limit2 + " ]";
         }
                
-        // Now just divide each time by the amount of times simulation run
-        double dummy;        
+        // Now just divide each time by the amount of times simulation run          
         // Final average query lifetime       
         finalIterationStats.setAverageQueryLifeTime( average );
         
+        double dummy;      
         // Final averages sizes of queues per module
         ////Connection Module
         dummy = finalIterationStats.getAverageQueueSizeConnectionM();
@@ -593,6 +593,11 @@ public class Statistics {
         /////Transaction Module
         dummy = finalIterationStats.getTransactionModStats().getDLLStatementTime();
         dummy /= pointerSimPintoDB.gettimesToRunSimulation();
-        finalIterationStats.getTransactionModStats().setDLLStatementTime( dummy );                  
+        finalIterationStats.getTransactionModStats().setDLLStatementTime( dummy ); 
+        
+        // averge of clientes recieved
+        dummy = finalIterationStats.getTotalConnections();
+        dummy /= this.pointerSimPintoDB.gettimesToRunSimulation();
+        finalIterationStats.setTotalConnections( dummy );
     }
 }

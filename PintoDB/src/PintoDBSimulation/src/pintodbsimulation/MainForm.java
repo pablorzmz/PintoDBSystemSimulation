@@ -5,6 +5,8 @@
  */
 package pintodbsimulation;
 
+import java.awt.event.KeyEvent;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,6 +19,7 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form MainForm
      */
     public MainForm() {
+        toTest = new LinkedList<>();
         stopSimulation = false;
         sleepMode = true ;
         showConsole = true;
@@ -77,11 +80,15 @@ public class MainForm extends javax.swing.JFrame {
         txtFinalIterarionStats = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("PintoDB System Simulation");
         setName("panel1"); // NOI18N
         setResizable(false);
+        setType(java.awt.Window.Type.UTILITY);
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
@@ -457,12 +464,19 @@ public class MainForm extends javax.swing.JFrame {
             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Final iterarion statistics", jPanel6);
+        jTabbedPane1.addTab("Final iteration statistics", jPanel6);
 
-        jMenu1.setText("File");
+        jMenu1.setText("PintoDB");
+
+        jMenuItem1.setText("Exit");
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu3.setText("Export data");
+        jMenuBar1.add(jMenu3);
+
+        jMenu2.setText("Help");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -569,8 +583,8 @@ public class MainForm extends javax.swing.JFrame {
     {      
       char c = evt.getKeyChar();
       if (!((c >= '0') && (c <= '9') ||
-         (c == evt.VK_BACK_SPACE) ||
-         (c == evt.VK_DELETE))) {
+         (c == KeyEvent.VK_BACK_SPACE) ||
+         (c == KeyEvent.VK_DELETE))) {
         getToolkit().beep();
         evt.consume();
       }
@@ -637,7 +651,7 @@ public class MainForm extends javax.swing.JFrame {
         }        
         try {
             t = Double.parseDouble( txt_t.getText() );
-        } catch  (Exception e ) {
+        } catch  (NumberFormatException e ) {
             JOptionPane.showMessageDialog( this,
             "Error input in parameter timeout time ( t )",
             "Error",
@@ -648,7 +662,7 @@ public class MainForm extends javax.swing.JFrame {
         
         try {
             maxSimTime = Double.parseDouble( txt_MaxTimeToRunSim.getText() );
-        } catch  ( Exception e ) {
+        } catch  ( NumberFormatException e ) {
             JOptionPane.showMessageDialog( this,
             "Error input in parameter max time to run simulation ",
             "Error",
@@ -836,6 +850,32 @@ public class MainForm extends javax.swing.JFrame {
         });
         
     }
+    
+    /* Metodos para el testing de los datos que pide la documentacion*/    
+    public class statsValues
+    {
+        int k;
+        int p;
+        int n;
+        int m;
+        double t; 
+
+        public statsValues() 
+        {
+            k = 0;
+            p = 0;
+            n = 0;
+            t = 0;
+        }                
+    }
+    private void callForTesting()
+    {
+            int timesToRunSim = 600;
+            double maxSimTime = 1500;
+    }
+    LinkedList<statsValues> toTest;
+    
+    /*****************************************************************/
 
     private final int MAX_LENGHT = 4;
     private boolean showConsole;
@@ -861,7 +901,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
