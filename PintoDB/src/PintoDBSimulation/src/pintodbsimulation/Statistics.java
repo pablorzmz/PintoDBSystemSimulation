@@ -30,9 +30,8 @@ public class Statistics {
         this.currentIterationStats = new IterationStatistics();
         this.finalIterationStats = new IterationStatistics();
         itemsForVariance = new LinkedList<>();
-        confidentInterval = "";
+        confidentInterval = "No condfident interval for iterations  n = 1";
     }
-
     /**
      *
      * @return
@@ -552,5 +551,10 @@ public class Statistics {
         dummy = finalIterationStats.getTotalConnections();
         dummy /= this.pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setTotalConnections(dummy);
+        
+        // average timeouts
+        dummy = finalIterationStats.getTimeOutsCounter();
+        dummy /= this.pointerSimPintoDB.gettimesToRunSimulation();
+        finalIterationStats.setTimeOutsCounter( dummy );
     }
 }

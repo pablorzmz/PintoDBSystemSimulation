@@ -110,7 +110,8 @@ public class SimPintoDB extends Thread {
                         case LEAVE:                            
                             currentMod.processExit();
                             break;
-                        case TIMEOUT:                            
+                        case TIMEOUT:
+                            stats.getCurrentIterationStats().increaseTimeOutsCounter();
                             currentMod.processTimeOut();
                             break;
                     }
