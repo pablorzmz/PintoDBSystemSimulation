@@ -80,6 +80,15 @@ public class Event {
         return clockTime;
     }
     
-    
+    /* Testing mode only */
+    public String printForTestiing()
+    {    
+        String modulo = mod == null? "En donde este en ese momento":
+                mod.getClass().getSimpleName();
+        String result = "Tiempo: " + String.valueOf( clockTime ) 
+        +",      Event type: " + this.eventType + ",      Module: " 
+        + modulo + ",      Client id: " + clientQuery.clientID;
+        return result;
+    }
     
 }

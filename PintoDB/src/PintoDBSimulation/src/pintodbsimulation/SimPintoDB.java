@@ -2,7 +2,6 @@ package pintodbsimulation;
 
 import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,19 +104,17 @@ public class SimPintoDB extends Thread {
                     refreshInterfaceInfo(currentEvent);
 
                     switch (currentEvent.getEventType()) {
-                        case ARRIVE:
-                            //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
+                        case ARRIVE:                          
                             currentMod.processArrive();
                             break;
-                        case LEAVE:
-                            //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
+                        case LEAVE:                            
                             currentMod.processExit();
                             break;
-                        case TIMEOUT:
+                        case TIMEOUT:                            
                             currentMod.processTimeOut();
                             break;
                     }
-                    //this.interFace.refreshConsoleAreaContent("");
+                    this.interFace.refreshConsoleAreaContent("");
 
                     //We need to check if there are clients waiting that already have a timeout
                     //and if there are, I need to generate their timeout
@@ -127,14 +124,14 @@ public class SimPintoDB extends Thread {
                 checkGenerateTimeout( this.queryProcessorModule );
                 checkGenerateTimeout( this.transactionModule );
                 checkGenerateTimeout( this.executionModule );*/
-                    if (interFace.sleepMode == true) {
+                    if ( interFace.sleepMode == true ) {
                         try {
-                            Thread.sleep(SLEEP_TIME);
+                            Thread.sleep( SLEEP_TIME );
                         } catch (InterruptedException ex) {
                             Logger.getLogger(SimPintoDB.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                } else {
+                } else {                    
                     this.systemEventList.poll();
                 }
             }
@@ -155,9 +152,9 @@ public class SimPintoDB extends Thread {
         }
         if (!interFace.stopSimulation) {
             stats.generateFinalStatistics();
-            this.interFace.refreshFinalIterationStats("Final results");
-            this.interFace.refreshFinalIterationStats(stats.getFinalIterationStats().resultStats());
-            this.interFace.refreshFinalIterationStats(stats.getConfidentInterval());
+            this.interFace.refreshFinalIterationStats( "Final results" );
+            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );
+            this.interFace.refreshFinalIterationStats( stats.getConfidentInterval() );
         }
         interFace.activeRunButton(true);
         interFace.activeTextFiles(true);
@@ -165,31 +162,31 @@ public class SimPintoDB extends Thread {
 
     private void refreshInterfaceInfo(Event currentEvent) {
         int pM, qM, tM, eM;
-        this.interFace.refreshClockTime(simClock);
-        this.interFace.refreshDeniendConnection(((ConnectionModule) connectionModule).getDeniedConnectionCounter());
-        this.interFace.refreshConsoleAreaContent("Current clock time: " + simClock);
-        this.interFace.refreshConsoleAreaContent("Next Event: " + currentEvent.getEventType());
+        this.interFace.refreshClockTime( simClock );
+        this.interFace.refreshDeniendConnection( ((ConnectionModule) connectionModule).getDeniedConnectionCounter() );
+        this.interFace.refreshConsoleAreaContent( "Current clock time: " + simClock );
+        this.interFace.refreshConsoleAreaContent( "Next Event: " + currentEvent.getEventType() );
         pM = this.processManagemnteModule.getQueryQueue().size();
         qM = this.queryProcessorModule.getQueryQueue().size();
         tM = this.transactionModule.getPriorityQueryQueue().size();
         eM = this.executionModule.getQueryQueue().size();
-        this.interFace.refresQueueSizesPerModule(pM, qM, tM, eM);
+        this.interFace.refresQueueSizesPerModule( pM, qM, tM, eM );
     }
 
     /**
      *
      */
     private void initializeSimCicle() {
-        this.connectionModule.setMaxServers(k);
-        this.executionModule.setMaxServers(m);
-        this.transactionModule.setMaxServers(p);
-        this.queryProcessorModule.setMaxServers(n);
-        this.processManagemnteModule.setMaxServers(1);
+        this.connectionModule.setMaxServers( k );
+        this.executionModule.setMaxServers( m );
+        this.transactionModule.setMaxServers( p );
+        this.queryProcessorModule.setMaxServers( n );
+        this.processManagemnteModule.setMaxServers( 1 );
 
         RandomNumberGenerator r = new RandomNumberGenerator();
-        ClientQuery firstOne = new ClientQuery(r.getConnectionStatementType(), connectionModule);
-        Event firstEvent = new Event(firstOne, SimEvent.ARRIVE, connectionModule, 0.0);
-        this.systemEventList.add(firstEvent);
+        ClientQuery firstOne = new ClientQuery( r.getConnectionStatementType(), connectionModule );
+        Event firstEvent = new Event( firstOne, SimEvent.ARRIVE, connectionModule, 0.0 );
+        this.systemEventList.add( firstEvent );
         this.simClock = 0;
     }
 
@@ -310,7 +307,7 @@ public class SimPintoDB extends Thread {
      *
      * @param connectionModule
      */
-    public void setConnectionModule(Module connectionModule) {
+    public void setConnectionModule( Module connectionModule ) {
         this.connectionModule = connectionModule;
     }
 
@@ -326,7 +323,7 @@ public class SimPintoDB extends Thread {
      *
      * @param processManagemnteModule
      */
-    public void setProcessManagemnteModule(Module processManagemnteModule) {
+    public void setProcessManagemnteModule( Module processManagemnteModule ) {
         this.processManagemnteModule = processManagemnteModule;
     }
 
@@ -342,7 +339,7 @@ public class SimPintoDB extends Thread {
      *
      * @param queryProcessorModule
      */
-    public void setQueryProcessorModule(Module queryProcessorModule) {
+    public void setQueryProcessorModule( Module queryProcessorModule ) {
         this.queryProcessorModule = queryProcessorModule;
     }
 
@@ -358,7 +355,7 @@ public class SimPintoDB extends Thread {
      *
      * @param ExecutionModule
      */
-    public void setExecutionModule(Module ExecutionModule) {
+    public void setExecutionModule( Module ExecutionModule ) {
         this.executionModule = ExecutionModule;
     }
 
@@ -374,7 +371,7 @@ public class SimPintoDB extends Thread {
      *
      * @param TransactionModule
      */
-    public void setTransactionModule(Module TransactionModule) {
+    public void setTransactionModule( Module TransactionModule ) {
         this.transactionModule = TransactionModule;
     }
 
@@ -390,7 +387,7 @@ public class SimPintoDB extends Thread {
      *
      * @param clients
      */
-    public void setTransactionModule(LinkedList<ClientQuery> clients) {
+    public void setTransactionModule( LinkedList<ClientQuery> clients ) {
         this.clients = clients;
     }
 
@@ -398,8 +395,7 @@ public class SimPintoDB extends Thread {
      *
      * @return
      */
-    PriorityQueue<Event> getSistemEventList() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    PriorityQueue<Event> getSistemEventList() {        
         return this.systemEventList;
     }
 
@@ -415,7 +411,7 @@ public class SimPintoDB extends Thread {
      *
      * @param simClock
      */
-    public void setSimClock(double simClock) {
+    public void setSimClock( double simClock ) {
         this.simClock = simClock;
     }
 
@@ -431,7 +427,7 @@ public class SimPintoDB extends Thread {
      *
      * @param maxSimClock
      */
-    public void setMaxSimClock(double maxSimClock) {
+    public void setMaxSimClock( double maxSimClock ) {
         this.maxSimClock = maxSimClock;
     }
 
@@ -447,7 +443,7 @@ public class SimPintoDB extends Thread {
      *
      * @param timesToRunSimulation
      */
-    public void setTimesToRunSimulation(int timesToRunSimulation) {
+    public void setTimesToRunSimulation( int timesToRunSimulation ) {
         this.timesToRunSimulation = timesToRunSimulation;
     }
 
@@ -468,21 +464,21 @@ public class SimPintoDB extends Thread {
     }
 
     //Testing use only
-    private void forTestingAModule(Module m) {
+    private void forTestingAModule( Module m ) {
         // add events to module
         ClientQuery c;
         Event e;
 
         c = new ClientQuery(StatementType.DDL, m);
         c.clientID = 0;
-        c.getQueryStatistics().setSystemArriveTime(0.0);
-        e = new Event(c, SimEvent.ARRIVE, m, 0.0);
-        systemEventList.add(e);
-
-        c = new ClientQuery(StatementType.UPDATE, m);
-        c.clientID = 1;
         c.getQueryStatistics().setSystemArriveTime(0.01);
         e = new Event(c, SimEvent.ARRIVE, m, 0.01);
+        systemEventList.add(e);
+
+        c = new ClientQuery(StatementType.DDL, m);
+        c.clientID = 1;
+        c.getQueryStatistics().setSystemArriveTime(0.02);
+        e = new Event(c, SimEvent.ARRIVE, m, 0.02);
         systemEventList.add(e);
 
         c = new ClientQuery(StatementType.UPDATE, m);

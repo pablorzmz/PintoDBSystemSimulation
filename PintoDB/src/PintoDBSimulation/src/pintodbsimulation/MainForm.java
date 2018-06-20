@@ -6,7 +6,6 @@
 package pintodbsimulation;
 
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,8 +17,7 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * Creates new form MainForm
      */
-    public MainForm() {
-        toTest = new LinkedList<>();
+    public MainForm() {        
         stopSimulation = false;
         sleepMode = true ;
         showConsole = true;
@@ -88,7 +86,6 @@ public class MainForm extends javax.swing.JFrame {
         setTitle("PintoDB System Simulation");
         setName("panel1"); // NOI18N
         setResizable(false);
-        setType(java.awt.Window.Type.UTILITY);
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
@@ -629,7 +626,7 @@ public class MainForm extends javax.swing.JFrame {
             this.txt_n.requestFocus();
             return false;            
         }        
-        p = Integer.parseInt( txt_p.getText() );
+        p = Integer.parseInt( txt_p.getText() );        
         if ( p <= 0 )
         {
             JOptionPane.showMessageDialog( this,
@@ -851,32 +848,6 @@ public class MainForm extends javax.swing.JFrame {
         
     }
     
-    /* Metodos para el testing de los datos que pide la documentacion*/    
-    public class statsValues
-    {
-        int k;
-        int p;
-        int n;
-        int m;
-        double t; 
-
-        public statsValues() 
-        {
-            k = 0;
-            p = 0;
-            n = 0;
-            t = 0;
-        }                
-    }
-    private void callForTesting()
-    {
-            int timesToRunSim = 600;
-            double maxSimTime = 1500;
-    }
-    LinkedList<statsValues> toTest;
-    
-    /*****************************************************************/
-
     private final int MAX_LENGHT = 4;
     private boolean showConsole;
     public SimPintoDB pintoDB;

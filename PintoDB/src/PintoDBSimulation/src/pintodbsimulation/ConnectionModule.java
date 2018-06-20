@@ -74,7 +74,7 @@ public class ConnectionModule extends Module {
             Event timeoutE;
             timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, this, e.getClockTime() + this.simPintoDBPointer.getT());
             eQ.add(timeoutE);
-            timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, this, e.getClockTime() + this.simPintoDBPointer.getT());
+            timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, null, e.getClockTime() + this.simPintoDBPointer.getT());
             eQ.add(timeoutE);
         } else {
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
@@ -83,7 +83,7 @@ public class ConnectionModule extends Module {
         }
 
         //I need to generate a new ARRIVE
-        ClientQuery newCQ = new ClientQuery(randNoGen.getConnectionStatementType(), this);
+        ClientQuery newCQ = new ClientQuery( randNoGen.getConnectionStatementType() , this);
         ++clientCounter;
         newCQ.clientID = clientCounter;
         generateAction(newCQ);
@@ -96,6 +96,9 @@ public class ConnectionModule extends Module {
         ClientQuery leavingCQ = e.getClientQuery();
 
         leavingCQ.setCurrentMod(this);
+        //lo agrega Pablo
+        leavingCQ.setFinishService( true );
+        ////
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();

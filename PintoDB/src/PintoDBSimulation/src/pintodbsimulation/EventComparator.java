@@ -19,8 +19,8 @@ public class EventComparator implements Comparator< Event > {
         SimEvent eA = a.getEventType();                       
         SimEvent eB = b.getEventType();
         
-        String  mA = a.getMod().getClass().getSimpleName();
-        String  mB = b.getMod().getClass().getSimpleName();
+        String  mA = a.getMod() == null?"":a.getMod().getClass().getSimpleName();
+        String  mB = b.getMod() == null?"":b.getMod().getClass().getSimpleName();
         
         int priorityEventA = returnEventPriority(eA ,a.isQueueTimeOut() );
         int priorityEventB = returnEventPriority(eB, b.isQueueTimeOut() );
@@ -158,6 +158,10 @@ public class EventComparator implements Comparator< Event > {
         }else if ( executionM.equals( nameM ) )
         {
             returnValue = 1;
+            
+        }else if ( nameM.equals("") )
+        {
+            return 0;
         }
         
         return returnValue;

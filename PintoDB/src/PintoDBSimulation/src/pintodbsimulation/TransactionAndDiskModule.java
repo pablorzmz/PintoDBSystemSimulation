@@ -31,7 +31,7 @@ public class TransactionAndDiskModule extends Module {
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
                         //queueSizeRegister.add(queryPriorityQueue.size());
-                        queueSizesAccumulator += queryQueue.size();
+                        queueSizesAccumulator += queryPriorityQueue.size();
                         ++queueSizesCounter;
                     } else {
                         --servers;
@@ -51,7 +51,7 @@ public class TransactionAndDiskModule extends Module {
                     queryPriorityQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     //queueSizeRegister.add(queryPriorityQueue.size());
-                    queueSizesAccumulator += queryQueue.size();
+                    queueSizesAccumulator += queryPriorityQueue.size();
                     ++queueSizesCounter;
                 }
             } else //If there isn't client waiting to be attended
@@ -96,7 +96,7 @@ public class TransactionAndDiskModule extends Module {
 
                     queryPriorityQueue.add(arrivingCQ);
                     //queueSizeRegister.add(this.queryPriorityQueue.size());
-                    queueSizesAccumulator += queryQueue.size();
+                    queueSizesAccumulator += queryPriorityQueue.size();
                     ++queueSizesCounter;
                 }
             } else if (queryPriorityQueue.size() > 0) {
@@ -107,7 +107,7 @@ public class TransactionAndDiskModule extends Module {
 
                 queryPriorityQueue.add(arrivingCQ);
                 //queueSizeRegister.add(this.queryPriorityQueue.size());
-                queueSizesAccumulator += queryQueue.size();
+                queueSizesAccumulator += queryPriorityQueue.size();
                 ++queueSizesCounter;
 
             } else {
@@ -128,8 +128,8 @@ public class TransactionAndDiskModule extends Module {
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             queryPriorityQueue.add(arrivingCQ);
-            //queueSizeRegister.add(this.queryPriorityQueue.size());
-            queueSizesAccumulator += queryQueue.size();
+            //queueSizeRegister.add(this.queryPriorityQueue.size());            
+            queueSizesAccumulator += queryPriorityQueue.size();            
             ++queueSizesCounter;
         }
         /*if ( queryPriorityQueue.size() > 0 ) {
@@ -207,7 +207,7 @@ public class TransactionAndDiskModule extends Module {
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     servers = maxServers;
                     //queueSizeRegister.add(queryPriorityQueue.size());
-                    queueSizesAccumulator += queryQueue.size();
+                    queueSizesAccumulator += queryPriorityQueue.size();
                     ++queueSizesCounter;
                 } else {
                     this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
@@ -221,7 +221,7 @@ public class TransactionAndDiskModule extends Module {
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
                         //queueSizeRegister.add(queryPriorityQueue.size());
-                        queueSizesAccumulator += queryQueue.size();
+                        queueSizesAccumulator += queryPriorityQueue.size();
                         ++queueSizesCounter;
                     }
                 }
@@ -238,7 +238,7 @@ public class TransactionAndDiskModule extends Module {
                 queryPriorityQueue.poll();
                 generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                 //queueSizeRegister.add(queryPriorityQueue.size());
-                queueSizesAccumulator += queryQueue.size();
+                queueSizesAccumulator += queryPriorityQueue.size();
                 ++queueSizesCounter;
             }
         } else //If there isn't client waiting to be attended
@@ -274,7 +274,7 @@ public class TransactionAndDiskModule extends Module {
                 qS.setUsedBlocks(0);
                 break;
             case JOIN:
-                int blocks = (int) (1 + (new RandomNumberGenerator().getRandNumb()) * 64);
+                int blocks = (int) (1 + (new RandomNumberGenerator().getRandNumb()) * 64);                
                 qS.setUsedBlocks(blocks);
                 break;
             default:

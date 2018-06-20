@@ -34,9 +34,6 @@
     <Property name="title" type="java.lang.String" value="PintoDB System Simulation"/>
     <Property name="name" type="java.lang.String" value="panel1" noResource="true"/>
     <Property name="resizable" type="boolean" value="false"/>
-    <Property name="type" type="java.awt.Window$Type" editor="org.netbeans.modules.form.editors.EnumEditor">
-      <Value id="UTILITY"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
