@@ -5,35 +5,35 @@ package pintodbsimulation;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author pablo
  */
 public class ClientQuery {
-    
+
     private StatementType queryType;
     private Module currentMod;
     private final QueryStatistics queryStatistics;
+    private boolean finishedService;
     //Test
     public int clientID;
 
-     /**
+    /**
      *
      * @param queryType
      * @param currentMod
      */
-    public ClientQuery(StatementType queryType,Module currentMod) {
+    public ClientQuery(StatementType queryType, Module currentMod) {
         this.queryType = queryType;
         this.currentMod = currentMod;
-        queryStatistics = new QueryStatistics();
+        this.queryStatistics = new QueryStatistics();
+        this.finishedService = false;
     }
-    
+
     /**
      *
      */
-    public void updateStats()
-    {
+    public void updateStats() {
         double timeInModule;
         String currentModuleName = currentMod.getClass().getSimpleName();
         String procM = ProcessManagmentModule.class.getSimpleName();
@@ -41,31 +41,26 @@ public class ClientQuery {
         String queryProcM = QueryProcessorModule.class.getSimpleName();
         String executionM = ExecutionModule.class.getSimpleName();
         String transactionM = TransactionAndDiskModule.class.getSimpleName();
-        timeInModule = queryStatistics.getModuleLeaveTime()- queryStatistics.getModuleArriveTime();
+        timeInModule = queryStatistics.getModuleLeaveTime() - queryStatistics.getModuleArriveTime();
 
-        if ( currentModuleName.equals( procM) )
-        {            
-            queryStatistics.setTimeInProcMgmtMod( timeInModule );
-            
-        }else if ( currentModuleName.equals(connectionM) )
-        {
-            queryStatistics.setTimeInConnectionMod( 0.0 );            
-             
-        }else if ( currentModuleName.equals(queryProcM) )
-        {
-            queryStatistics.setTimeInQueryProcMod( timeInModule );            
-            
-        }else if ( currentModuleName.equals(executionM) )
-        {
-            queryStatistics.setTimeInExecMod( timeInModule );
-            
-        }else if ( currentModuleName.equals(transactionM) )
-        {
-            queryStatistics.setTimeInTransMod( timeInModule );
+        if (currentModuleName.equals(procM)) {
+            queryStatistics.setTimeInProcMgmtMod(timeInModule);
+
+        } else if (currentModuleName.equals(connectionM)) {
+            queryStatistics.setTimeInConnectionMod(0.0);
+
+        } else if (currentModuleName.equals(queryProcM)) {
+            queryStatistics.setTimeInQueryProcMod(timeInModule);
+
+        } else if (currentModuleName.equals(executionM)) {
+            queryStatistics.setTimeInExecMod(timeInModule);
+
+        } else if (currentModuleName.equals(transactionM)) {
+            queryStatistics.setTimeInTransMod(timeInModule);
         }
-        queryStatistics.setModuleArriveTime( Statistics.INVALID_TIME );
-        queryStatistics.setModuleLeaveTime( Statistics.INVALID_TIME );        
-    }    
+        queryStatistics.setModuleArriveTime(Statistics.INVALID_TIME);
+        queryStatistics.setModuleLeaveTime(Statistics.INVALID_TIME);
+    }
 
     /**
      *
@@ -85,7 +80,7 @@ public class ClientQuery {
 
     /**
      *
-     * @return 
+     * @return
      */
     public StatementType getQueryType() {
         return queryType;
@@ -93,17 +88,25 @@ public class ClientQuery {
 
     /**
      *
-     * @return 
+     * @return
      */
     public Module getCurrentMod() {
         return currentMod;
     }
 
-     /**
+    /**
      *
-     * @return 
+     * @return
      */
     public QueryStatistics getQueryStatistics() {
         return queryStatistics;
-    }             
+    }
+    
+    public boolean getFinishService(){
+        return this.finishedService;
+    }
+    
+    public void setFinishService(boolean serviceState){
+        this.finishedService = serviceState;
+    }
 }

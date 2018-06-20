@@ -33,17 +33,16 @@ public abstract class Module {
         this.nextModule = nextModule;
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
-        this.queryPriorityQueue = new PriorityQueue<>( new ClientQueryComparator());
+        this.queryPriorityQueue = new PriorityQueue<>(new ClientQueryComparator());
         //this.queueSizeRegister = new LinkedList<>();
         this.queueSizesCounter = 0;
         this.queueSizesAccumulator = 0;
     }
 
     /**
-     * 
+     *
      */
-    public void clear()
-    {
+    public void clear() {
         servers = 0;
         queryQueue.clear();
         queryPriorityQueue.clear();
@@ -51,7 +50,7 @@ public abstract class Module {
         queueSizesCounter = 0;
         queueSizesAccumulator = 0;
     }
-    
+
     /**
      *
      * @param nextModule
@@ -64,24 +63,22 @@ public abstract class Module {
      *
      * @return
      */
-    
     /*public LinkedList<Integer> getQueueSizeRegister() {
         return queueSizeRegister;
     }*/
-    
     /**
      *
      * @return
      */
-    public int getQueueSizesCounter(){
+    public int getQueueSizesCounter() {
         return this.queueSizesCounter;
     }
-    
+
     /**
      *
      * @return
      */
-    public int getQueueSizesAccumulator(){
+    public int getQueueSizesAccumulator() {
         return this.queueSizesAccumulator;
     }
 
@@ -131,5 +128,5 @@ public abstract class Module {
     public void setMaxServers(int maxServers) {
         this.maxServers = maxServers;
     }
-    
+
 }

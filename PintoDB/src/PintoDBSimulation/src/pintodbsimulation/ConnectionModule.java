@@ -23,53 +23,62 @@ public class ConnectionModule extends Module {
     }
 
     /**
-     * 
-     * @param deniedConnectionCounter 
+     *
+     * @param deniedConnectionCounter
      */
     public void setDeniedConnectionCounter(int deniedConnectionCounter) {
         this.deniedConnectionCounter = deniedConnectionCounter;
-    }        
+    }
 
     @Override
     public void processTimeOut() {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
+
         //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
         //outgoingQS.setSystemLeaveTime( e.getClockTime() ); //I need to update the outgoing client data
         //outgoingCQ.updateStats();
         this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent(
-            "TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-            + " del modulo " + "Conexión");        
+                "TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
+                + " del modulo " + "Conexión");
 
+        outgoingCQ.setFinishService(true);
         --servers;
+
     }
 
     @Override
     public void processArrive() {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
+
         ClientQuery arrivingCQ = e.getClientQuery();
         QueryStatistics arrivingQS = arrivingCQ.getQueryStatistics();
         arrivingCQ.setCurrentMod(this);
-        arrivingQS.setSystemArriveTime(e.getClockTime()); //I need to update the outgoing client data        
-        
+        arrivingCQ.setFinishService(false);
+        arrivingQS.setSystemArriveTime(e.getClockTime()); //I need to update the outgoing client data
+
         double old = this.simPintoDBPointer.getStats().getCurrentIterationStats().getTotalConnections();
-        this.simPintoDBPointer.getStats().getCurrentIterationStats().setTotalConnections( old + 1 );
-        
+        this.simPintoDBPointer.getStats().getCurrentIterationStats().setTotalConnections(old + 1);
+
         if (servers < maxServers) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
-            ("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "Conexión" + " en el tiempo " + e.getClockTime());            
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
+                    + "en el modulo " + "Conexión" + " en el tiempo " + e.getClockTime());
             ++servers;
             //I need to add the new cliente to the system, ie the clients list.
             LinkedList<ClientQuery> simClients = simPintoDBPointer.getClients();
             simClients.add(arrivingCQ);
             generateNextModuleAction(arrivingCQ);
+            //I need to generate the posible timeout event for the new client in the system
+            Event timeoutE;
+            timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, this, e.getClockTime() + this.simPintoDBPointer.getT());
+            eQ.add(timeoutE);
+            timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, this, e.getClockTime() + this.simPintoDBPointer.getT());
+            eQ.add(timeoutE);
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
-            ("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
-                    + "en el modulo " + "Conexión");            
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
+                    + "en el modulo " + "Conexión");
             ++deniedConnectionCounter;
         }
 
@@ -85,22 +94,22 @@ public class ConnectionModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery leavingCQ = e.getClientQuery();
+
         leavingCQ.setCurrentMod(this);
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
-        ("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                + "Conexión");        
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
+                + "Conexión");
         --servers;
+
     }
 
     @Override
-    public void generateAction( ClientQuery clientQuery) {
+    public void generateAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
-        ("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
-                + " de conexiones");        
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
+                + " Conexión");
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist((30.0 / 60.0));
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
@@ -112,9 +121,8 @@ public class ConnectionModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent
-        ("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "modulo de conexiones" + " al modulo" + " administrador de proc");        
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
+                + "Conexión" + " al modulo" + " Administrador de procesos");
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList

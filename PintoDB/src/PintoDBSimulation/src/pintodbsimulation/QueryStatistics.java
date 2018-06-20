@@ -10,74 +10,74 @@ package pintodbsimulation;
  * @author pablo
  */
 public class QueryStatistics {
-    
-    private double  systemArriveTime;
-    private double  systemLeaveTime;
-    private double  moduleArriveTime;
-    private double  moduleLeaveTime;
-    private double  timeInQueryProcMod;
-    private double  timeInConnectionMod;
-    private double  timeInExecMod;
-    private double  timeInTransMod;
-    private double  timeInProcMgmtMod;
-    private int     usedBlocks;
+
+    private double systemArriveTime;
+    private double systemLeaveTime;
+    private double moduleArriveTime;
+    private double moduleLeaveTime;
+    private double timeInQueryProcMod;
+    private double timeInConnectionMod;
+    private double timeInExecMod;
+    private double timeInTransMod;
+    private double timeInProcMgmtMod;
+    private int usedBlocks;
 
     /**
      *
      */
     public QueryStatistics() {
-        this.systemArriveTime    =  Statistics.INVALID_TIME;
-        this.systemLeaveTime     =  Statistics.INVALID_TIME;
-        this.moduleArriveTime    =  Statistics.INVALID_TIME;
-        this.moduleLeaveTime     =  Statistics.INVALID_TIME;
-        this.timeInConnectionMod =  Statistics.INVALID_TIME;
-        this.timeInQueryProcMod  =  Statistics.INVALID_TIME;
-        this.timeInProcMgmtMod   =  Statistics.INVALID_TIME;
-        this.timeInExecMod       =  Statistics.INVALID_TIME;
-        this.timeInTransMod      =  Statistics.INVALID_TIME;
+        this.systemArriveTime = Statistics.INVALID_TIME;
+        this.systemLeaveTime = Statistics.INVALID_TIME;
+        this.moduleArriveTime = Statistics.INVALID_TIME;
+        this.moduleLeaveTime = Statistics.INVALID_TIME;
+        this.timeInConnectionMod = Statistics.INVALID_TIME;
+        this.timeInQueryProcMod = Statistics.INVALID_TIME;
+        this.timeInProcMgmtMod = Statistics.INVALID_TIME;
+        this.timeInExecMod = Statistics.INVALID_TIME;
+        this.timeInTransMod = Statistics.INVALID_TIME;
     }
 
-     /**
+    /**
      *
-     * @return 
+     * @return
      */
     public double getSystemArriveTime() {
         return systemArriveTime;
     }
 
-     /**
+    /**
      *
      * @param systemArriveTime
-     */    
+     */
     public void setSystemArriveTime(double systemArriveTime) {
         this.systemArriveTime = systemArriveTime;
     }
-    
-     /**
+
+    /**
      *
-     * @return 
+     * @return
      */
     public double getSystemLeaveTime() {
         return systemLeaveTime;
     }
 
-     /**
+    /**
      *
      * @param systemLeaveTime
-     */    
+     */
     public void setSystemLeaveTime(double systemLeaveTime) {
         this.systemLeaveTime = systemLeaveTime;
     }
 
-     /**
+    /**
      *
-     * @return 
-     */    
+     * @return
+     */
     public double getModuleArriveTime() {
         return moduleArriveTime;
     }
 
-     /**
+    /**
      *
      * @param moduleArriveTime
      */
@@ -85,9 +85,9 @@ public class QueryStatistics {
         this.moduleArriveTime = moduleArriveTime;
     }
 
-     /**
+    /**
      *
-     * @return 
+     * @return
      */
     public double getModuleLeaveTime() {
         return moduleLeaveTime;
@@ -103,96 +103,96 @@ public class QueryStatistics {
 
     /**
      *
-     * @return 
+     * @return
      */
     public double getTimeInQueryProcMod() {
         return timeInQueryProcMod;
     }
 
-     /**
+    /**
      *
      * @param timeInQueryProcMod
      */
     public void setTimeInQueryProcMod(double timeInQueryProcMod) {
         this.timeInQueryProcMod = timeInQueryProcMod;
     }
-    
-     /**
+
+    /**
      *
-     * @return 
+     * @return
      */
     public double getTimeInConnectionMod() {
         return timeInConnectionMod;
     }
-    
-     /**
+
+    /**
      *
      * @param timeInConnectionMod
      */
     public void setTimeInConnectionMod(double timeInConnectionMod) {
         this.timeInConnectionMod = timeInConnectionMod;
     }
-    
-     /**
+
+    /**
      *
-     * @return 
+     * @return
      */
     public double getTimeInExecMod() {
         return timeInExecMod;
     }
 
-     /**
+    /**
      *
      * @param timeInExecMod
-     */    
+     */
     public void setTimeInExecMod(double timeInExecMod) {
         this.timeInExecMod = timeInExecMod;
     }
 
-     /**
+    /**
      *
-     * @return 
-     */    
+     * @return
+     */
     public double getTimeInTransMod() {
         return timeInTransMod;
     }
 
-     /**
+    /**
      *
      * @param timeInTransMod
-     */    
+     */
     public void setTimeInTransMod(double timeInTransMod) {
         this.timeInTransMod = timeInTransMod;
     }
 
-     /**
+    /**
      *
-     * @return 
-     */    
+     * @return
+     */
     public double getTimeInProcMgmtMod() {
         return timeInProcMgmtMod;
     }
 
-     /**
+    /**
      *
      * @param timeInProcMgmtMod
-     */    
+     */
     public void setTimeInProcMgmtMod(double timeInProcMgmtMod) {
         this.timeInProcMgmtMod = timeInProcMgmtMod;
     }
 
-     /**
+    /**
      *
-     * @return 
-     */    
+     * @return
+     */
     public int getUsedBlocks() {
         return usedBlocks;
     }
 
-     /**
+    /**
      *
      * @param usedBlocks
-     */    
+     */
     public void setUsedBlocks(int usedBlocks) {
         this.usedBlocks = usedBlocks;
     }

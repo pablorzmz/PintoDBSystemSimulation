@@ -17,15 +17,15 @@ public class SimPintoDB extends Thread {
     private int p;
     private double t;
     private LinkedList<ClientQuery> clients;
-    private PriorityQueue<Event> systemEventList;
-    private Statistics stats;
+    private final PriorityQueue<Event> systemEventList;//*
+    private final Statistics stats;//*
     private Module connectionModule;
     private Module processManagemnteModule;
     private Module queryProcessorModule;
     private Module executionModule;
     private Module transactionModule;
     private final MainForm interFace;
-    public final static int sleepTime = 750;
+    public final static int SLEEP_TIME = 750;
 
     /**
      *
@@ -48,18 +48,18 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Statistics getStats() {
         return stats;
     }
-    
+
     /**
      *
      * @param intf
      */
-    public SimPintoDB( MainForm intf ) {
+    public SimPintoDB(MainForm intf) {
         //pointer to interface
         this.interFace = intf;
 
@@ -94,47 +94,54 @@ public class SimPintoDB extends Thread {
         for (int times = 0; times < timesToRunSimulation && !interFace.stopSimulation; ++times) {
             while (simClock < maxSimClock && systemEventList.size() > 0 && !interFace.stopSimulation) {
                 Event currentEvent = this.systemEventList.peek();
-                Module currentMod = currentEvent.getMod();
-                simClock = currentEvent.getClockTime();
+                ClientQuery currentCQ = currentEvent.getClientQuery();
+                if (!currentCQ.getFinishService()) { //If the current client haven't finnished it's service already
+                    Module currentMod = currentEvent.getMod();
+                    if (currentMod == null) {
+                        currentMod = currentCQ.getCurrentMod();
+                    }
+                    simClock = currentEvent.getClockTime();
 
-                refreshInterfaceInfo( currentEvent );
+                    refreshInterfaceInfo(currentEvent);
 
-                switch (currentEvent.getEventType()) {
-                    case ARRIVE:
-                        //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
-                        currentMod.processArrive();
-                        break;
-                    case LEAVE:
-                        //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
-                        currentMod.processExit();
-                        break;
-                    case TIMEOUT:
-                        currentMod.processTimeOut();
-                        break;
-                }
-                //this.interFace.refreshConsoleAreaContent("");
+                    switch (currentEvent.getEventType()) {
+                        case ARRIVE:
+                            //System.out.println(YELLOW + "Next Event: " + currentEvent.getEventType() + RESET);
+                            currentMod.processArrive();
+                            break;
+                        case LEAVE:
+                            //System.out.println(GREEN + "Next Event: " + currentEvent.getEventType() + RESET);
+                            currentMod.processExit();
+                            break;
+                        case TIMEOUT:
+                            currentMod.processTimeOut();
+                            break;
+                    }
+                    //this.interFace.refreshConsoleAreaContent("");
 
-                //We need to check if there are clients waiting that already have a timeout
-                //and if there are, I need to generate their timeout
-                //checkGenerateTimeout();
-                checkGenerateTimeout( this.connectionModule );
+                    //We need to check if there are clients waiting that already have a timeout
+                    //and if there are, I need to generate their timeout
+                    //checkGenerateTimeout();
+                    /*checkGenerateTimeout( this.connectionModule );
                 checkGenerateTimeout( this.processManagemnteModule );
                 checkGenerateTimeout( this.queryProcessorModule );
                 checkGenerateTimeout( this.transactionModule );
-                checkGenerateTimeout( this.executionModule );
-
-                if (interFace.sleepMode == true) {
-                    try {
-                        Thread.sleep( sleepTime );
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(SimPintoDB.class.getName()).log(Level.SEVERE, null, ex);
+                checkGenerateTimeout( this.executionModule );*/
+                    if (interFace.sleepMode == true) {
+                        try {
+                            Thread.sleep(SLEEP_TIME);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(SimPintoDB.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                } else {
+                    this.systemEventList.poll();
                 }
             }
             // calculate stats            
             stats.generateStatistics();
-            this.interFace.refreshIterationStats("Results for iteration number: " + (int)(times + 1)  );
-            this.interFace.refreshIterationStats( stats.getCurrentIterationStats().resultStats() );
+            this.interFace.refreshIterationStats("Results for iteration number: " + (int) (times + 1));
+            this.interFace.refreshIterationStats(stats.getCurrentIterationStats().resultStats());
             // clear everything
             systemEventList.clear();
             clients.clear();
@@ -146,17 +153,17 @@ public class SimPintoDB extends Thread {
             executionModule.clear();
             initializeSimCicle();
         }
-        if ( !interFace.stopSimulation ) {
-            stats.generateFinalStatistics(); 
+        if (!interFace.stopSimulation) {
+            stats.generateFinalStatistics();
             this.interFace.refreshFinalIterationStats("Final results");
-            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats( ) );
-            this.interFace.refreshFinalIterationStats( stats.getConfidentInterval() );
+            this.interFace.refreshFinalIterationStats(stats.getFinalIterationStats().resultStats());
+            this.interFace.refreshFinalIterationStats(stats.getConfidentInterval());
         }
         interFace.activeRunButton(true);
         interFace.activeTextFiles(true);
     }
 
-    private void refreshInterfaceInfo( Event currentEvent ) {
+    private void refreshInterfaceInfo(Event currentEvent) {
         int pM, qM, tM, eM;
         this.interFace.refreshClockTime(simClock);
         this.interFace.refreshDeniendConnection(((ConnectionModule) connectionModule).getDeniedConnectionCounter());
@@ -253,8 +260,7 @@ public class SimPintoDB extends Thread {
 
         }
     }*/
-    
-    private void checkGenerateTimeout(Module m) {
+ /*private void checkGenerateTimeout(Module m) {
         if (m != this.connectionModule) {
             //I need to check if there are client with timeout on all the modules queues
             LinkedList<ClientQuery> timeoutCQ = new LinkedList<>();
@@ -262,9 +268,9 @@ public class SimPintoDB extends Thread {
             int queueSize = 0;
             ClientQuery cQ;
             Object moduleQA[];
-            if(m.getClass().getSimpleName().equals( this.transactionModule.getClass().getSimpleName())){
+            if (m.getClass().getSimpleName().equals(this.transactionModule.getClass().getSimpleName())) {
                 moduleQ = m.getPriorityQueryQueue();
-            }else{
+            } else {
                 moduleQ = m.getQueryQueue();
             }
             queueSize = moduleQ.size();
@@ -291,8 +297,7 @@ public class SimPintoDB extends Thread {
 
             }
         }
-    }
-
+    }*/
     /**
      *
      * @return
@@ -462,10 +467,7 @@ public class SimPintoDB extends Thread {
         return this.t;
     }
 
-    /**
-     * ******************* METODOS PARA TESTEAR UN
-     * MÓDULO******************************
-     */
+    //Testing use only
     private void forTestingAModule(Module m) {
         // add events to module
         ClientQuery c;
