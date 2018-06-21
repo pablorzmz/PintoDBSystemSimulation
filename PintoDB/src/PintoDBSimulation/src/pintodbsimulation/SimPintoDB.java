@@ -139,7 +139,7 @@ public class SimPintoDB extends Thread {
             // calculate stats            
             stats.generateStatistics();
             this.interFace.refreshIterationStats("Results for iteration number: " + (int) (times + 1));
-            this.interFace.refreshIterationStats(stats.getCurrentIterationStats().resultStats());
+            this.interFace.refreshIterationStats(stats.getCurrentIterationStats().resultStats( false ));
             // clear everything
             systemEventList.clear();
             clients.clear();
@@ -154,7 +154,7 @@ public class SimPintoDB extends Thread {
         if (!interFace.stopSimulation) {
             stats.generateFinalStatistics();
             this.interFace.refreshFinalIterationStats( "Final results" );
-            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats() );
+            this.interFace.refreshFinalIterationStats( stats.getFinalIterationStats().resultStats( true ) );
             this.interFace.refreshFinalIterationStats( stats.getConfidentInterval() );
         }
         interFace.activeRunButton(true);

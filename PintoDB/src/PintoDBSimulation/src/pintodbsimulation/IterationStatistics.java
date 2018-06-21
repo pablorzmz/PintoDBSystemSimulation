@@ -50,14 +50,16 @@ public class IterationStatistics {
      * 
      * @return 
      */
-    public String resultStats()
+    public String resultStats(boolean averages)
     {
+        String info = averages?"Average":"Amount of";
         String data =
         "\nThis statistics were calculated with clients who finished service in system or in each module\n"+
         "\n"+        
-        "\tAverage denied connections: " + this.counterOfDeniedConnection +" and the 5% of total connections( "+ totalConnections +" ) is "+ (totalConnections*0.05) +"\n" +
-        "\tAverage timeouts: "+ this.timeOutsCounter + "\n"+
-        "\tAverage query lifetime in system: " + this.averageQueryLifeTime + "\n" +
+        "\t"+ info +" denied connections: " + this.counterOfDeniedConnection +" and it is a "+ (this.counterOfDeniedConnection/totalConnections)*100
+                    +" % of "+ totalConnections +" connections\n" +
+        "\t"+ info +" timeouts: "+ this.timeOutsCounter + "\n"+
+        "\t"+ info +" query lifetime in system: " + this.averageQueryLifeTime + "\n" +
         "\tAverage Connection Module queue size: " + this.averageQueueSizeConnectionM + "\n" +
         "\tAverage Process Managment Module queue size: " + this.averageQueueSizeProcessM + "\n" +
         "\tAverage Query Processor Module queue size: " + this.averageQueueSizeQueryM + "\n" +
