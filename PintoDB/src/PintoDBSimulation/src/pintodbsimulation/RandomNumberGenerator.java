@@ -2,7 +2,10 @@ package pintodbsimulation;
 
 import java.util.Random;
 
-
+/**
+ *
+ * @author b65477@ecci.ucr.ac.cr
+ */
 public class RandomNumberGenerator {
     
     private final Random r;

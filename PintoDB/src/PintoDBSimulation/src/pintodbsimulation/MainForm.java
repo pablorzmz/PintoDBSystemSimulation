@@ -726,6 +726,13 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param pM
+     * @param qM
+     * @param tM
+     * @param eM
+     */
     public void refresQueueSizesPerModule(int pM, int qM, int tM, int eM) {
         this.txtProMgmtcModule.setText(String.valueOf(pM));
         this.txtQueryProcMod.setText(String.valueOf(qM));
@@ -741,6 +748,10 @@ public class MainForm extends javax.swing.JFrame {
         this.txtClockTime.setText(String.valueOf(time));
     }
 
+    /**
+     *
+     * @param count
+     */
     public void refreshDeniendConnection(int count) {
         this.txtDeniendConnections.setText(String.valueOf(count));
     }
@@ -783,6 +794,7 @@ public class MainForm extends javax.swing.JFrame {
     /**
      *
      * @param content
+     * @throws java.io.IOException
      */
     public void saveInterfaceData(String content) throws IOException {
 
@@ -931,8 +943,20 @@ public class MainForm extends javax.swing.JFrame {
 
     private final int MAX_LENGHT = 4;
     private boolean showConsole;
+
+    /**
+     *
+     */
     public SimPintoDB pintoDB;
+
+    /**
+     *
+     */
     public volatile boolean stopSimulation;
+
+    /**
+     *
+     */
     public volatile boolean sleepMode;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRun;

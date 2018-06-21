@@ -48,6 +48,7 @@ public class IterationStatistics {
     
     /**
      * 
+     * @param averages
      * @return 
      */
     public String resultStats(boolean averages)

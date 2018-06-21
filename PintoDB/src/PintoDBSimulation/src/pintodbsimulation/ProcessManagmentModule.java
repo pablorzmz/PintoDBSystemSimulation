@@ -2,8 +2,20 @@ package pintodbsimulation;
 
 import java.util.PriorityQueue;
 
+/**
+ *
+ * @author
+ */
 public class ProcessManagmentModule extends Module {
 
+    /**
+     * Class constructor.
+     *
+     * @param servers
+     * @param maxServers
+     * @param simPintoDBPointer
+     * @param nextModule
+     */
     public ProcessManagmentModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
     }

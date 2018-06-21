@@ -17,6 +17,10 @@ public class Statistics {
     private final IterationStatistics currentIterationStats;
     private final IterationStatistics finalIterationStats;
     private final SimPintoDB pointerSimPintoDB;
+
+    /**
+     *
+     */
     public final static double INVALID_TIME = -1.0;
     private LinkedList<Double> itemsForVariance;
     private String confidentInterval;

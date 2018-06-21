@@ -16,6 +16,10 @@ public class ClientQuery {
     private final QueryStatistics queryStatistics;
     private boolean finishedService;
     //Test
+
+    /**
+     *
+     */
     public int clientID;
 
     /**
@@ -102,10 +106,18 @@ public class ClientQuery {
         return queryStatistics;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean getFinishService(){
         return this.finishedService;
     }
     
+    /**
+     *
+     * @param serviceState
+     */
     public void setFinishService(boolean serviceState){
         this.finishedService = serviceState;
     }

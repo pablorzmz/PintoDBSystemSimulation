@@ -81,6 +81,12 @@ public class Event {
     }
     
     /* Testing mode only */
+
+    /**
+     *
+     * @return
+     */
+
     public String printForTestiing()
     {    
         String modulo = mod == null? "En donde este en ese momento":

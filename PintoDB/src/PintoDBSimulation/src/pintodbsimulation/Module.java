@@ -34,7 +34,7 @@ public abstract class Module {
     protected LinkedList<ClientQuery> queryQueue;
 
     /**
-     * Priority queue for the clientes waiting to be attended.
+     * Priority queue for the clients waiting to be attended.
      */
     protected PriorityQueue<ClientQuery> queryPriorityQueue;
 
@@ -46,7 +46,7 @@ public abstract class Module {
 
     /**
      * Accumulate the number of clients waiting to be attended, each time this
-     * number change. Used to calculeta statistics.
+     * number change. Used to calculate statistics.
      */
     protected int queueSizesAccumulator;
 
@@ -88,7 +88,6 @@ public abstract class Module {
         servers = 0;
         queryQueue.clear();
         queryPriorityQueue.clear();
-        //queueSizeRegister.clear();
         queueSizesCounter = 0;
         queueSizesAccumulator = 0;
     }
@@ -150,59 +149,58 @@ public abstract class Module {
     }
 
     /**
-     * Abstract method to be implemente by the classes who extends this class.
-     *
-     * @see ProcessManagmentModule
-     * @see QueryProcessorModule
-     * @see ExecutionModule
-     * @see TransactionAndDiskModule
-     * @see ConnectionModule
+     * Pulls out the current event of the event list, and searches for this event client,
+     * ie client with timeout, which can be on the module waiting queue(is there is any) or
+     * being attended. In the first case the client is simply taken out of the module waiting queue.
+     * Otherwise the client stops being attended and a server if released.
+     * In the second case the logic before releasing a server is identical to that of {@link proccessExit()}.
+     * 
+     * @see Event
+     * @see ClientQuery
+     * @see SimPintoDB
      */
     public abstract void processTimeOut();
 
     /**
-     * Abstract method to be implemente by the classes who extends this class.
-     *
-     * @see ProcessManagmentModule
-     * @see QueryProcessorModule
-     * @see ExecutionModule
-     * @see TransactionAndDiskModule
-     * @see ConnectionModule
+     * Pulls out the current event of the event list and gets the current client from the event,
+     * ie the client arriving to the module. Then check if there are available server, if there are
+     * the client is pass to be attended and {@link generateAction} is called with the current client as argument. 
+     * If there are not the client is put on the module waiting queue.
+     * If the module do not have an waiting queue the client is simply rejected.
+     * 
+     * @see Event
+     * @see ClientQuery
+     * @see SimPintoDB
      */
     public abstract void processArrive();
 
     /**
-     * Abstract method to be implemente by the classes who extends this class.
-     *
-     * @see ProcessManagmentModule
-     * @see QueryProcessorModule
-     * @see ExecutionModule
-     * @see TransactionAndDiskModule
-     * @see ConnectionModule
+     * Pulls out the current event of the event list and gets the current client from the event,
+     * ie the client leaving to the module. If there are other clients waiting to be attended 
+     * on the module waiting queue (if there is any) the next client is taken out of the waiting queue and passed to be attended, 
+     * and {@link generateAction} is called with the next client as argument.
+     * Otherwise a server is released, ie {@link servers} is subtracted by one.
+     * Finally {@link generateNextModuleAction} is called with the current client as parameter.
+     * 
+     * @see Event
+     * @see ClientQuery
+     * @see SimPintoDB
      */
     public abstract void processExit();
 
     /**
-     * Abstract method to be implemente by the classes who extends this class.
-     *
+     * Creates a new event for this module and the client {@link clientQuery} and puts it on the simulation event list. 
+     * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
+     * 
      * @param clientQuery
-     * @see ProcessManagmentModule
-     * @see QueryProcessorModule
-     * @see ExecutionModule
-     * @see TransactionAndDiskModule
-     * @see ConnectionModule
      */
     public abstract void generateAction(ClientQuery clientQuery);
 
     /**
-     * Abstract method to be implemente by the classes who extends this class.
-     *
+     * Creates a new event for the next module ({@link nextModule}) and the client {@link clientQuery} and puts it on the simulation event list. 
+     * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
+     * 
      * @param clientQuery
-     * @see ProcessManagmentModule
-     * @see QueryProcessorModule
-     * @see ExecutionModule
-     * @see TransactionAndDiskModule
-     * @see ConnectionModule
      */
     public abstract void generateNextModuleAction(ClientQuery clientQuery);
 }

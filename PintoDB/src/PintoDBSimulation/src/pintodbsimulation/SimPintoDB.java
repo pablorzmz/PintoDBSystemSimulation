@@ -5,6 +5,10 @@ import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author b65477@ecci.ucr.ac.cr
+ */
 public class SimPintoDB extends Thread {
 
     private int timesToRunSimulation;
@@ -24,6 +28,10 @@ public class SimPintoDB extends Thread {
     private Module executionModule;
     private Module transactionModule;
     private final MainForm interFace;
+
+    /**
+     *
+     */
     public final static int SLEEP_TIME = 750;
 
     /**

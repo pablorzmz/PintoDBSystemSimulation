@@ -3,11 +3,26 @@ package pintodbsimulation;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
+/**
+ *
+ * @author b65477@ecci.ucr.ac.cr
+ */
 public class ConnectionModule extends Module {
 
     private int deniedConnectionCounter;
+
+    /**
+     *
+     */
     public int clientCounter;
 
+    /**
+     *
+     * @param servers
+     * @param maxServers
+     * @param simPintoDBPointer
+     * @param nextModule
+     */
     public ConnectionModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
         deniedConnectionCounter = 0;
