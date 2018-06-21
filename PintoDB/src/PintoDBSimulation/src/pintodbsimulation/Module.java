@@ -3,23 +3,65 @@ package pintodbsimulation;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
+/**
+ * Abstract and father class to be extended by all the module classes of this
+ * simulator.
+ *
+ * @author
+ */
 public abstract class Module {
 
-    /*
-    * Members declaration block
+    //Members declaration block.
+    /**
+     * Busy servers counter.
      */
     protected int servers;
+
+    /**
+     * Max number of available servers
+     */
     protected int maxServers;
+
+    /**
+     * RandomNumberGenerator instance, use to generate random numbers and random
+     * variables values, respecting several distributions.
+     */
     protected RandomNumberGenerator randNoGen;
+
+    /**
+     * Queue for the clients waiting to be attended.
+     */
     protected LinkedList<ClientQuery> queryQueue;
+
+    /**
+     * Priority queue for the clientes waiting to be attended.
+     */
     protected PriorityQueue<ClientQuery> queryPriorityQueue;
-    //protected LinkedList<Integer> queueSizeRegister;
+
+    /**
+     * Count the number of times that the number of clients waiting change. Used
+     * to calculate statistics.
+     */
     protected int queueSizesCounter;
+
+    /**
+     * Accumulate the number of clients waiting to be attended, each time this
+     * number change. Used to calculeta statistics.
+     */
     protected int queueSizesAccumulator;
+
+    /**
+     * Instance of the controller class.
+     */
     protected SimPintoDB simPintoDBPointer;
+
+    /**
+     * Instance of the next module in the execution of the simulation.
+     */
     protected Module nextModule;
 
     /**
+     * Class constructor.
      *
      * @param servers
      * @param maxServers
@@ -34,13 +76,13 @@ public abstract class Module {
         this.randNoGen = new RandomNumberGenerator();
         this.queryQueue = new LinkedList<>();
         this.queryPriorityQueue = new PriorityQueue<>(new ClientQueryComparator());
-        //this.queueSizeRegister = new LinkedList<>();
         this.queueSizesCounter = 0;
         this.queueSizesAccumulator = 0;
     }
 
     /**
-     *
+     * Set some of the class fields (counters and queues) to their initial
+     * value.
      */
     public void clear() {
         servers = 0;
@@ -52,6 +94,7 @@ public abstract class Module {
     }
 
     /**
+     * Set the nextModule field to the value(Module) past as argument.
      *
      * @param nextModule
      */
@@ -60,73 +103,106 @@ public abstract class Module {
     }
 
     /**
+     * Returns this class queueSizesCounter field current value.
      *
-     * @return
-     */
-    /*public LinkedList<Integer> getQueueSizeRegister() {
-        return queueSizeRegister;
-    }*/
-    /**
-     *
-     * @return
+     * @return queueSiszesCounter field
      */
     public int getQueueSizesCounter() {
         return this.queueSizesCounter;
     }
 
     /**
+     * Returns this class queueSizesAccumulator current field value.
      *
-     * @return
+     * @return queueSizesAccumulator field
      */
     public int getQueueSizesAccumulator() {
         return this.queueSizesAccumulator;
     }
 
     /**
+     * Returns this class queryQueue field, which type is
+     * {@code LinkedList<ClientQuery>}.
      *
-     */
-    public abstract void processTimeOut();
-
-    /**
-     *
-     */
-    public abstract void processArrive();
-
-    /**
-     *
-     */
-    public abstract void processExit();
-
-    /**
-     *
-     * @param clientQuery
-     */
-    public abstract void generateAction(ClientQuery clientQuery);
-
-    /**
-     *
-     * @param clientQuery
-     */
-    public abstract void generateNextModuleAction(ClientQuery clientQuery);
-
-    /**
-     *
-     * @return
+     * @return queryQueue field
      */
     public LinkedList<ClientQuery> getQueryQueue() {
         return queryQueue;
     }
 
     /**
+     * Returns this class queryPriorityQueue field, which type is
+     * {@code PriorityQueue<ClientQuery>}.
      *
-     * @return
+     * @return queryPriorityQueue field
      */
-    public PriorityQueue<ClientQuery> getPriorityQueryQueue() {
+    public PriorityQueue<ClientQuery> getQueryPriorityQueue() {
         return queryPriorityQueue;
     }
 
+    /**
+     * Set the maxServer field to the value (int) past as argument.
+     *
+     * @param maxServers
+     */
     public void setMaxServers(int maxServers) {
         this.maxServers = maxServers;
     }
 
+    /**
+     * Abstract method to be implemente by the classes who extends this class.
+     *
+     * @see ProcessManagmentModule
+     * @see QueryProcessorModule
+     * @see ExecutionModule
+     * @see TransactionAndDiskModule
+     * @see ConnectionModule
+     */
+    public abstract void processTimeOut();
+
+    /**
+     * Abstract method to be implemente by the classes who extends this class.
+     *
+     * @see ProcessManagmentModule
+     * @see QueryProcessorModule
+     * @see ExecutionModule
+     * @see TransactionAndDiskModule
+     * @see ConnectionModule
+     */
+    public abstract void processArrive();
+
+    /**
+     * Abstract method to be implemente by the classes who extends this class.
+     *
+     * @see ProcessManagmentModule
+     * @see QueryProcessorModule
+     * @see ExecutionModule
+     * @see TransactionAndDiskModule
+     * @see ConnectionModule
+     */
+    public abstract void processExit();
+
+    /**
+     * Abstract method to be implemente by the classes who extends this class.
+     *
+     * @param clientQuery
+     * @see ProcessManagmentModule
+     * @see QueryProcessorModule
+     * @see ExecutionModule
+     * @see TransactionAndDiskModule
+     * @see ConnectionModule
+     */
+    public abstract void generateAction(ClientQuery clientQuery);
+
+    /**
+     * Abstract method to be implemente by the classes who extends this class.
+     *
+     * @param clientQuery
+     * @see ProcessManagmentModule
+     * @see QueryProcessorModule
+     * @see ExecutionModule
+     * @see TransactionAndDiskModule
+     * @see ConnectionModule
+     */
+    public abstract void generateNextModuleAction(ClientQuery clientQuery);
 }

@@ -169,7 +169,7 @@ public class SimPintoDB extends Thread {
         this.interFace.refreshConsoleAreaContent( "Next Event: " + currentEvent.getEventType() );
         pM = this.processManagemnteModule.getQueryQueue().size();
         qM = this.queryProcessorModule.getQueryQueue().size();
-        tM = this.transactionModule.getPriorityQueryQueue().size();
+        tM = this.transactionModule.getQueryPriorityQueue().size();
         eM = this.executionModule.getQueryQueue().size();
         this.interFace.refresQueueSizesPerModule( pM, qM, tM, eM );
     }
