@@ -247,10 +247,10 @@ public class SimPintoDB extends Thread {
         this.interFace.refreshDeniendConnection( ((ConnectionModule) connectionModule).getDeniedConnectionCounter() );
         this.interFace.refreshConsoleAreaContent( "Current clock time: " + simClock );
         this.interFace.refreshConsoleAreaContent( "Next Event: " + currentEvent.getEventType() );
-        pM = this.processManagemnteModule.getQueryQueue().size();
-        qM = this.queryProcessorModule.getQueryQueue().size();
-        tM = this.transactionModule.getQueryPriorityQueue().size();
-        eM = this.executionModule.getQueryQueue().size();
+        pM = this.processManagemnteModule.getMyQueue().size();
+        qM = this.queryProcessorModule.getMyQueue().size();
+        tM = this.transactionModule.getMyQueue().size();
+        eM = this.executionModule.getMyQueue().size();
         this.interFace.refresQueueSizesPerModule( pM, qM, tM, eM );
     }
 

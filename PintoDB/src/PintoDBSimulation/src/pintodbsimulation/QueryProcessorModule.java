@@ -1,5 +1,6 @@
 package pintodbsimulation;
 
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 /**
@@ -20,6 +21,7 @@ public class QueryProcessorModule extends Module {
      */
     public QueryProcessorModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
+        this.myQueue = new LinkedList<>();
     }
 
     @Override
@@ -30,15 +32,15 @@ public class QueryProcessorModule extends Module {
         ClientQuery outgoingCQ = e.getClientQuery();
 
         //I need to check where the outgoing client is
-        if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
+        if (!myQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
                     + "del modulo " + " Procesamiento de consultas"
                     + " porque ya lleva en el sistema " + (e.getClockTime() - outgoingCQ.getQueryStatistics().getSystemArriveTime())
                     + " > " + simPintoDBPointer.getT());
 
-            if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
-                generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizesAccumulator += queryQueue.size();
+            if (myQueue.size() > 0) { //If there are waiting clients on the module queue
+                generateAction(this.myQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
+                queueSizesAccumulator += myQueue.size();
                 ++queueSizesCounter;
             } else { //If there isn't client waiting to be attended
                 --servers;
@@ -73,8 +75,8 @@ public class QueryProcessorModule extends Module {
                     + "en el modulo " + "Procesamiento de consultas" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
-            queryQueue.add(arrivingCQ);
-            queueSizesAccumulator += queryQueue.size();
+            myQueue.add(arrivingCQ);
+            queueSizesAccumulator += myQueue.size();
             ++queueSizesCounter;
         }
 
@@ -90,13 +92,13 @@ public class QueryProcessorModule extends Module {
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
-        if (queryQueue.size() > 0) {
+        if (myQueue.size() > 0) {
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
                     + "Procesamiento de consultas" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
-            generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-            queueSizesAccumulator += queryQueue.size();
+            generateAction(myQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
+            queueSizesAccumulator += myQueue.size();
             ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "

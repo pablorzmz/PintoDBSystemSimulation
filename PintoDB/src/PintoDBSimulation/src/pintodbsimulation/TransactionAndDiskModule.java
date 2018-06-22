@@ -20,6 +20,7 @@ public class TransactionAndDiskModule extends Module {
      */
     public TransactionAndDiskModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
+        this.myQueue = new PriorityQueue<>( new ClientQueryComparator() );
     }
 
     @Override
@@ -29,19 +30,19 @@ public class TransactionAndDiskModule extends Module {
         ClientQuery outgoingCQ = e.getClientQuery();
 
         //I need to check where the outgoing client is
-        if (!queryPriorityQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
-            if (queryPriorityQueue.size() > 0) { //If there are waiting clients on the module queue
-                ClientQuery nextCQ = this.queryPriorityQueue.peek();
+        if (!myQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
+            if (myQueue.size() > 0) { //If there are waiting clients on the module queue
+                ClientQuery nextCQ = this.myQueue.peek();
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
                         this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
                                 + "del modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
                                 + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
 
-                        queryPriorityQueue.poll();
+                        myQueue.poll();
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
-                        queueSizesAccumulator += queryPriorityQueue.size();
+                        queueSizesAccumulator += myQueue.size();
                         ++queueSizesCounter;
                     } else {
                         --servers;
@@ -58,9 +59,9 @@ public class TransactionAndDiskModule extends Module {
                     if (outgoingCQ.getQueryType() == StatementType.DDL) {
                         servers = 1;
                     }
-                    queryPriorityQueue.poll();
+                    myQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                    queueSizesAccumulator += queryPriorityQueue.size();
+                    queueSizesAccumulator += myQueue.size();
                     ++queueSizesCounter;
                 }
             } else //If there isn't client waiting to be attended
@@ -103,18 +104,18 @@ public class TransactionAndDiskModule extends Module {
                             + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
-                    queryPriorityQueue.add(arrivingCQ);
-                    queueSizesAccumulator += queryPriorityQueue.size();
+                    myQueue.add(arrivingCQ);
+                    queueSizesAccumulator += myQueue.size();
                     ++queueSizesCounter;
                 }
-            } else if (queryPriorityQueue.size() > 0) {
+            } else if (myQueue.size() > 0) {
                 this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : "
                         + " (" + arrivingCQ.getQueryType() + ") " + " fue encolado "
                         + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
                         + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
-                queryPriorityQueue.add(arrivingCQ);
-                queueSizesAccumulator += queryPriorityQueue.size();
+                myQueue.add(arrivingCQ);
+                queueSizesAccumulator += myQueue.size();
                 ++queueSizesCounter;
 
             } else {
@@ -134,8 +135,8 @@ public class TransactionAndDiskModule extends Module {
                     + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
-            queryPriorityQueue.add(arrivingCQ);            
-            queueSizesAccumulator += queryPriorityQueue.size();            
+            myQueue.add(arrivingCQ);            
+            queueSizesAccumulator += myQueue.size();            
             ++queueSizesCounter;
         }
     }
@@ -150,18 +151,18 @@ public class TransactionAndDiskModule extends Module {
         leavingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
 
-        if (queryPriorityQueue.size() > 0) { //If there are waiting clients on the module queue
-            ClientQuery nextCQ = this.queryPriorityQueue.peek();
+        if (myQueue.size() > 0) { //If there are waiting clients on the module queue
+            ClientQuery nextCQ = this.myQueue.peek();
             if (nextCQ.getQueryType() == StatementType.DDL) {
                 if (leavingCQ.getQueryType() == StatementType.DDL) {
                     this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
                             + "de Transacciones" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
-                    nextCQ = queryPriorityQueue.poll();
+                    nextCQ = myQueue.poll();
                     generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                     servers = maxServers;
-                    queueSizesAccumulator += queryPriorityQueue.size();
+                    queueSizesAccumulator += myQueue.size();
                     ++queueSizesCounter;
                 } else {
                     this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
@@ -171,10 +172,10 @@ public class TransactionAndDiskModule extends Module {
                     --servers;
                     if (servers == 0) // I was the last one no DDL and the next one is a DDL
                     {
-                        nextCQ = queryPriorityQueue.poll();
+                        nextCQ = myQueue.poll();
                         generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
                         servers = maxServers;
-                        queueSizesAccumulator += queryPriorityQueue.size();
+                        queueSizesAccumulator += myQueue.size();
                         ++queueSizesCounter;
                     }
                 }
@@ -188,9 +189,9 @@ public class TransactionAndDiskModule extends Module {
                     servers = 1;
                 }
 
-                queryPriorityQueue.poll();
+                myQueue.poll();
                 generateAction(nextCQ); //I need to generate the LEAVE of the waiting client that I put to be attended
-                queueSizesAccumulator += queryPriorityQueue.size();
+                queueSizesAccumulator += myQueue.size();
                 ++queueSizesCounter;
             }
         } else //If there isn't client waiting to be attended

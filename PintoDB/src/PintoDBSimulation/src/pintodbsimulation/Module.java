@@ -2,6 +2,7 @@ package pintodbsimulation;
 
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Abstract and father class to be extended by all the module classes of this
@@ -29,15 +30,9 @@ public abstract class Module {
     protected RandomNumberGenerator randNoGen;
 
     /**
-     * Queue for the clients waiting to be attended.
+     * 
      */
-    protected LinkedList<ClientQuery> queryQueue;
-
-    /**
-     * Priority queue for the clients waiting to be attended.
-     */
-    protected PriorityQueue<ClientQuery> queryPriorityQueue;
-
+    protected Queue<ClientQuery> myQueue;
     /**
      * Count the number of times that the number of clients waiting change. Used
      * to calculate statistics.
@@ -74,10 +69,9 @@ public abstract class Module {
         this.simPintoDBPointer = simPintoDBPointer;
         this.nextModule = nextModule;
         this.randNoGen = new RandomNumberGenerator();
-        this.queryQueue = new LinkedList<>();
-        this.queryPriorityQueue = new PriorityQueue<>(new ClientQueryComparator());
         this.queueSizesCounter = 0;
         this.queueSizesAccumulator = 0;
+        this.myQueue = null;
     }
 
     /**
@@ -86,8 +80,8 @@ public abstract class Module {
      */
     public void clear() {
         servers = 0;
-        queryQueue.clear();
-        queryPriorityQueue.clear();
+        if ( myQueue != null )
+            myQueue.clear();
         queueSizesCounter = 0;
         queueSizesAccumulator = 0;
     }
@@ -120,25 +114,22 @@ public abstract class Module {
     }
 
     /**
-     * Returns this class queryQueue field, which type is
-     * {@code LinkedList<ClientQuery>}.
-     *
-     * @return queryQueue field
+     * 
+     * @return 
      */
-    public LinkedList<ClientQuery> getQueryQueue() {
-        return queryQueue;
+    public Queue<ClientQuery> getMyQueue() {
+        return myQueue;
     }
-
+    
     /**
-     * Returns this class queryPriorityQueue field, which type is
-     * {@code PriorityQueue<ClientQuery>}.
-     *
-     * @return queryPriorityQueue field
+     * 
+     * @param myQueue 
      */
-    public PriorityQueue<ClientQuery> getQueryPriorityQueue() {
-        return queryPriorityQueue;
+    public void setMyQueue(Queue<ClientQuery> myQueue) {
+        this.myQueue = myQueue;
     }
 
+   
     /**
      * Set the maxServer field to the value (int) past as argument.
      *

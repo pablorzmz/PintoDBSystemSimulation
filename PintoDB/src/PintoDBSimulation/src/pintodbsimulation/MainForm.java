@@ -811,7 +811,8 @@ public class MainForm extends javax.swing.JFrame {
      * @param evt
      */
     private void btnRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunActionPerformed
-        if (validateData()) {
+        this.pintoDB = new SimPintoDB( this );
+        if ( validateData() ) {
             // clear data
             this.txtConsoleArea.setText("");
             this.txtClockTime.setText("");
@@ -824,14 +825,13 @@ public class MainForm extends javax.swing.JFrame {
             this.txtIterarionStats.setText("");
             //run simulation
             stopSimulation = false;
-            activeTextFiles(false);
-            if (this.pintoDB == null) {
-                this.pintoDB = new SimPintoDB(this);
+            activeTextFiles( false );
+            if ( this.pintoDB == null) {
+                this.pintoDB = new SimPintoDB( this );
             }
             this.pintoDB.start();
-            activeRunButton(false);
+            activeRunButton( false );
         }
-        this.pintoDB = new SimPintoDB(this);
     }//GEN-LAST:event_btnRunActionPerformed
 
     /**
@@ -935,7 +935,6 @@ public class MainForm extends javax.swing.JFrame {
                 m.setVisible(true);
                 ImageIcon img = new ImageIcon("resources/database.png");
                 m.setIconImage(img.getImage());
-                m.pintoDB = new SimPintoDB(m);
             }
         });
 
