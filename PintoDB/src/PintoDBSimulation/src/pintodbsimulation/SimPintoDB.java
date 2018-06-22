@@ -6,36 +6,107 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Controller class that is responsible for handling the simulation
  *
  * @author b65477@ecci.ucr.ac.cr
  */
 public class SimPintoDB extends Thread {
 
+    //Members declaration block.
+    /**
+     * Times to run simulation.
+     */
     private int timesToRunSimulation;
+    
+    /**
+     * Simulation clock.
+     */
     private double simClock;
+    
+    /**
+     * Time the simulation will run.
+     */
     private double maxSimClock;
+    
+    /**
+     * Number of concurrent connections that the system can handle.
+     */
     private int k;
+    
+    /**
+     * Number of processes available for processing queries concurrent 
+     * that the system can handle.
+     */
     private int n;
+    
+    /**
+     * Number of processes available to execute queries.
+     */
     private int m;
+    
+    /**
+     * Number of processes available for the execution of transactions.
+     */
     private int p;
+    
+    /**
+     * Number of seconds of timeout of the connections.
+     */
     private double t;
+    
+    /**
+     * Queue for the clients waiting to be attended.
+     */
     private LinkedList<ClientQuery> clients;
+    
+    /**
+     * Queue for the system event list.
+     */
     private final PriorityQueue<Event> systemEventList;//*
+    
+    /**
+     * Pointer to the Statistics class.
+     */
     private final Statistics stats;//*
+    
+    /**
+     * Instance of the connection module in the execution of the simulation.
+     */
     private Module connectionModule;
+    
+    /**
+     * Instance of the process management module in the execution of the simulation.
+     */
     private Module processManagemnteModule;
+    
+    /**
+     * Instance of the query processor module in the execution of the simulation.
+     */
     private Module queryProcessorModule;
+    
+    /**
+     * Instance of the execution module in the execution of the simulation.
+     */
     private Module executionModule;
+    
+    /**
+     * Instance of the transaction module in the execution of the simulation.
+     */
     private Module transactionModule;
+    
+    /**
+     * Pointer to the MainForm class.
+     */
     private final MainForm interFace;
 
     /**
-     *
+     *Assignment of sleep time
      */
     public final static int SLEEP_TIME = 750;
 
     /**
-     *
+     *Set the setSimParams fields to the value (int, int, int, int, int, double, double) past as argument.
+     * 
      * @param k
      * @param m
      * @param n
@@ -55,8 +126,9 @@ public class SimPintoDB extends Thread {
     }
 
     /**
+     * Returns the pointer to the class Statistics.
      *
-     * @return
+     * @return stats pointer
      */
     public Statistics getStats() {
         return stats;
@@ -305,15 +377,17 @@ public class SimPintoDB extends Thread {
         }
     }*/
     /**
-     *
-     * @return
+     *Returns the module connectionModule
+     * 
+     * @return connectionModule module
      */
     public Module getConnectionModule() {
         return connectionModule;
     }
 
     /**
-     *
+     *Set the connectionModule field to the value(Module) past as argument.
+     * 
      * @param connectionModule
      */
     public void setConnectionModule( Module connectionModule ) {
@@ -321,15 +395,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns the module processManagemnteModule
+     * 
+     * @return processManagemnteModule module
      */
     public Module getProcessManagemnteModule() {
         return processManagemnteModule;
     }
 
     /**
-     *
+     *Set the processManagemnteModule field to the value(Module) past as argument.
+     * 
      * @param processManagemnteModule
      */
     public void setProcessManagemnteModule( Module processManagemnteModule ) {
@@ -337,15 +413,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns the module queryProcessorModule
+     * 
+     * @return queryProcessorModule module
      */
     public Module getQueryProcessorModule() {
         return queryProcessorModule;
     }
 
     /**
-     *
+     *Set the queryProcessorModule field to the value(Module) past as argument.
+     * 
      * @param queryProcessorModule
      */
     public void setQueryProcessorModule( Module queryProcessorModule ) {
@@ -353,15 +431,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns the module executionModule
+     * 
+     * @return executionModule module
      */
     public Module getExecutionModule() {
         return executionModule;
     }
 
     /**
-     *
+     *Set the ExecutionModul field to the value(Module) past as argument.
+     * 
      * @param ExecutionModule
      */
     public void setExecutionModule( Module ExecutionModule ) {
@@ -369,15 +449,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns the module transactionModule
+     * 
+     * @return transactionModule module
      */
     public Module getTransactionModule() {
         return transactionModule;
     }
 
     /**
-     *
+     *Set the TransactionModule field to the value(Module) past as argument.
+     * 
      * @param TransactionModule
      */
     public void setTransactionModule( Module TransactionModule ) {
@@ -385,15 +467,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns the {@code LinkedList<ClientQuery> } clients
+     * 
+     * @return clients LinkedList
      */
     public LinkedList<ClientQuery> getClients() {
         return clients;
     }
 
     /**
-     *
+     *Set the clients field to the value({@code LinkedList<ClientQuery>}) past as argument.
+     * 
      * @param clients
      */
     public void setTransactionModule( LinkedList<ClientQuery> clients ) {
@@ -401,23 +485,26 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns this {@code PriorityQueue<Event>} systemEventList
+     * 
+     * @return systemEventList PriorityQueue
      */
     PriorityQueue<Event> getSistemEventList() {        
         return this.systemEventList;
     }
 
     /**
-     *
-     * @return
+     *Returns simulation clock simClock
+     * 
+     * @return simClock double
      */
     double getSimClock() {
         return simClock;
     }
 
     /**
-     *
+     *Set the simClock field to the value(double) past as argument.
+     * 
      * @param simClock
      */
     public void setSimClock( double simClock ) {
@@ -425,15 +512,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns time the simulation will run maxSimClock
+     * 
+     * @return maxSimClock double
      */
     double getmaxSimClock() {
         return maxSimClock;
     }
 
     /**
-     *
+     *Set the maxSimClock field to the value(double) past as argument.
+     * 
      * @param maxSimClock
      */
     public void setMaxSimClock( double maxSimClock ) {
@@ -441,15 +530,17 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns times to run simulation timesToRunSimulation
+     * 
+     * @return timesToRunSimulation int
      */
     int gettimesToRunSimulation() {
         return timesToRunSimulation;
     }
 
     /**
-     *
+     *Set the timesToRunSimulation field to the value(int) past as argument.
+     * 
      * @param timesToRunSimulation
      */
     public void setTimesToRunSimulation( int timesToRunSimulation ) {
@@ -457,16 +548,18 @@ public class SimPintoDB extends Thread {
     }
 
     /**
-     *
-     * @return
+     *Returns pointer to the MainForm class interFace
+     * 
+     * @return interFace MainForm
      */
     public MainForm getInterFace() {
         return interFace;
     }
 
     /**
-     *
-     * @return
+     *Returns the number of seconds of timeout of the connections
+     * 
+     * @return t double
      */
     public double getT() {
         return this.t;
