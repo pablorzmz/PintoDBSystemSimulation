@@ -1,7 +1,5 @@
 package pintodbsimulation;
 
-import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -30,9 +28,10 @@ public abstract class Module {
     protected RandomNumberGenerator randNoGen;
 
     /**
-     * 
+     * Generic module waiting queue for clients({@link ClientQuery})
      */
     protected Queue<ClientQuery> myQueue;
+    
     /**
      * Count the number of times that the number of clients waiting change. Used
      * to calculate statistics.
@@ -114,14 +113,16 @@ public abstract class Module {
     }
 
     /**
+     * Return this class myQueue field of type {@code Queue<ClientQuery>}.
      * 
-     * @return 
+     * @return myQueue field
      */
     public Queue<ClientQuery> getMyQueue() {
         return myQueue;
     }
     
     /**
+     * Set this class myQueue field value to that pass as argument.
      * 
      * @param myQueue 
      */

@@ -14,6 +14,12 @@ import java.util.LinkedList;
  */
 public class EventComparator implements Comparator< Event > {
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     @Override
     public int compare( Event a, Event b ) {                            
         SimEvent eA = a.getEventType();                       

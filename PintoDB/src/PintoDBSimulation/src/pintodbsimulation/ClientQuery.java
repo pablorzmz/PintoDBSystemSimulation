@@ -15,6 +15,10 @@ public class ClientQuery {
     private Module currentMod;
     private final QueryStatistics queryStatistics;
     private boolean finishedService;
+
+    /**
+     *
+     */
     public int clientID;
 
     /**

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /**
  * Controller class that is responsible for handling the simulation
  *
- * @author b65477@ecci.ucr.ac.cr
+ * @author B65477
  */
 public class SimPintoDB extends Thread {
 
