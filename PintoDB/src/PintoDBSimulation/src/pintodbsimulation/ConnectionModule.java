@@ -4,19 +4,18 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 /**
- *
- * @author b65477@ecci.ucr.ac.cr
+ * This class simulate the Connection Managment Module described by the project.
+ * This class extends from the abstract class Module.
+ * @author B65477
+ * @see Module
  */
 public class ConnectionModule extends Module {
 
     private int deniedConnectionCounter;
+    private int clientCounter;
 
     /**
-     *
-     */
-    public int clientCounter;
-
-    /**
+     * Class constructor.
      *
      * @param servers
      * @param maxServers
@@ -30,15 +29,15 @@ public class ConnectionModule extends Module {
     }
 
     /**
-     *
-     * @return
+     * Return the current value (int) of the class field {@link deniedConnectionCounter}.
+     * @return deniedConnectionCounter field
      */
     public int getDeniedConnectionCounter() {
         return deniedConnectionCounter;
     }
 
     /**
-     *
+     * Set the deniedConnectionCounter field to the value(int) pass as argument.
      * @param deniedConnectionCounter
      */
     public void setDeniedConnectionCounter(int deniedConnectionCounter) {
@@ -51,9 +50,6 @@ public class ConnectionModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
 
-        //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
-        //outgoingQS.setSystemLeaveTime( e.getClockTime() ); //I need to update the outgoing client data
-        //outgoingCQ.updateStats();
         this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent(
                 "TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
                 + " del modulo " + "Conexión");

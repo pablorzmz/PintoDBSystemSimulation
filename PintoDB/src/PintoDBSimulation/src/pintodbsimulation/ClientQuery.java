@@ -15,11 +15,6 @@ public class ClientQuery {
     private Module currentMod;
     private final QueryStatistics queryStatistics;
     private boolean finishedService;
-    //Test
-
-    /**
-     *
-     */
     public int clientID;
 
     /**
@@ -28,6 +23,7 @@ public class ClientQuery {
      * @param currentMod
      */
     public ClientQuery(StatementType queryType, Module currentMod) {
+        this.clientID = 0;
         this.queryType = queryType;
         this.currentMod = currentMod;
         this.queryStatistics = new QueryStatistics();

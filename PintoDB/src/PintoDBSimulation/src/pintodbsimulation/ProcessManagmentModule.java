@@ -3,8 +3,10 @@ package pintodbsimulation;
 import java.util.PriorityQueue;
 
 /**
- *
- * @author
+ * This class simulate the Process Managment Module described by the project.
+ * This class extends from the abstract class Module.
+ * @author B65477 
+ * @see Module
  */
 public class ProcessManagmentModule extends Module {
 
@@ -27,9 +29,6 @@ public class ProcessManagmentModule extends Module {
         Event e = eQ.poll(); //I need to delete the current event
         ClientQuery outgoingCQ = e.getClientQuery();
 
-        //QueryStatistics outgoingQS = outgoingCQ.getQueryStatistics();
-        //outgoingQS.setModuleLeaveTime(e.getClockTime()); //I need to update the outgoing client data
-        //outgoingCQ.updateStats();
         //I need to check where the outgoing client is
         if (!queryQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
@@ -39,7 +38,6 @@ public class ProcessManagmentModule extends Module {
 
             if (queryQueue.size() > 0) { //If there are waiting clients on the module queue
                 generateAction(this.queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-                //queueSizeRegister.add(queryQueue.size());
                 queueSizesAccumulator += queryQueue.size();
                 ++queueSizesCounter;
             } else { //If there isn't client waiting to be attended
@@ -75,7 +73,6 @@ public class ProcessManagmentModule extends Module {
                     + (e.getClockTime() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             queryQueue.add(arrivingCQ);
-            //queueSizeRegister.add(queryQueue.size());
             queueSizesAccumulator += queryQueue.size();
             ++queueSizesCounter;
         }
@@ -98,7 +95,6 @@ public class ProcessManagmentModule extends Module {
                     + (e.getClockTime() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
             generateAction(queryQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
-            //queueSizeRegister.add(queryQueue.size());
             queueSizesAccumulator += queryQueue.size();
             ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
@@ -125,21 +121,6 @@ public class ProcessManagmentModule extends Module {
         PriorityQueue<Event> eQ = simPintoDBPointer.getSistemEventList();
         Event e;
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingNormalDist(1, 0.01);
-        /*//I need to check if the client clientQuery will have a timeout
-        QueryStatistics qS = clientQuery.getQueryStatistics();
-        if (eTime - qS.getSystemArriveTime() > simPintoDBPointer.getT()) { //Timeout
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Y tendrá time out porque va a llevar en el sistema: " + (eTime - qS.getSystemArriveTime())
-                    + " > " + simPintoDBPointer.getT());
-            e = new Event(clientQuery, SimEvent.TIMEOUT, this, eTime);
-            eQ.add(e);
-            e = new Event(clientQuery, SimEvent.TIMEOUT, this.simPintoDBPointer.getConnectionModule(), eTime);
-            eQ.add(e);
-        } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Y NO time out porque va a llevar en el sistema: "
-                    + (eTime - qS.getSystemArriveTime()) + " < " + simPintoDBPointer.getT());
-            e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
-            eQ.add(e);
-        }*/
         e = new Event(clientQuery, SimEvent.LEAVE, this, eTime);
         eQ.add(e);
     }

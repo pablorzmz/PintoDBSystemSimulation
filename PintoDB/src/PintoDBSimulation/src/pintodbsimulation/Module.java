@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
  * Abstract and father class to be extended by all the module classes of this
  * simulator.
  *
- * @author
+ * @author B65477
  */
 public abstract class Module {
 
@@ -193,6 +193,9 @@ public abstract class Module {
      * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
      * 
      * @param clientQuery
+     * @see Event
+     * @see ClientQuery
+     * @see SimPintoDB
      */
     public abstract void generateAction(ClientQuery clientQuery);
 
@@ -201,6 +204,9 @@ public abstract class Module {
      * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
      * 
      * @param clientQuery
+     * @see Event
+     * @see ClientQuery
+     * @see SimPintoDB
      */
     public abstract void generateNextModuleAction(ClientQuery clientQuery);
 }
