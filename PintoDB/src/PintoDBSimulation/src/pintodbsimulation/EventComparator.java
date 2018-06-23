@@ -1,80 +1,68 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pintodbsimulation;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
+ * Comparator implementation for the {@code PriorityQueue} to compare
+ * {@code Event} instances.
  *
- * @author pablo
+ * @author B65477 B65728 B55830
+ * @see Comparator
+ * @see Event
  */
-public class EventComparator implements Comparator< Event > {
+public class EventComparator implements Comparator< Event> {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @return
-     */
     @Override
-    public int compare( Event a, Event b ) {                            
-        SimEvent eA = a.getEventType();                       
+    public int compare(Event a, Event b) {
+        SimEvent eA = a.getEventType();
         SimEvent eB = b.getEventType();
-        
-        String  mA = a.getMod() == null?"":a.getMod().getClass().getSimpleName();
-        String  mB = b.getMod() == null?"":b.getMod().getClass().getSimpleName();
-        
-        int priorityEventA = returnEventPriority(eA ,a.isQueueTimeOut() );
-        int priorityEventB = returnEventPriority(eB, b.isQueueTimeOut() );
-        
+
+        String mA = a.getMod() == null ? "" : a.getMod().getClass().getSimpleName();
+        String mB = b.getMod() == null ? "" : b.getMod().getClass().getSimpleName();
+
+        int priorityEventA = returnEventPriority(eA);
+        int priorityEventB = returnEventPriority(eB);
+
         int priorityModuleA = returnModulePriority(mA);
         int priorityModuleB = returnModulePriority(mB);
-        
+
         forSorting eventA;
-        eventA = new forSorting( a.getClockTime(), priorityEventA, priorityModuleA );
-        
+        eventA = new forSorting(a.getClockTime(), priorityEventA, priorityModuleA);
+
         forSorting eventB;
-        eventB = new forSorting( b.getClockTime(), priorityEventB, priorityModuleB );
-        
-        LinkedList< forSorting > ls = new LinkedList<>();
-        
-        ls.add( eventA );
-        ls.add( eventB );
-        
+        eventB = new forSorting(b.getClockTime(), priorityEventB, priorityModuleB);
+
+        LinkedList< forSorting> ls = new LinkedList<>();
+
+        ls.add(eventA);
+        ls.add(eventB);
+
         // Now sorting
-        ls.sort( Comparator.comparing( forSorting::getModule ));
-        ls.sort( Comparator.comparing( forSorting::getEvent )); 
-        ls.sort( Comparator.comparing( forSorting::getTime ));               
-        
-        
+        ls.sort(Comparator.comparing(forSorting::getModule));
+        ls.sort(Comparator.comparing(forSorting::getEvent));
+        ls.sort(Comparator.comparing(forSorting::getTime));
+
         // now comparing
-        if ( a.getClockTime() == b.getClockTime() 
-                && priorityEventA == priorityEventB 
-                && priorityModuleA == priorityModuleB )
-        {
+        if (a.getClockTime() == b.getClockTime()
+                && priorityEventA == priorityEventB
+                && priorityModuleA == priorityModuleB) {
             return 0;
-            
-        }else if ( ls.get( 0 ).getTime() == a.getClockTime() 
-                && ls.get( 0 ).getModule() == priorityModuleA 
-                && ls.get( 0 ).getEvent() == priorityEventA ) 
-        {
-            return -1 ;
-            
-        }else
-        {
+
+        } else if (ls.get(0).getTime() == a.getClockTime()
+                && ls.get(0).getModule() == priorityModuleA
+                && ls.get(0).getEvent() == priorityEventA) {
+            return -1;
+
+        } else {
             return 1;
-        }                                         
+        }
     }
-    
+
     /**
-     * 
+     * Class use to implement the {@code SimEvent} comparator
      */
-    private class forSorting
-    {
+    private class forSorting {
 
         public forSorting(double time, int event, int module) {
             this.time = time;
@@ -93,84 +81,68 @@ public class EventComparator implements Comparator< Event > {
         public int getModule() {
             return module;
         }
-                
+
         private final double time;
         private final int event;
-        private final int module;         
+        private final int module;
     }
-    
+
     /**
-     * 
+     * Returns an int value between 0 and 2 associated with each {@code SimEvent} value, 
+     * which represent each type of event priority.
+     *
      * @param event
-     * @return 
+     * @return Integer value associated with each event priority.
+     * @see Event
      */
-    private int returnEventPriority( SimEvent event, boolean queueTimeOut )
-    {
+    private int returnEventPriority(SimEvent event) {
         int returnValue = -1;
-        
-        switch( event )
-        {
+
+        switch (event) {
             case TIMEOUT:
-                if ( queueTimeOut )
-                { 
-                    returnValue = 0;
-                }else
-                {
-                    returnValue = 1;
-                }                
-            break;
-            
+                returnValue = 0;
+                break;
             case LEAVE:
-                
-                    returnValue = 3;          
-            break;
-            
+
+                returnValue = 1;
+                break;
             case ARRIVE:
-                returnValue = 4;
-            break;            
+                returnValue = 2;
+                break;
         }
-        
-        return  returnValue;
+        return returnValue;
     }
-    
+
     /**
-     * 
+     * Return an int value between 0 and 5 associated to the module name, 
+     * which represent each module priority. 
+     * Where the modules closer to the end of the service have more priority.
+     *
      * @param nameM
-     * @return 
+     * @return Interger value associated with each module priority
+     * @see Module
      */
-    private int returnModulePriority( String nameM)
-    {
+    private int returnModulePriority(String nameM) {
         int returnValue = -1;
         String connectionM = ConnectionModule.class.getSimpleName();
         String procM = ProcessManagmentModule.class.getSimpleName();
         String queryProcM = QueryProcessorModule.class.getSimpleName();
         String transactionM = TransactionAndDiskModule.class.getSimpleName();
-        String executionM = ExecutionModule.class.getSimpleName();   
-        
-        if ( connectionM.equals( nameM ) )
-        {
+        String executionM = ExecutionModule.class.getSimpleName();
+
+        if (connectionM.equals(nameM)) {
             returnValue = 5;
-            
-        }else if ( procM.equals( nameM ) )
-        {
+        } else if (procM.equals(nameM)) {
             returnValue = 4;
-        }else if ( queryProcM.equals( nameM ) )
-        {
+        } else if (queryProcM.equals(nameM)) {
             returnValue = 3;
-        }else if ( transactionM.equals( nameM ) )
-        {
+        } else if (transactionM.equals(nameM)) {
             returnValue = 2;
-            
-        }else if ( executionM.equals( nameM ) )
-        {
+        } else if (executionM.equals(nameM)) {
             returnValue = 1;
-            
-        }else if ( nameM.equals("") )
-        {
-            return 0;
+        } else if (nameM.equals("")) {
+            returnValue = 0;
         }
-        
         return returnValue;
-    }    
-        
+    }
 }

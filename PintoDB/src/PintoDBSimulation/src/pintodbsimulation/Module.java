@@ -6,7 +6,7 @@ import java.util.Queue;
  * Abstract and father class to be extended by all the module classes of this
  * simulator.
  *
- * @author B65477
+ * @author B65477 B65728 B55830
  */
 public abstract class Module {
 
@@ -31,7 +31,7 @@ public abstract class Module {
      * Generic module waiting queue for clients({@link ClientQuery})
      */
     protected Queue<ClientQuery> myQueue;
-    
+
     /**
      * Count the number of times that the number of clients waiting change. Used
      * to calculate statistics.
@@ -79,8 +79,9 @@ public abstract class Module {
      */
     public void clear() {
         servers = 0;
-        if ( myQueue != null )
+        if (myQueue != null) {
             myQueue.clear();
+        }
         queueSizesCounter = 0;
         queueSizesAccumulator = 0;
     }
@@ -114,23 +115,22 @@ public abstract class Module {
 
     /**
      * Return this class myQueue field of type {@code Queue<ClientQuery>}.
-     * 
+     *
      * @return myQueue field
      */
     public Queue<ClientQuery> getMyQueue() {
         return myQueue;
     }
-    
+
     /**
      * Set this class myQueue field value to that pass as argument.
-     * 
-     * @param myQueue 
+     *
+     * @param myQueue
      */
     public void setMyQueue(Queue<ClientQuery> myQueue) {
         this.myQueue = myQueue;
     }
 
-   
     /**
      * Set the maxServer field to the value (int) past as argument.
      *
@@ -141,12 +141,13 @@ public abstract class Module {
     }
 
     /**
-     * Pulls out the current event of the event list, and searches for this event client,
-     * ie client with timeout, which can be on the module waiting queue(is there is any) or
-     * being attended. In the first case the client is simply taken out of the module waiting queue.
-     * Otherwise the client stops being attended and a server if released.
-     * In the second case the logic before releasing a server is identical to that of {@link proccessExit()}.
-     * 
+     * Pulls out the current event of the event list, and searches for this
+     * event client, ie client with timeout, which can be on the module waiting
+     * queue(is there is any) or being attended. In the first case the client is
+     * simply taken out of the module waiting queue. Otherwise the client stops
+     * being attended and a server if released. In the second case the logic
+     * before releasing a server is identical to that of {@link proccessExit()}.
+     *
      * @see Event
      * @see ClientQuery
      * @see SimPintoDB
@@ -154,12 +155,13 @@ public abstract class Module {
     public abstract void processTimeOut();
 
     /**
-     * Pulls out the current event of the event list and gets the current client from the event,
-     * ie the client arriving to the module. Then check if there are available server, if there are
-     * the client is pass to be attended and {@link generateAction} is called with the current client as argument. 
-     * If there are not the client is put on the module waiting queue.
-     * If the module do not have an waiting queue the client is simply rejected.
-     * 
+     * Pulls out the current event of the event list and gets the current client
+     * from the event, ie the client arriving to the module. Then check if there
+     * are available server, if there are the client is pass to be attended and
+     * {@link generateAction} is called with the current client as argument. If
+     * there are not the client is put on the module waiting queue. If the
+     * module do not have an waiting queue the client is simply rejected.
+     *
      * @see Event
      * @see ClientQuery
      * @see SimPintoDB
@@ -167,13 +169,15 @@ public abstract class Module {
     public abstract void processArrive();
 
     /**
-     * Pulls out the current event of the event list and gets the current client from the event,
-     * ie the client leaving to the module. If there are other clients waiting to be attended 
-     * on the module waiting queue (if there is any) the next client is taken out of the waiting queue and passed to be attended, 
-     * and {@link generateAction} is called with the next client as argument.
-     * Otherwise a server is released, ie {@link servers} is subtracted by one.
-     * Finally {@link generateNextModuleAction} is called with the current client as parameter.
-     * 
+     * Pulls out the current event of the event list and gets the current client
+     * from the event, ie the client leaving to the module. If there are other
+     * clients waiting to be attended on the module waiting queue (if there is
+     * any) the next client is taken out of the waiting queue and passed to be
+     * attended, and {@link generateAction} is called with the next client as
+     * argument. Otherwise a server is released, ie {@link servers} is
+     * subtracted by one. Finally {@link generateNextModuleAction} is called
+     * with the current client as parameter.
+     *
      * @see Event
      * @see ClientQuery
      * @see SimPintoDB
@@ -181,9 +185,11 @@ public abstract class Module {
     public abstract void processExit();
 
     /**
-     * Creates a new event for this module and the client {@link clientQuery} and puts it on the simulation event list. 
-     * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
-     * 
+     * Creates a new event for this module and the client {@link clientQuery}
+     * and puts it on the simulation event list. This new event type can be
+     * {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs
+     * of the module.
+     *
      * @param clientQuery
      * @see Event
      * @see ClientQuery
@@ -192,9 +198,11 @@ public abstract class Module {
     public abstract void generateAction(ClientQuery clientQuery);
 
     /**
-     * Creates a new event for the next module ({@link nextModule}) and the client {@link clientQuery} and puts it on the simulation event list. 
-     * This new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs of the module.
-     * 
+     * Creates a new event for the next module ({@link nextModule}) and the
+     * client {@link clientQuery} and puts it on the simulation event list. This
+     * new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE}
+     * depending of the needs of the module.
+     *
      * @param clientQuery
      * @see Event
      * @see ClientQuery

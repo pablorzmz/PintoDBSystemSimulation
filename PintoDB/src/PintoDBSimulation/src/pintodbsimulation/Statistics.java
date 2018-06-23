@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pintodbsimulation;
 
 import java.util.LinkedList;
 import org.apache.commons.math3.distribution.TDistribution;
 
 /**
+ * This class calculates all the simulation statistics.
  *
- * @author pablo
+ * @author B65477 B65728 B55830
  */
 public class Statistics {
 
@@ -19,7 +15,7 @@ public class Statistics {
     private final SimPintoDB pointerSimPintoDB;
 
     /**
-     *
+     * Invalid time constant
      */
     public final static double INVALID_TIME = -1.0;
     private LinkedList<Double> itemsForVariance;
@@ -36,9 +32,11 @@ public class Statistics {
         itemsForVariance = new LinkedList<>();
         confidentInterval = "No condfident interval for iterations  n = 1";
     }
+
     /**
+     * Returns a copy this class confidentInterval field(String).
      *
-     * @return
+     * @return Copy of the confidentInterval field.
      */
     public String getConfidentInterval() {
         String copy = confidentInterval;
@@ -47,25 +45,33 @@ public class Statistics {
     }
 
     /**
+     * Returns this class currentIterationStats field.
      *
-     * @return
+     * @return currentIterationStats field
      */
     public IterationStatistics getCurrentIterationStats() {
         return currentIterationStats;
     }
 
     /**
+     * Returns this class finalIterationStats field.
      *
-     * @return
+     * @return finalIterationStats field.
      */
     public IterationStatistics getFinalIterationStats() {
         return finalIterationStats;
     }
 
     /**
+     * Calculetes the average time that clients with each type of statement
+     * spend on each system module.
      *
      * @param arraySizes
      * @param statement
+     * @see ClientQuery
+     * @see StatementType
+     * @see StatementPerModuleStats
+     * @see QueryStatistics
      */
     private void calculateAverageTimePerStatementPerModule(int arraySizes[], StatementType statement) {
         double dummyValue;
@@ -162,27 +168,20 @@ public class Statistics {
     }
 
     /**
+     * Calculates each module average queue size.
      *
      * @param m
+     * @see Module
      */
     private double calculateQueueAverageSizes(Module m) {
-        int queueSize;
         double value;
-
-        //Connection Module will be zero, no queue
-        // Process Managment Module
-        /*queueSize = m.getQueueSizeRegister().size();
-        for( int index = 0; index < queueSize; ++index )
-        {                     
-            value += m.getQueueSizeRegister().get(index);
-        }
-        value /= queueSize==0?1:queueSize;*/
         value = m.getQueueSizesAccumulator();
         value /= m.getQueueSizesCounter() == 0 ? 1 : m.getQueueSizesCounter();
         return value;
     }
 
     /**
+     * Generate the simulation final statistics of the current iteration.
      *
      */
     public void generateStatistics() {
@@ -369,8 +368,7 @@ public class Statistics {
                 clientsWhoFinishedSystemProcess += 1;
             }
         }// end for
-        // For each module calculate its average queue size               // For each module calculate its average queue size               
-
+        // For each module calculate its average queue size        
         //Connection Module will be zero, no queue
         double result;
         // Process Managment Module
@@ -406,7 +404,8 @@ public class Statistics {
     }
 
     /**
-     *
+     * Generates the simulation final statistics from all the iterations ask by
+     * the user. Generates a confident interval for the simulation too.
      */
     public void generateFinalStatistics() {
         //calculate confident interval for 95%
@@ -555,10 +554,10 @@ public class Statistics {
         dummy = finalIterationStats.getTotalConnections();
         dummy /= this.pointerSimPintoDB.gettimesToRunSimulation();
         finalIterationStats.setTotalConnections(dummy);
-        
+
         // average timeouts
         dummy = finalIterationStats.getTimeOutsCounter();
         dummy /= this.pointerSimPintoDB.gettimesToRunSimulation();
-        finalIterationStats.setTimeOutsCounter( dummy );
+        finalIterationStats.setTimeOutsCounter(dummy);
     }
 }

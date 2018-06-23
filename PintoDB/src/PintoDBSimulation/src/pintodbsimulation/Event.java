@@ -1,23 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pintodbsimulation;
 
 /**
+ * This class stores necessary information of an event for this simulation.
  *
- * @author pablo
+ * @author B65477 B65728 B55830
  */
 public class Event {
-    
+
     private final ClientQuery clientQuery;
     private final SimEvent eventType;
     private final Module mod;
     private final double clockTime;
-    private boolean queueTimeOut;
 
-     /**
+    /**
+     * Class constructor.
      *
      * @param clientQuery
      * @param eventType
@@ -29,72 +25,44 @@ public class Event {
         this.eventType = eventType;
         this.mod = mod;
         this.clockTime = clockTime;
-        this.queueTimeOut = false;
     }
-    
+
     /**
-     * 
-     * @param queueTimeOut 
-     */
-    public void setQueueTimeOut( boolean queueTimeOut ) {
-        this.queueTimeOut = queueTimeOut;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public boolean isQueueTimeOut() {
-        return queueTimeOut;
-    }
-        
-     /**
+     * Return this class clientQuery field value({@code ClientQuery}).
      *
-     * @return 
-     */    
+     * @return clientQuery field
+     * @see ClientQuery
+     */
     public ClientQuery getClientQuery() {
         return clientQuery;
     }
 
-     /**
+    /**
+     * Return this class eventType field valie ({@code SimEvent}).
      *
-     * @return 
-     */    
+     * @return eventType field.
+     * @see SimEvent
+     */
     public SimEvent getEventType() {
         return eventType;
     }
 
-     /**
+    /**
+     * Return this class mod field value ({@code Module}).
      *
-     * @return 
-     */    
+     * @return mod field
+     * @see Module
+     */
     public Module getMod() {
         return mod;
     }
 
-     /**
+    /**
+     * Return this class clockTime field value (double).
      *
-     * @return 
-     */    
+     * @return clockTime field
+     */
     public double getClockTime() {
         return clockTime;
     }
-    
-    /* Testing mode only */
-
-    /**
-     *
-     * @return
-     */
-
-    public String printForTestiing()
-    {    
-        String modulo = mod == null? "En donde este en ese momento":
-                mod.getClass().getSimpleName();
-        String result = "Tiempo: " + String.valueOf( clockTime ) 
-        +",      Event type: " + this.eventType + ",      Module: " 
-        + modulo + ",      Client id: " + clientQuery.clientID;
-        return result;
-    }
-    
 }

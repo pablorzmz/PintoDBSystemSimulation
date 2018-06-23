@@ -6,7 +6,8 @@ import java.util.PriorityQueue;
 /**
  * This class simulate the Process Managment Module described by the project.
  * This class extends from the abstract class Module.
- * @author B65477 
+ *
+ * @author B65477 B65728 B55830
  * @see Module
  */
 public class ProcessManagmentModule extends Module {
@@ -33,8 +34,8 @@ public class ProcessManagmentModule extends Module {
 
         //I need to check where the outgoing client is
         if (!myQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                    + "del modulo " + "Administracion de procesos"
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " fue sacado de ser antendido "
+                    + "del " + "Process Managment Module"
                     + " porque ya lleva en el sistema " + (e.getClockTime() - outgoingCQ.getQueryStatistics().getSystemArriveTime())
                     + " > " + simPintoDBPointer.getT());
 
@@ -46,8 +47,8 @@ public class ProcessManagmentModule extends Module {
                 --servers;
             }
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                    + "del modulo " + "Administracion de procesos " + " y el tiempo actual es " + e.getClockTime());
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " fue sacado de la cola "
+                    + "del " + "Process Managment Module " + " y el tiempo actual es " + e.getClockTime());
         }
 
     }
@@ -63,15 +64,15 @@ public class ProcessManagmentModule extends Module {
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "Administracion de procesos" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue pasado de ser antendido "
+                    + "en el " + "Process Managment Module" + " y su tiempo en el sistema es de: "
                     + (e.getClockTime() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             ++servers;
             generateAction(arrivingCQ);
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
-                    + "en el modulo " + "Administracion de procesos" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue encolado "
+                    + "en el " + "Process Managment Module" + " y su tiempo en el sistema es de: "
                     + (e.getClockTime() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             myQueue.add(arrivingCQ);
@@ -92,16 +93,16 @@ public class ProcessManagmentModule extends Module {
         leavingCQ.updateStats();
 
         if (myQueue.size() > 0) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "Administracion de procesos" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " sale del "
+                    + "Process Managment Module" + " y su tiempo en el sistema es de: "
                     + (e.getClockTime() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
             generateAction(myQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizesAccumulator += myQueue.size();
             ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "Administracion de procesos" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " sale del "
+                    + "Process Managment Module" + " y su tiempo en el sistema es de: "
                     + (e.getClockTime() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
             --servers;
@@ -115,8 +116,8 @@ public class ProcessManagmentModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-                + "Administracion de procesos" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.getClientID() + " del "
+                + "Process Managment Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
 
         //I need to add the new event to the systemEventList
@@ -130,8 +131,8 @@ public class ProcessManagmentModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "Administracion de procesos " + "al modulo " + " Procesamiento de consultas" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.getClientID() + " del "
+                + "Process Managment Module " + "al " + " Query Processor Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
 
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());

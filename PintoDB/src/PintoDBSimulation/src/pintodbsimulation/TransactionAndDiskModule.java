@@ -3,16 +3,17 @@ package pintodbsimulation;
 import java.util.PriorityQueue;
 
 /**
- * This class simulate the Transaction and Disk Access Module described by the project.
- * This class extends from the abstract class Module.
- * @author B65477
+ * This class simulate the Transaction and Disk Access Module described by the
+ * project. This class extends from the abstract class Module.
+ *
+ * @author B65477 B65728 B55830
  * @see Module
  */
 public class TransactionAndDiskModule extends Module {
 
     /**
      * Class constructor.
-     * 
+     *
      * @param servers
      * @param maxServers
      * @param simPintoDBPointer
@@ -20,7 +21,7 @@ public class TransactionAndDiskModule extends Module {
      */
     public TransactionAndDiskModule(int servers, int maxServers, SimPintoDB simPintoDBPointer, Module nextModule) {
         super(servers, maxServers, simPintoDBPointer, nextModule);
-        this.myQueue = new PriorityQueue<>( new ClientQueryComparator() );
+        this.myQueue = new PriorityQueue<>(new ClientQueryComparator());
     }
 
     @Override
@@ -35,8 +36,8 @@ public class TransactionAndDiskModule extends Module {
                 ClientQuery nextCQ = this.myQueue.peek();
                 if (nextCQ.getQueryType() == StatementType.DDL) {
                     if (servers == 1) {
-                        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido "
+                                + "del " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                                 + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
 
                         myQueue.poll();
@@ -46,13 +47,13 @@ public class TransactionAndDiskModule extends Module {
                         ++queueSizesCounter;
                     } else {
                         --servers;
-                        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                                + "del modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido "
+                                + "del " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                                 + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
                     }
                 } else {
-                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido"
-                            + "del modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de ser antendido "
+                            + "del " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
 
                     // if the current client was a DDL and the next one no
@@ -65,14 +66,14 @@ public class TransactionAndDiskModule extends Module {
                     ++queueSizesCounter;
                 }
             } else //If there isn't client waiting to be attended
-             if (outgoingCQ.getQueryType() == StatementType.DDL) {
-                    servers = 0;
-                } else {
-                    --servers;
-                }
+            if (outgoingCQ.getQueryType() == StatementType.DDL) {
+                servers = 0;
+            } else {
+                --servers;
+            }
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
-                    + "del modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " de tipo " + outgoingCQ.getQueryType() + " fue sacado de la cola "
+                    + "del " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
         }
 
@@ -91,17 +92,17 @@ public class TransactionAndDiskModule extends Module {
         if (servers < maxServers) {
             if (arrivingCQ.getQueryType() == StatementType.DDL) {
                 if (servers == 0) {
-                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : "
+                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " de tipo : "
                             + " (" + arrivingCQ.getQueryType() + ") " + " fue pasado de ser antendido "
-                            + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                            + "en el " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
                     servers = maxServers;
                     generateAction(arrivingCQ);
                 } else {
-                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID
+                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID()
                             + " de tipo :(" + arrivingCQ.getQueryType() + ") fue encolado "
-                            + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                            + "en el " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
                     myQueue.add(arrivingCQ);
@@ -109,9 +110,9 @@ public class TransactionAndDiskModule extends Module {
                     ++queueSizesCounter;
                 }
             } else if (myQueue.size() > 0) {
-                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : "
+                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " de tipo : "
                         + " (" + arrivingCQ.getQueryType() + ") " + " fue encolado "
-                        + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                        + "en el " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                         + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
                 myQueue.add(arrivingCQ);
@@ -119,24 +120,24 @@ public class TransactionAndDiskModule extends Module {
                 ++queueSizesCounter;
 
             } else {
-                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : "
+                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " de tipo : "
                         + " (" + arrivingCQ.getQueryType() + ") "
                         + " fue pasado a ser atendido "
-                        + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                        + "en el " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                         + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
                 ++servers;
                 generateAction(arrivingCQ);
             }
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " de tipo : "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " de tipo : "
                     + " (" + arrivingCQ.getQueryType() + ") "
                     + " fue encolado "
-                    + "en el modulo " + "de Transacciones" + " y su tiempo en el sistema es de: "
+                    + "en el " + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
-            myQueue.add(arrivingCQ);            
-            queueSizesAccumulator += myQueue.size();            
+            myQueue.add(arrivingCQ);
+            queueSizesAccumulator += myQueue.size();
             ++queueSizesCounter;
         }
     }
@@ -155,8 +156,8 @@ public class TransactionAndDiskModule extends Module {
             ClientQuery nextCQ = this.myQueue.peek();
             if (nextCQ.getQueryType() == StatementType.DDL) {
                 if (leavingCQ.getQueryType() == StatementType.DDL) {
-                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + "de Transacciones" + " y su tiempo en el sistema es de: "
+                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " de tipo: " + leavingCQ.getQueryType() + " y sale del "
+                            + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
                     nextCQ = myQueue.poll();
@@ -165,8 +166,8 @@ public class TransactionAndDiskModule extends Module {
                     queueSizesAccumulator += myQueue.size();
                     ++queueSizesCounter;
                 } else {
-                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                            + "de Transacciones" + " y su tiempo en el sistema es de: "
+                    this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " de tipo: " + leavingCQ.getQueryType() + " y sale del "
+                            + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                             + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
                     --servers;
@@ -180,8 +181,8 @@ public class TransactionAndDiskModule extends Module {
                     }
                 }
             } else {
-                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " de tipo: " + leavingCQ.getQueryType() + " y sale del modulo "
-                        + "de Transacciones" + " y su tiempo en el sistema es de: "
+                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " de tipo: " + leavingCQ.getQueryType() + " y sale del "
+                        + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                         + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
                 // if the current client was a DDL and the next one no
@@ -211,8 +212,8 @@ public class TransactionAndDiskModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + "de Transacciones" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.getClientID() + " de tipo " + clientQuery.getQueryType() + " del "
+                + "Transaction and Disk Access Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
 
         Event e;
@@ -227,7 +228,7 @@ public class TransactionAndDiskModule extends Module {
                 qS.setUsedBlocks(0);
                 break;
             case JOIN:
-                int blocks = (int) (1 + (new RandomNumberGenerator().getRandNumb()) * 64);                
+                int blocks = (int) (1 + (new RandomNumberGenerator().getRandNumb()) * 64);
                 qS.setUsedBlocks(blocks);
                 break;
             default:
@@ -243,8 +244,8 @@ public class TransactionAndDiskModule extends Module {
 
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " de tipo " + clientQuery.getQueryType() + " del modulo "
-                + "de Transacciones" + " al modulo " + "Ejecucion de consultas" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.getClientID() + " de tipo " + clientQuery.getQueryType() + " del "
+                + "Transaction and Disk Access Module" + " al " + "Execution Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
         //I need to create a new ARRIVE type event on the next module for the client clientQuery        
 

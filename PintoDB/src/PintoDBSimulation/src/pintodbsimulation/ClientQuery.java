@@ -1,13 +1,9 @@
 package pintodbsimulation;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * This class stores necessary information of a client for the simulation.
  *
- * @author pablo
+ * @author B65477 B65728 B55830
  */
 public class ClientQuery {
 
@@ -15,19 +11,16 @@ public class ClientQuery {
     private Module currentMod;
     private final QueryStatistics queryStatistics;
     private boolean finishedService;
+    private final int clientID;
 
     /**
      *
-     */
-    public int clientID;
-
-    /**
-     *
+     * @param clientID
      * @param queryType
      * @param currentMod
      */
-    public ClientQuery(StatementType queryType, Module currentMod) {
-        this.clientID = 0;
+    public ClientQuery(int clientID, StatementType queryType, Module currentMod) {
+        this.clientID = clientID;
         this.queryType = queryType;
         this.currentMod = currentMod;
         this.queryStatistics = new QueryStatistics();
@@ -35,7 +28,7 @@ public class ClientQuery {
     }
 
     /**
-     *
+     * Update each module and system statistics (arrive time, leave time, ...)
      */
     public void updateStats() {
         double timeInModule;
@@ -67,58 +60,80 @@ public class ClientQuery {
     }
 
     /**
+     * Return this class clientID field current value (int).
+     *
+     * @return clientID field
+     */
+    public int getClientID() {
+        return clientID;
+    }
+
+    /**
+     * Set this class queryType field with the {@code StatementType} pass as
+     * argument.
      *
      * @param queryType
+     * @see StatementType
      */
     public void setQueryType(StatementType queryType) {
         this.queryType = queryType;
     }
 
     /**
+     * Set this class currentMod field with the {@code Module} pass as argument.
      *
      * @param currentMod
+     * @see Module
      */
     public void setCurrentMod(Module currentMod) {
         this.currentMod = currentMod;
     }
 
     /**
+     * Return this class queryType field value{@code StatementType}).
      *
-     * @return
+     * @return queryType field
+     * @see StatementType
      */
     public StatementType getQueryType() {
         return queryType;
     }
 
     /**
+     * Return this class currentMod field value({@code Module}).
      *
-     * @return
+     * @return currentMod field
+     * @see Module
      */
     public Module getCurrentMod() {
         return currentMod;
     }
 
     /**
+     * Return this class queryStatistic field value({@code QueryStatistics}).
      *
-     * @return
+     * @return queryStatistics field
+     * @see QueryStatistics
      */
     public QueryStatistics getQueryStatistics() {
         return queryStatistics;
     }
-    
+
     /**
+     * Return this class finishedService field value(boolean).
      *
-     * @return
+     * @return finishedService field
      */
-    public boolean getFinishService(){
+    public boolean getFinishService() {
         return this.finishedService;
     }
-    
+
     /**
+     * Set this class finishedService field with the boolean pass as argument.
      *
      * @param serviceState
      */
-    public void setFinishService(boolean serviceState){
+    public void setFinishService(boolean serviceState) {
         this.finishedService = serviceState;
     }
 }

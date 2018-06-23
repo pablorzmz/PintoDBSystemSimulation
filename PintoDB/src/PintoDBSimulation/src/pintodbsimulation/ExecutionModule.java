@@ -4,16 +4,17 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 /**
- * This class simulate the Execution Module described by the project.
- * This class extends from the abstract class Module.
- * @author B65477
+ * This class simulate the Execution Module described by the project. This class
+ * extends from the abstract class Module.
+ *
+ * @author B65477 B65728 B55830
  * @see Module
  */
 public class ExecutionModule extends Module {
 
     /**
      * Class constructor.
-     * 
+     *
      * @param servers
      * @param maxServers
      * @param simPintoDBPointer
@@ -34,8 +35,8 @@ public class ExecutionModule extends Module {
         //I need to check where the outgoing client is
         if (!myQueue.remove(outgoingCQ)) { //If the outgoing client wasn't on the module queue, it must be being attended
             if (myQueue.size() > 0) { //If there are waiting clients on the module queue
-                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                        + "del modulo " + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+                this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " fue sacado de ser antendido "
+                        + "del " + "Execution Module" + " y su tiempo en el sistema es de: "
                         + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
 
                 generateAction(this.myQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
@@ -46,8 +47,8 @@ public class ExecutionModule extends Module {
                 --servers;
             }
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de la cola "
-                    + "del modulo " + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("TimeOut: El cliente: " + outgoingCQ.getClientID() + " fue sacado de la cola "
+                    + "del " + "Execution Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - outgoingCQ.getQueryStatistics().getSystemArriveTime()));
         }
 
@@ -64,15 +65,15 @@ public class ExecutionModule extends Module {
         arrivingQS.setModuleArriveTime(e.getClockTime()); //I need to update the outgoing client data
 
         if (servers < maxServers) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue pasado de ser antendido "
+                    + "en el " + "Execution Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             ++servers;
             generateAction(arrivingCQ);
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue encolado "
-                    + "en el modulo " + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue encolado "
+                    + "en el " + "Execution Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - arrivingCQ.getQueryStatistics().getSystemArriveTime()));
 
             myQueue.add(arrivingCQ);
@@ -93,16 +94,16 @@ public class ExecutionModule extends Module {
         leavingCQ.updateStats();
 
         if (myQueue.size() > 0) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " sale del "
+                    + "Execution Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
 
             generateAction(myQueue.poll()); //I need to generate the LEAVE of the waiting client that I put to be attended
             queueSizesAccumulator += myQueue.size();
             ++queueSizesCounter;
         } else { //If there isn't client waiting to be attended
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                    + "Ejecución de consultas" + " y su tiempo en el sistema es de: "
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " sale del "
+                    + "Execution Module" + " y su tiempo en el sistema es de: "
                     + (simPintoDBPointer.getSimClock() - leavingCQ.getQueryStatistics().getSystemArriveTime()));
             --servers;
         }
@@ -115,8 +116,8 @@ public class ExecutionModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on this module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-                + " Ejecución de consultas" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una salida del cliente: " + clientQuery.getClientID() + " del "
+                + " Execution Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
         Event e;
         double eTime = simPintoDBPointer.getSimClock();
@@ -144,8 +145,8 @@ public class ExecutionModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new LEAVE type event on the next module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una salida del cliente: " + clientQuery.clientID + " del modulo "
-                + "Ejecución de consultas" + " al modulo " + "de Conexion" + " y su tiempo en el sistema es de: "
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una salida del cliente: " + clientQuery.getClientID() + " del "
+                + "Execution Module" + " al " + "Connection Module" + " y su tiempo en el sistema es de: "
                 + (simPintoDBPointer.getSimClock() - clientQuery.getQueryStatistics().getSystemArriveTime()));
         Event e = new Event(clientQuery, SimEvent.LEAVE, nextModule, simPintoDBPointer.getSimClock());
 

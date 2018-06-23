@@ -1,13 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pintodbsimulation;
 
 /**
+ * This class stores needed information for statistics calculation purpose.
+ * Specificaly arrive and leave time for each client of the system and number of
+ * disk blocks loaded.
  *
- * @author pablo
+ * @author B65477 B65728 B55830
+ * @see ClientQuery
  */
 public class QueryStatistics {
 
@@ -23,7 +22,7 @@ public class QueryStatistics {
     private int usedBlocks;
 
     /**
-     *
+     * Class constructor.
      */
     public QueryStatistics() {
         this.systemArriveTime = Statistics.INVALID_TIME;
@@ -38,14 +37,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class systemArriveTime field value (double).
      *
-     * @return
+     * @return systemArriveTime field
      */
     public double getSystemArriveTime() {
         return systemArriveTime;
     }
 
     /**
+     * Set this class systemArriveTime to the double pass as argument
      *
      * @param systemArriveTime
      */
@@ -54,14 +55,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class systemLeaveTime field value (double).
      *
-     * @return
+     * @return systemLeaveTime field
      */
     public double getSystemLeaveTime() {
         return systemLeaveTime;
     }
 
     /**
+     * Set this class systemLeaveTime to the double pass as argument
      *
      * @param systemLeaveTime
      */
@@ -70,14 +73,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class moduleArriveTime field value (double).
      *
-     * @return
+     * @return moduleArriveTime field
      */
     public double getModuleArriveTime() {
         return moduleArriveTime;
     }
 
     /**
+     * Set this class moduleArriveTime to the double pass as argument
      *
      * @param moduleArriveTime
      */
@@ -86,14 +91,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class moduleLeaveTime field value (double).
      *
-     * @return
+     * @return moduleLeaveTime field
      */
     public double getModuleLeaveTime() {
         return moduleLeaveTime;
     }
 
     /**
+     * Set this class moduleLeaveTime to the double pass as argument
      *
      * @param moduleLeaveTime
      */
@@ -102,14 +109,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class timeInQueryProcMod field value (double).
      *
-     * @return
+     * @return timeInQueryProcMod field
      */
     public double getTimeInQueryProcMod() {
         return timeInQueryProcMod;
     }
 
     /**
+     * Set this class timeInQueryProcMod to the double pass as argument
      *
      * @param timeInQueryProcMod
      */
@@ -118,14 +127,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class timeInConnectionMod field value (double).
      *
-     * @return
+     * @return timeInConnectionMod field
      */
     public double getTimeInConnectionMod() {
         return timeInConnectionMod;
     }
 
     /**
+     * Set this class timeInConnectionMod to the double pass as argument
      *
      * @param timeInConnectionMod
      */
@@ -134,14 +145,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class timeInExecMod field value (double).
      *
-     * @return
+     * @return timeInExecMod field
      */
     public double getTimeInExecMod() {
         return timeInExecMod;
     }
 
     /**
+     * Set this class timeInExecMod to the double pass as argument
      *
      * @param timeInExecMod
      */
@@ -150,14 +163,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class timeInTransMod field value (double).
      *
-     * @return
+     * @return timeInTransMod field
      */
     public double getTimeInTransMod() {
         return timeInTransMod;
     }
 
     /**
+     * Set this class timeInTransMod to the double pass as argument
      *
      * @param timeInTransMod
      */
@@ -166,14 +181,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class timeInProcMgmtMod field value (double).
      *
-     * @return
+     * @return timeInProcMgmtMod field
      */
     public double getTimeInProcMgmtMod() {
         return timeInProcMgmtMod;
     }
 
     /**
+     * Set this class timeInProcMgmtMod to the double pass as argument
      *
      * @param timeInProcMgmtMod
      */
@@ -182,14 +199,16 @@ public class QueryStatistics {
     }
 
     /**
+     * Returns this class usedBlocks field value (int).
      *
-     * @return
+     * @return usedBlocks field
      */
     public int getUsedBlocks() {
         return usedBlocks;
     }
 
     /**
+     * Set this class usedBlocks to the int pass as argument
      *
      * @param usedBlocks
      */

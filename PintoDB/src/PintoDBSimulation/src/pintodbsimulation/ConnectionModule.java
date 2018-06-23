@@ -6,7 +6,8 @@ import java.util.PriorityQueue;
 /**
  * This class simulate the Connection Managment Module described by the project.
  * This class extends from the abstract class Module.
- * @author B65477
+ *
+ * @author B65477 B65728 B55830
  * @see Module
  */
 public class ConnectionModule extends Module {
@@ -29,7 +30,9 @@ public class ConnectionModule extends Module {
     }
 
     /**
-     * Return the current value (int) of the class field {@link deniedConnectionCounter}.
+     * Return the current value (int) of the class field
+     * {@link deniedConnectionCounter}.
+     *
      * @return deniedConnectionCounter field
      */
     public int getDeniedConnectionCounter() {
@@ -38,6 +41,7 @@ public class ConnectionModule extends Module {
 
     /**
      * Set the deniedConnectionCounter field to the value(int) pass as argument.
+     *
      * @param deniedConnectionCounter
      */
     public void setDeniedConnectionCounter(int deniedConnectionCounter) {
@@ -51,8 +55,8 @@ public class ConnectionModule extends Module {
         ClientQuery outgoingCQ = e.getClientQuery();
 
         this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent(
-                "TimeOut: El cliente: " + outgoingCQ.clientID + " fue sacado de ser antendido"
-                + " del modulo " + "Conexión");
+                "TimeOut: El cliente: " + outgoingCQ.getClientID() + " fue sacado de ser antendido "
+                + "del " + "Connection Module");
 
         outgoingCQ.setFinishService(true);
         --servers;
@@ -74,8 +78,8 @@ public class ConnectionModule extends Module {
         this.simPintoDBPointer.getStats().getCurrentIterationStats().setTotalConnections(old + 1);
 
         if (servers < maxServers) {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue pasado de ser antendido "
-                    + "en el modulo " + "Conexión" + " en el tiempo " + e.getClockTime());
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue pasado de ser antendido "
+                    + "en el " + "Connection Module" + " en el tiempo " + e.getClockTime());
             ++servers;
             //I need to add the new cliente to the system, ie the clients list.
             LinkedList<ClientQuery> simClients = simPintoDBPointer.getClients();
@@ -88,15 +92,14 @@ public class ConnectionModule extends Module {
             timeoutE = new Event(arrivingCQ, SimEvent.TIMEOUT, null, e.getClockTime() + this.simPintoDBPointer.getT());
             eQ.add(timeoutE);
         } else {
-            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.clientID + " fue rechazado "
-                    + "en el modulo " + "Conexión");
+            this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Arrive: El cliente: " + arrivingCQ.getClientID() + " fue rechazado "
+                    + "en el " + "Connection Module");
             ++deniedConnectionCounter;
         }
 
         //I need to generate a new ARRIVE
-        ClientQuery newCQ = new ClientQuery( randNoGen.getConnectionStatementType() , this);
         ++clientCounter;
-        newCQ.clientID = clientCounter;
+        ClientQuery newCQ = new ClientQuery(clientCounter, randNoGen.getConnectionStatementType(), this);
         generateAction(newCQ);
     }
 
@@ -108,13 +111,13 @@ public class ConnectionModule extends Module {
 
         leavingCQ.setCurrentMod(this);
         //lo agrega Pablo
-        leavingCQ.setFinishService( true );
+        leavingCQ.setFinishService(true);
         ////
         QueryStatistics leavingQS = leavingCQ.getQueryStatistics();
         leavingQS.setSystemLeaveTime(e.getClockTime()); //I need to update the outgoing client data
         leavingCQ.updateStats();
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.clientID + " sale del modulo "
-                + "Conexión");
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Leave: El cliente: " + leavingCQ.getClientID() + " sale del "
+                + "Connection Module");
         --servers;
 
     }
@@ -122,8 +125,8 @@ public class ConnectionModule extends Module {
     @Override
     public void generateAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on this module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una llegada del cliente: " + clientQuery.clientID + " al modulo "
-                + " Conexión");
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Action: Se genera una llegada del cliente: " + clientQuery.getClientID() + " al "
+                + " Connection Module");
         double eTime = simPintoDBPointer.getSimClock() + randNoGen.getTimeUsingExponencialDist((30.0 / 60.0));
         Event e = new Event(clientQuery, SimEvent.ARRIVE, this, eTime);
 
@@ -135,8 +138,8 @@ public class ConnectionModule extends Module {
     @Override
     public void generateNextModuleAction(ClientQuery clientQuery) {
         //I need to create a new ARRIVE type event on the next module for the client clientQuery
-        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.clientID + " del modulo "
-                + "Conexión" + " al modulo" + " Administrador de procesos");
+        this.simPintoDBPointer.getInterFace().refreshConsoleAreaContent("Generate Next Action: Se genera una llegada del cliente: " + clientQuery.getClientID() + " del "
+                + "Connection Module" + " al " + " Process Managment Module");
         Event e = new Event(clientQuery, SimEvent.ARRIVE, nextModule, simPintoDBPointer.getSimClock());
 
         //I need to add the new event to the systemEventList
