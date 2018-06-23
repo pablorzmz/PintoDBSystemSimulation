@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pintodbsimulation;
 
 import java.awt.Image;
@@ -21,8 +16,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author pablo
+ * Graphic user interface
+ * 
+ * @author B65477 B65728 B55830
  */
 public class MainForm extends javax.swing.JFrame {
 
