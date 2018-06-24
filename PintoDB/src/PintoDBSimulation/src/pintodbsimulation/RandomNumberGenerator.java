@@ -31,7 +31,7 @@ public class RandomNumberGenerator {
 
     /**
      * Returns a random variable value that respect the normal distribution, 
-     * with parameter {@link mean} and {@link variance}.
+     * with parameter mean and variance.
      * This random variable value is generate with the convolution method.
      *
      * @param mean
@@ -49,7 +49,7 @@ public class RandomNumberGenerator {
 
     /**
      * Returns a random variable value that respect the uniform distribution, 
-     * with parameter {@link a} and {@link b}.
+     * with parameter a and b.
      * This random variable value is generate with the inverse transform method 
      * obteined formula for this distribution.
      *
@@ -63,7 +63,7 @@ public class RandomNumberGenerator {
 
     /**
      * Returns a random variable value that respect the exponencial distribution, 
-     * with parameter {@link lambda}.
+     * with parameter lambda.
      * This random variable value is generate with the inverse transform method 
      * obteined formula for this distribution.
      * 

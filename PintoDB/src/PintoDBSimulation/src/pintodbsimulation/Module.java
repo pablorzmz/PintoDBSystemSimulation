@@ -146,7 +146,7 @@ public abstract class Module {
      * queue(is there is any) or being attended. In the first case the client is
      * simply taken out of the module waiting queue. Otherwise the client stops
      * being attended and a server if released. In the second case the logic
-     * before releasing a server is identical to that of {@link proccessExit()}.
+     * before releasing a server is identical to that of {@link processExit()}.
      *
      * @see Event
      * @see ClientQuery
@@ -185,7 +185,7 @@ public abstract class Module {
     public abstract void processExit();
 
     /**
-     * Creates a new event for this module and the client {@link clientQuery}
+     * Creates a new event for this module and the client (clientQuery)
      * and puts it on the simulation event list. This new event type can be
      * {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE} depending of the needs
      * of the module.
@@ -199,7 +199,7 @@ public abstract class Module {
 
     /**
      * Creates a new event for the next module ({@link nextModule}) and the
-     * client {@link clientQuery} and puts it on the simulation event list. This
+     * client (clientQuery) and puts it on the simulation event list. This
      * new event type can be {@code SimEvent.LEAVE} o {@code SimEvent.ARRIVE}
      * depending of the needs of the module.
      *

@@ -14,6 +14,7 @@ public class ClientQuery {
     private final int clientID;
 
     /**
+     * Class constructor.
      *
      * @param clientID
      * @param queryType
